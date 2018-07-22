@@ -1,6 +1,8 @@
 from app import create_app
-
-app = create_app()
+import config
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app = create_app()
+    host = config.CONFIG_VALUES['host']
+    port = config.CONFIG_VALUES['port']
+    app.run(debug=True, host=host, port=port)
