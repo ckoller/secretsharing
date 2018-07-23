@@ -3,7 +3,7 @@
 if [[ $@ -eq null ]]; then
 gnome-terminal -x bash -c "python run.py --host=127.0.0.1 --port=5000 --player_count=1 --player_id=1; exec bash"
 else
-counter=0
+counter=1
 port=5000
 for ((i=5001; i<=5001+$@-1; i++))
 do
@@ -13,5 +13,6 @@ let port=$i
 sleep 1
 done
 sleep 2
+curl "http://127.0.0.1:$port/api/commit/?value=5"
 fi
 

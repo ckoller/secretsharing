@@ -1,7 +1,5 @@
 from flask import Flask
 from celery import Celery
-import argparse
-import config
 
 celery = Celery(__name__)
 celery.config_from_object('jobs.celeryconfig')

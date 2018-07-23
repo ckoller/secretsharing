@@ -5,10 +5,11 @@ import config
 def setup():
     host, port, id, player_count = get_host_info()
     players = create_player_dict(host, port, player_count)
-    config.CONFIG_VALUES['players'] = players
-    config.CONFIG_VALUES['host'] = host
-    config.CONFIG_VALUES['port'] = port
-    config.CONFIG_VALUES['id'] = id
+    config.players = players
+    config.host = host
+    config.port = port
+    config.id = id
+    config.player_count = int(player_count)
 
 def get_host_info():
     parser = argparse.ArgumentParser(description='P2P multiparty computation app')
@@ -25,8 +26,8 @@ def create_player_dict(ip, my_port, player_count):
 
 if __name__ == '__main__':
     setup()
-    host = config.CONFIG_VALUES['host']
-    port = config.CONFIG_VALUES['port']
+    host = config.host
+    port = config.port
     app = create_app()
     app.run(debug=True, host=host, port=port)
 
