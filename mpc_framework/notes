@@ -1,0 +1,16 @@
+
+c
+    (p1, p2, p3)
+
+    Add
+    Minus
+    Mult
+    Divide
+
+
+    add(add(p1, p2), p3)
+
+
+
+
+

@@ -6,11 +6,18 @@ class Polynomials:
     prime = 2 ** 127 - 1
     prime = 47
 
+    def create_poly_and_shares(self, secret, degree, shares):
+        if (degree > shares or degree < 1):
+            raise ValueError('shares must be lager than degree and degree must be higher than one')
+        poly = [random.SystemRandom().randint(1, self.prime) for i in range(degree + 1)]
+        poly[0] = secret
+        shares = [self.eval_poly(poly, x) for x in range(1, shares + 1)]
+        return poly, shares
+
     # bivariate: poly with two variable f(x,y)
     # symetric: f(x1, x2, ..) = f(y1, y2, ..)
     # f(X, Y) = 3*(x2*y2) + 92*(x+y) + 10
-
-    def create_poly_and_shares(self, secret, degree, shares):
+    def create_poly_and_shares_bi(self, secret, degree, shares):
         if (degree > shares or degree < 1):
             raise ValueError('shares ', 5, ' must be lager than degree ', degree, ' and degree must be higher than one')
         poly = self.create_bivariate_symetric_poly(secret, degree)
@@ -85,7 +92,7 @@ class Polynomials:
         return result
 
     def consistency_test(self):
-        poly, shares = self.create_poly_and_shares(secret=4, degree=2, shares=5)
+        poly, shares = self.create_poly_and_shares_bi(secret=4, degree=2, shares=5)
         print("poly: \n", poly)
         print("shares: \n", shares)
         print(self.eval_poly(shares[3], 4))
@@ -99,8 +106,8 @@ class Polynomials:
         t = 2
         n = 4
         # input sharing
-        poly_a, shares_a = self.create_poly_and_shares(a, degree=t, shares=n)
-        poly_b, shares_b = self.create_poly_and_shares(b, degree=t, shares=n)
+        poly_a, shares_a = self.create_poly_and_shares_bi(a, degree=t, shares=n)
+        poly_b, shares_b = self.create_poly_and_shares_bi(b, degree=t, shares=n)
         shares_a_0 = shares_a[:, 0]
         shares_b_0 = shares_b[:, 0]
         # addition
@@ -117,9 +124,6 @@ class Polynomials:
 
         print("add shares\n", y[1:])
         print(self.lagrange_interpolate(y[1:])[1])
-
-
-
 
 
 

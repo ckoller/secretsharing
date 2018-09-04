@@ -1,6 +1,6 @@
 players = 'players'
 host = 'host'
 port = 'port'
-id = 0
+id = ""
 player_count = 0
 

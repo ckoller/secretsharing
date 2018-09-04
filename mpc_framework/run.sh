@@ -13,6 +13,5 @@ let port=$i
 sleep 1
 done
 sleep 2
-curl "http://127.0.0.1:$port/api/commit/?value=5"
+#curl "http://127.0.0.1:$port/api/commit/?value=5"
 fi
-
