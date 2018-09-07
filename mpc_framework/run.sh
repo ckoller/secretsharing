@@ -1,4 +1,4 @@
-#!/bin/tsbash
+#!/bin/bash
 #gnome-terminal -x bash -c "celery worker -A celery_worker.celery --loglevel=DEBUG; exec bash"
 if [[ $@ -eq null ]]; then
 gnome-terminal -x bash -c "python run.py --host=127.0.0.1 --port=5000 --player_count=1 --player_id=1; exec bash"
