@@ -1,16 +1,84 @@
+def add(a,b):
+    sum = a+b
+    return sum
 
-c
-    (p1, p2, p3)
+def scalar_mult(a, scalar):
+    return a * scalar
 
-    Add
-    Minus
-    Mult
-    Divide
+def mult(a, b):
+    pol = Polynomials()
+    prod = a * b
+    n = config.player_count
+    _, shares = pol.create_poly_and_shares(prod, degree=n/3, shares=n)[1]
 
-
-    add(add(p1, p2), p3)
-
-
+    rec = pol.lagrange_interpolate(shares)
 
 
 
+
+def received_all_shares(share_type):
+    return share_dict != {} and share_type in share_dict and None not in share_dict[share_type].values()
+
+def add_all():
+    result = sum(input_shares)
+    output_sharing(result)
+
+def mul_all():
+    prod = 1
+    for x in input_shares:
+        prod = mult(x, prod)
+    output_sharing(prod)
+
+
+
+
+
+def share_value(value, def output_sharing(y):
+    for player_id, player in config.players.items():
+        url = "http://" + player + "/api/ceps/share/"
+        data = {"share": json.dumps(y),
+                "share_type": "output",
+                "sender_id": config.id}
+        r = requests.post(url, data)
+    set_share(config.id, y, "output")
+    if received_all_shares("output"):
+        print(reconstruct(output_shares)[1], "res")
+
+
+def reconstruct(shares):
+    pol = Polynomials()
+    rec = pol.lagrange_interpolate(shares)
+    return recshare_type):
+    pol = Polynomials()
+    n = config.player_count
+    poly, shares = pol.create_poly_and_shares(value, degree=int(n / 3), shares=n)
+    for player_id, player in config.players.items():
+        url = "http://" + player + "/api/ceps/share/"
+        data = {"share": json.dumps(shares[player_id - 1]),
+                "share_type": share_type,
+                "sender_id": config.id}
+        r = requests.post(url, data)
+    set_share(int(config.id), shares[int(config.id) - 1], share_type)
+
+
+
+def set_share(owner_id, share, share_type):
+    global share_dict
+    global output_shares
+    global input_shares
+    if share_dict == {}:
+        share_dict["input"] = {player_id: None for player_id in range(1, config.player_count + 1)}
+        share_dict["output"] = {player_id: None for player_id in range(1, config.player_count + 1)}
+        share_dict["output_list"] = []
+    if share_dict[share_type][int(owner_id)] is None:
+        share_dict[share_type][int(owner_id)] = share
+        if share_type == "output":
+            output_shares.append(share)
+        if share_type == "input":
+            input_shares.append(share)
+
+# flask state only last as long as a request, so in order for variables to survive for longer than a single request
+# we do this for now
+share_dict = {}
+output_shares = []
+input_shares = []

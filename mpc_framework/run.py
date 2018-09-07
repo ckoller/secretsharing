@@ -1,6 +1,7 @@
 from app import create_app
 import argparse
 import config
+from app.api.ceps.ceps import Ceps
 
 def setup():
     host, port, id, player_count = get_host_info()
@@ -10,6 +11,7 @@ def setup():
     config.port = port
     config.id = id
     config.player_count = int(player_count)
+    config.protocol = Ceps()
 
 def get_host_info():
     parser = argparse.ArgumentParser(description='P2P multiparty computation app')

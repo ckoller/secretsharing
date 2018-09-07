@@ -1,42 +1,7 @@
-Protocol Commit
-1. On input (commit, i, cid, a), P i samples a bivariate symmetric polynomial f a (X, Y) of
-degree at most t, such that f a (0, 0) = a. He sends the polynomial f k (X) = f a (X, k) to
-each P k (therefore P k also learns β k = f k (0)).
+MULT
 
-- GET   /API/commit                     [value]                                                                             commit to value
-- POST  /API/commit                     [prover_id, commit_id, share]                                                       give shares
+START AUTOMATIC
 
-2. Each P j computes β k,j = f j (k) and sends β k,j to each P k .
+Prettyfy
 
-- POST  /API/<commit_id>/consistency    [prover_id, commit_id, sender_id, consistency_value]                                send con_vals to eachother
-
-3. Each P k checks that deg(f k ) ≤ t and that β k,j = f k (j) for j = 1, . . . , n. If so, he
-broadcasts success. Otherwise, he broadcasts (dispute, k, j) for each inconsistency.
-
-- POST  /API/<commit_id>/dispute        [prover_id, commit_id, sender_id, status, disputer_id]                              check con_vals and broadcast results
-
-4. For each dispute reported in the previous step, P i broadcasts the correct value of β k,j .
-
-- PUT  /API/<commit_id>/consistency     [prover_id, commit_id, sender_id, consistency_value, disputer_id1, disputer_id2]    p_i send correct con_vals
-
-5. If any P k finds a disagreement between what P i has broadcast and what he received
-privately from P i , he knows P i is corrupt and broadcasts (accuse, k).
-
-- POST  /API/<commit_id>/accuse     [prover_id, commit_id, sender_id, accusation]                                           p_k broadcast accusations on disagrements con_vals
-
-6. For any accusation from P k in the previous step, P i broadcasts f k (X).
-
-- PUT  /API/<commit_id>/commit     [prover_id, commit_id, sender_id, accuser_id, share]                                     p_i broadcast share for accusations
-
-7. If any P k finds a new disagreement between what P i has now broadcast and what he
-received privately from P i , he knows P i is corrupt and broadcasts (accuse, k).
-
-- PUT  /API/<commit_id>/accuse     [prover_id, commit_id, sender_id, accusation]                                            p_k broadcast accusations on disagrements
-
-
-8. If the information broadcast by P i is not consistent, or if more than t players have
-accused P i , players output fail.
-Otherwise, players who accused P i and had a new polynomial f k (X) broadcast will
-accept it as their polynomial. All others keep the polynomial they received in the first
-step. Now each P k outputs success and stores (cid, i, β k = f k (0)). In addition P i
-stores the polynomial g a (X) = f a (X, 0).
+add(1, add(2, 3))
