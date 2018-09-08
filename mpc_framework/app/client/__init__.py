@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-module = Blueprint('site', __name__)
+module = Blueprint('client', __name__)
 
 from . import routes

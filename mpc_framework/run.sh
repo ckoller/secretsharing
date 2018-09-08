@@ -16,7 +16,7 @@ sleep 2
 #curl "http://127.0.0.1:$port/api/commit/?value=5"
 #curl "http://127.0.0.1:$port/api/ceps/share/?value=5"
 
-curl "http://127.0.0.1:5001/api/ceps/share/?value=2"
-curl "http://127.0.0.1:5002/api/ceps/share/?value=2"
-curl "http://127.0.0.1:5003/api/ceps/share/?value=2"
+curl "http://127.0.0.1:5001/"
+curl "http://127.0.0.1:5002/"
+curl "http://127.0.0.1:5003/"
 fi

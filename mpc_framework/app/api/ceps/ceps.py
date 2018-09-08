@@ -1,73 +1,140 @@
 from app.api.polynomials import Polynomials
 import config, json, requests
 
+
 class Ceps:
-    def __init__(self):
-        self.poly = []
-        self.shares = []
-        self.share_dict = {}
-        self.output_shares = []
-        self.input_shares = []
+    def __init__(self, circuit):
+        self.circuit = circuit
 
-    def input_sharing(self, my_value):
-        self.share_value(my_value, "input")
+    def run(self, my_value):
+        self.share_my_value(my_value)
 
-    def share_value(self, value, share_type):
+    def share_my_value(self, my_value):
         pol = Polynomials()
         n = config.player_count
-        poly, shares = pol.create_poly_and_shares(value, degree=int(n / 3), shares=n)
-        for player_id, player in config.players.items():
-            url = "http://" + player + "/api/ceps/share/"
-            data = {"share": json.dumps(shares[player_id - 1]),
-                    "share_type": share_type,
-                    "sender_id": config.id}
-            r = requests.post(url, data)
-        self.set_share(int(config.id), shares[int(config.id) - 1], share_type)
+        for gate in self.circuit:
+            if gate.type == 'input' and gate.wires_in[0] == int(config.id):
+                poly, shares = pol.create_poly_and_shares(my_value, degree=int(n / 3), shares=n)
+                for player_id, player in config.players.items():
+                    url = "http://" + player + "/api/ceps/share/"
+                    data = {"share": json.dumps(shares[player_id - 1]),
+                            "gate_id": json.dumps(gate.id)}
+                    requests.post(url, data)
+                gate.output_value = shares[int(config.id) - 1]
 
-    def set_share(self, owner_id, share, share_type):
-        if self.share_dict == {}:
-            self.share_dict["input"] = {player_id: None for player_id in range(1, config.player_count + 1)}
-            self.share_dict["output"] = {player_id: None for player_id in range(1, config.player_count + 1)}
-            self.share_dict["output_list"] = []
-        if self.share_dict[share_type][int(owner_id)] is None:
-            self.share_dict[share_type][int(owner_id)] = share
-            if share_type == "output":
-                self.output_shares.append(share)
-            if share_type == "input":
-                self.input_shares.append(share)
+    def handle_input_share(self, share, gate_id):
+        gate = self.circuit[gate_id]
+        gate.output_value = share
+        if self.received_all_input_shares():
+            self.evaluate_circuit()
 
-    def output_sharing(self, y):
-        for player_id, player in config.players.items():
-            url = "http://" + player + "/api/ceps/share/"
-            data = {"share": json.dumps(y),
-                    "share_type": "output",
-                    "sender_id": config.id}
-            r = requests.post(url, data)
-        self.set_share   (config.id, y, "output")
-        if self.received_all_shares("output"):
-            print(self.reconstruct(self.output_shares)[1], "res")
+    def received_all_input_shares(self):
+        for gate in self.circuit:
+            if gate.type == 'input' and gate.output_value == None:
+                return False
+        return True
 
-    def reconstruct(self, shares):
-        pol = Polynomials()
-        rec = pol.lagrange_interpolate(shares)
-        return rec
+    def evaluate_circuit(self):
+        print("hello")
 
-    def received_all_shares(self, share_type):
-        return self.share_dict != {} and share_type in self.share_dict and None not in self.share_dict[share_type].values()
+class Gate:
+    def __init__(self, id, type, wires_in):
+        self.id = id
+        self.type = type
+        self.wires_in = wires_in
+        self.wires_out = []
+        self.output_value = None
+        self.scalar = 1
 
-    def add_all(self):
-        result = sum(self.input_shares)
-        self.output_sharing(result)
+class CircuitCreator:
+    def __init__(self):
+        self.circuit = []
+        self.gate_id = 0
 
-    def mul_all(self):
-        prod = 1
-        for x in self.input_shares:
-            prod = self.mult(x, prod)
-        self.output_sharing(prod)
+    def create_circuit(self):
+        # 1*2 + 3*4 * 4
+        self.scalar_mult(self.add(self.mult(self.input(1), self.input(2)), self.mult(self.input(3), self.input(4))), 4)
 
-    def computation_phase(self):
-        print("ha")
+    def eval_circuit(self):
+        for gate in self.circuit:
+            if gate.type == 'add':
+                val_in_l = self.circuit[gate.wires_in[0]].output_value
+                val_in_r = self.circuit[gate.wires_in[1]].output_value
+                gate.output_value = val_in_l + val_in_r
+            elif gate.type == 'scalar_mult':
+                val_in = self.circuit[gate.wires_in[0]].output_value
+                scalar = gate.scalar
+                gate.output_value = val_in * scalar
+            elif gate.type == 'mult':
+                val_in_l = self.circuit[gate.wires_in[0]].output_value
+                val_in_r = self.circuit[gate.wires_in[1]].output_value
+                gate.output_value = val_in_l * val_in_r
+            elif gate.type == 'div':
+                val_in_l = self.circuit[gate.wires_in[0]].output_value
+                val_in_r = self.circuit[gate.wires_in[1]].output_value
+                gate.output_value = val_in_l / val_in_r
+            if True:
+                print("id", gate.id)
+                print("type", gate.type)
+                print("wires_in", gate.wires_in)
+                print("wires_out", gate.wires_out)
+                print("output_value", gate.output_value)
+                print("scalar", gate.scalar)
+                print("")
+        last_gate = self.circuit[len(self.circuit)-1]
+        return last_gate.output_value
 
-    def output_reconstruction(self):
-        print("ha")
+    def input(self, input_value):
+        gate = Gate(id=self.gate_id, type="input", wires_in=[input_value])
+        gate.output_value = input_value
+        self.circuit.insert(self.gate_id, gate)
+        self.gate_id = self.gate_id + 1
+        return self.gate_id - 1;
 
+    def add(self, gid_in_l, gid_in_r):
+        gate = Gate(id=self.gate_id, type="add", wires_in=[gid_in_l, gid_in_r])
+        self.update_input_gate(gid_in_l)
+        self.update_input_gate(gid_in_r)
+        self.update_circuit(gate)
+        return self.gate_id - 1;
+
+    def scalar_mult(self, gid_in, scalar):
+        gate = Gate(id=self.gate_id, type="scalar_mult", wires_in=[gid_in])
+        gate.scalar = scalar
+        self.update_input_gate(gid_in)
+        self.update_circuit(gate)
+        return self.gate_id - 1;
+
+    def mult(self, gid_in_l, gid_in_r):
+        gate = Gate(id=self.gate_id, type="mult", wires_in=[gid_in_l, gid_in_r])
+        self.update_input_gate(gid_in_l)
+        self.update_input_gate(gid_in_r)
+        self.update_circuit(gate)
+        return self.gate_id - 1;
+
+    def div(self, gid_in_l, gid_in_r):
+        gate = Gate(id=self.gate_id, type="div", wires_in=[gid_in_l, gid_in_r])
+        self.update_input_gate(gid_in_l)
+        self.update_input_gate(gid_in_r)
+        self.update_circuit(gate)
+        self.gate_id = self.gate_id + 1
+        return self.gate_id - 1;
+
+    def update_input_gate(self, gid_in):
+        g_in = self.circuit[gid_in]
+        g_in.wires_out.append(self.gate_id)
+
+    def update_circuit(self, gate):
+        self.circuit.insert(self.gate_id, gate)
+        self.gate_id = self.gate_id + 1
+
+    def print_circuit(self):
+        for gate in self.circuit:
+            print("id", gate.id)
+            print("type", gate.type)
+            print("wires_in", gate.wires_in)
+            print("wires_out", gate.wires_out)
+            print("output_value", gate.output_value)
+            print("scalar", gate.scalar)
+            print("")
+        print("\n\n")
