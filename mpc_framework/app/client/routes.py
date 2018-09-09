@@ -1,6 +1,8 @@
 from . import module
 import config, json, requests
-from app.api.ceps.ceps import Ceps, CircuitCreator
+from app.api.ceps.ceps import Ceps
+from app.circuit import CircuitCreator
+
 
 @module.route('/')
 def home():

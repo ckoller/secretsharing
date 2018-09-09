@@ -1,7 +1,7 @@
 from app import create_app
 import argparse
 import config
-from app.api.ceps.ceps import Ceps, CircuitCreator
+from app.api.ceps.ceps import Ceps
 from app.client.routes import Client
 
 
