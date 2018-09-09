@@ -3,9 +3,11 @@ import numpy as np
 
 class Polynomials:
 
-    prime = 2 ** 127 - 1
     prime = 47
     prime = 1069
+    prime = 2 ** 127 - 1
+    prime = 110503
+
 
     def create_poly_and_shares(self, secret, degree, shares):
         if (degree > shares or degree < 1):

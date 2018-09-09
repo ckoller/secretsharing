@@ -1,6 +1,6 @@
 from app.api.polynomials import Polynomials
 import config, json, requests
-
+from app.client.routes import Client
 
 class Ceps:
     def __init__(self, circuit):
@@ -77,6 +77,7 @@ class Ceps:
     def protocol_done(self, result):
         print("Result", result)
         print("output shares", self.output_shares)
+        Client().get_response(result)
 
     def received_all_input_shares(self):
         for gate in self.circuit:
@@ -114,19 +115,9 @@ class Ceps:
             elif gate.type == 'div':
                 val_in_l = self.circuit[gate.wires_in[0]].output_value
                 val_in_r = self.circuit[gate.wires_in[1]].output_value
-                mult_invers = self.pol.extended_gcd(5, prime)[0]
-                gate.output_value = val_in_l * mult_invers
+                prod = val_in_l * self.pol.mult_invers(val_in_r)
                 self.share_my_mult_value(prod, gate)
                 break
-            if False:
-                print("id", gate.id)
-                print("type", gate.type)
-                print("wires_in", gate.wires_in)
-                print("wires_out", gate.wires_out)
-                print("output_value", gate.output_value)
-                print("scalar", gate.scalar)
-                print("")
-
         if self.cur_gid == len(self.circuit):
             gate = self.circuit[self.cur_gid-1]
             self.cur_gid = self.cur_gid + 1
@@ -137,4 +128,5 @@ class Ceps:
     def reconstruct(self, shares):
         rec = self.pol.lagrange_interpolate(shares)
         return rec
+
 
