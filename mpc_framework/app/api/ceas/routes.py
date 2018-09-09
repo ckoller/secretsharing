@@ -1,19 +1,9 @@
 from app.api.ceas import module
-from jobs.tasks import add_together
 import config
 import json
 import numpy as np
 from flask import request
 from app.api.ceas.commitment import Commitment
-
-@module.route('/')
-def home():
-    return "HELLO WORLD"
-
-@module.route('/add')
-def subadd():
-    result = add_together.delay(12, 23)
-    return "HELLO ADD"
 
 @module.route('/commit/<int:id>/accusation/', methods=['POST', 'PUT'])
 def accuse(id):

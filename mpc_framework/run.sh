@@ -7,7 +7,7 @@ counter=1
 port=5000
 for ((i=5001; i<=5001+$@-1; i++))
 do
-gnome-terminal -x bash -c "python run.py --host=127.0.0.1 --port=$i --player_count=$@ --player_id=$counter; exec bash"
+gnome-terminal -- bash -c "python run.py --host=127.0.0.1 --port=$i --player_count=$@ --player_id=$counter; exec bash"
 let counter=counter+1
 let port=$i
 sleep 1

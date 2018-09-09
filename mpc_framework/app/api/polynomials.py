@@ -92,39 +92,5 @@ class Polynomials:
             power += 1
         return result
 
-    def consistency_test(self):
-        poly, shares = self.create_poly_and_shares_bi(secret=4, degree=2, shares=5)
-        print("poly: \n", poly)
-        print("shares: \n", shares)
-        print(self.eval_poly(shares[3], 4))
-        print(self.eval_poly(shares[4], 3))
-        print(self.eval_poly(shares[1], 0))
-        print(self.eval_poly(shares[0], 1))
-        print(self.eval_poly(shares[2], 0))
-        print(self.eval_poly(shares[0], 2))
-
-    def addition(self, a, b):
-        t = 2
-        n = 4
-        # input sharing
-        poly_a, shares_a = self.create_poly_and_shares_bi(a, degree=t, shares=n)
-        poly_b, shares_b = self.create_poly_and_shares_bi(b, degree=t, shares=n)
-        shares_a_0 = shares_a[:, 0]
-        shares_b_0 = shares_b[:, 0]
-        # addition
-        add_shares = [shares_a_0[x] + shares_b_0[x] for x in range(0, n)]
-        # output reconstruction
-        y = add_shares
-        print("poly a\n", poly_a)
-        print("shares a\n", shares_a)
-        print("shares a 0\n", shares_a_0, "\n")
-
-        print("poly b\n", poly_b)
-        print("shares b\n", shares_b)
-        print("shares b 0\n", shares_b_0, "\n")
-
-        print("add shares\n", y[1:])
-        print(self.lagrange_interpolate(y[1:])[1])
-
-
-
+    def mult_invers(self, number):
+        return self._extended_gcd(number, self.prime)[0]
