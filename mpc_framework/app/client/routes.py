@@ -21,13 +21,13 @@ class Client:
         #c.add(c.mult(c.input(1),c.input(2)), c.add(c.input(3), c.input(4)))            # 8*8+8+8   =   80      n=4
         #c.add(c.mult(c.input(2),c.input(1)), c.mult(c.input(3), c.input(4)))           # 8*8 + 8*8 =   128     n=4
         #c.scalar_mult(c.add(c.mult(c.input(2),c.input(1)), c.mult(c.input(3), c.input(4))), scalar=2)                     # (8*8 + 8*8)*2)/2  = 256
-
         c.mult(c.scalar_mult(c.add(c.mult(c.input(2),c.input(1)), c.mult(c.input(3), c.input(4))), scalar=2), c.input(5))   # (8*8 + 8*8)*2)*8  = 2048
+        return c.get_circuit()
 
-        return c.circuit
+    def get_response(self, result, circuit):
+        print("client got result", result)
+        CircuitCreator().print_circuit(circuit)
 
-    def get_response(self, response):
-        print("client got this", response)
 
     #TODO run mulitple protocols in one run and check if they calculate correct
     #TODO circuit return on create

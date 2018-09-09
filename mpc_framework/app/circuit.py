@@ -1,3 +1,4 @@
+
 class Gate:
     def __init__(self, id, type, wires_in):
         self.id = id
@@ -17,34 +18,10 @@ class CircuitCreator:
         # 1*2 + 3*4 * 4
         self.scalar_mult(self.add(self.mult(self.input(1), self.input(2)), self.mult(self.input(3), self.input(4))), 4)
 
-    def eval_circuit(self):
-        for gate in self.circuit:
-            if gate.type == 'add':
-                val_in_l = self.circuit[gate.wires_in[0]].output_value
-                val_in_r = self.circuit[gate.wires_in[1]].output_value
-                gate.output_value = val_in_l + val_in_r
-            elif gate.type == 'scalar_mult':
-                val_in = self.circuit[gate.wires_in[0]].output_value
-                scalar = gate.scalar
-                gate.output_value = val_in * scalar
-            elif gate.type == 'mult':
-                val_in_l = self.circuit[gate.wires_in[0]].output_value
-                val_in_r = self.circuit[gate.wires_in[1]].output_value
-                gate.output_value = val_in_l * val_in_r
-            elif gate.type == 'div':
-                val_in_l = self.circuit[gate.wires_in[0]].output_value
-                val_in_r = self.circuit[gate.wires_in[1]].output_value
-                gate.output_value = val_in_l / val_in_r
-            if True:
-                print("id", gate.id)
-                print("type", gate.type)
-                print("wires_in", gate.wires_in)
-                print("wires_out", gate.wires_out)
-                print("output_value", gate.output_value)
-                print("scalar", gate.scalar)
-                print("")
-        last_gate = self.circuit[len(self.circuit)-1]
-        return last_gate.output_value
+    def get_circuit(self):
+        gate = Gate(id=self.gate_id, type="output", wires_in=[self.gate_id - 1])
+        self.circuit.insert(self.gate_id, gate)
+        return self.circuit
 
     def input(self, player_id):
         gate = Gate(id=self.gate_id, type="input", wires_in=[player_id])
@@ -104,6 +81,7 @@ class CircuitCreator:
             print("type", gate.type)
             print("wires_in", gate.wires_in)
             print("wires_out", gate.wires_out)
+            print("shares", gate.shares)
             print("output_value", gate.output_value)
             print("scalar", gate.scalar)
             print("")
