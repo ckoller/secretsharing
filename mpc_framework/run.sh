@@ -13,10 +13,12 @@ let port=$i
 sleep 1
 done
 sleep 2
+
 #curl "http://127.0.0.1:$port/api/commit/?value=5"
 #curl "http://127.0.0.1:$port/api/ceps/share/?value=5"
 
-curl "http://127.0.0.1:5001/"
-curl "http://127.0.0.1:5002/"
-curl "http://127.0.0.1:5003/"
+for ((i=5001; i<=5001+$@-1; i++))
+do
+curl "http://127.0.0.1:$i/"
+done
 fi
