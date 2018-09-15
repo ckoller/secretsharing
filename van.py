@@ -2,7 +2,7 @@ import random
 import numpy as np
 
 prime = 2**127 - 1
-prime = 89
+prime = 61
 
 def create_shares(secret, degree, shares):
     if(degree > shares or degree < 1):
@@ -151,40 +151,50 @@ def triples(l):
         a = [r_2l[x][:len(r_2l[x])/2] for x in range(0, n)]
         b = [r_2l[x][len(r_2l[x])/2:] for x in range(0, n)]
         r, R = protocol_double_random(l)
-        D = [[(a[x][y] + b[x][y] + R[x][y]) % prime for y in range(0,l)] for x in range(0,n)]
+        D = [[(a[x][y] * b[x][y] + R[x][y]) % prime for y in range(0,l)] for x in range(0,n)]
         D_open = open(2*t, D)
         c = [[(D_open[x] - r[y][x]) % prime for x in range(0,l)] for y in range(0,n)]
-
-        a_open = open(t, a)
-        b_open = open(t, b)
-        c_open = open(2*t, c)
-
-        print(a_open[0]*b_open[0] % prime)
-
-        print(c_open)
-        print(a_open)
-        print(b_open)
-
         return a, b, c
 
-def mult_2(x_1,x_2, x_3):
-    # preprocessing
-    r_input = protocol_random(3)
-    a, b, c = triples(3)
-    # evaluation
-    # input
-    # step 1 : share
-    d_gid1 = x_1 + r_input[0][0]
-    d_gid2 = x_2 + r_input[1][1]
-    d_gid2 = x_3 + r_input[2][2]
-    # step 2 : x_gid = d_gid - r_gid
-    #x_gid = [[(d_gid1 - r_input[x][1]) % prime, (d_gid2 - r_input[x][y]) % prime, (d_gid2 - r_input[x][y]) % prime] for x in range(0, )
 
+def mult_2(x_1,x_2):
+    # preprocessing
+    #Let i be the number of input gates in Circ, run Random(i) and associate
+    #one t-sharing [rgid] to each (gid, inp, Pj ) inB Circ. Then send all shares of [rgid]
+    #to Pj to let Pj compute rgid.
+    r_input = protocol_random(2)
+    r = open(t,r_input)
+
+
+    print("r", r_input)
+    print(r)
+    a, b, c = triples(1)
+
+    # evaluate input gate:
+        # d_i = x + r
+    d_1 = (x_1 + r[0]) % prime
+    d_2 = (x_2 + r[1]) % prime
+        # [x_i] = d - r
+    input_evals = [[(d_1 - r_input[x][0]) % prime, (d_2-r_input[x][1]) % prime] for x in range(0,n)]
+    # evaluate multiplication gate
+        # [al] = [x1] * [a]
+    alpha_share = [[(input_evals[x][0] + a[x][0]) % prime] for x in range(0,5)]
+        # [be] = [x2] * [b]
+    beta_share = [[(input_evals[x][1] + b[x][0]) % prime] for x in range(0,5)]
+
+    alpha = open(2*t, alpha_share)[0]
+    beta = open(2*t, beta_share)[0]
+
+    # [x] = al*be - al*b - be*a + c
+    x_share = [ [(alpha*beta - alpha*b[x][0] - beta*a[x][0] + c[x][0]) % prime] for x in range(0,n)]
+    print(x_share)
+    ##print(alpha_share)
+    print(open(2,x_share))
 
 
 n=5
-t=n-1/2
+t=(n-1)/2
 l=n-t
 print("n=", n, "t=", t, "l=", l)
 
-print(mult_2(2,2,2))
+mult_2(5,9)
