@@ -2,7 +2,7 @@ import random
 import numpy as np
 
 prime = 2**127 - 1
-prime = 61
+prime = 89
 
 def create_shares(secret, degree, shares):
     if(degree > shares or degree < 1):
@@ -155,20 +155,22 @@ def triples(l):
         D_open = open(2*t, D)
         c = [[(D_open[x] - r[y][x]) % prime for x in range(0,l)] for y in range(0,n)]
 
-        #c_open = open(2*t, c)
-        #a_open = open(t, a)
-        #b_open = open(t, b)
+        a_open = open(t, a)
+        b_open = open(t, b)
+        c_open = open(2*t, c)
 
-        #print(c_open)
-        #print(a_open)
-        #print(b_open)
+        print(a_open[0]*b_open[0] % prime)
+
+        print(c_open)
+        print(a_open)
+        print(b_open)
 
         return a, b, c
 
 def mult_2(x_1,x_2, x_3):
     # preprocessing
     r_input = protocol_random(3)
-    a, b, c = triples(2)
+    a, b, c = triples(3)
     # evaluation
     # input
     # step 1 : share
@@ -181,7 +183,7 @@ def mult_2(x_1,x_2, x_3):
 
 
 n=5
-t=(n-1)/2
+t=n-1/2
 l=n-t
 print("n=", n, "t=", t, "l=", l)
 
