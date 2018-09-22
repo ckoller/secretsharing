@@ -128,12 +128,17 @@ def protocol_double_random(l):
     # step 1: t-sharing, 2t-sharing
     s_poly_t = [random_poly(t) for x in range(0, n)]
     s_poly_2t = [random_poly(2*t) for x in range(0, n)]
+    for x in range(0,n):
+        s = random.SystemRandom().randint(1,prime)
+        s_poly_t[x][0] = s
+        s_poly_2t[x][0] = s
+
     M_t = van(n,t+1)
     M_2t = van(n,2*t+1)
     s_shares_t = [np.dot(M_t, s_poly_t[x]) % prime for x in range(0, n)]
     s_shares_2t = [np.dot(M_2t, s_poly_2t[x]) % prime for x in range(0, n)]
     dist_shares_t = [[s_shares_t[x][y] for x in range(0,n)] for y in range(0,n)]
-    dist_shares_2t = [[s_shares_t[x][y] for x in range(0,n)] for y in range(0,n)]
+    dist_shares_2t = [[s_shares_2t[x][y] for x in range(0,n)] for y in range(0,n)]
     # step 2: compute
     M_r = van(n,l)
     r = [np.dot(np.transpose(M_r), dist_shares_t[x]) % prime for x in range(0,n)]

@@ -7,7 +7,10 @@ class Polynomials:
     prime = 1069
     prime = 2 ** 127 - 1
     prime = 110503
+    prime = 47
 
+    def get_prime(self):
+        return self.prime
 
     def create_poly_and_shares(self, secret, degree, shares):
         if (degree > shares or degree < 1):
@@ -96,3 +99,7 @@ class Polynomials:
 
     def mult_invers(self, number):
         return self._extended_gcd(number, self.prime)[0]
+
+    def van(self, r, c):
+        M = [ [(y ** x) for x in range(0, c) ] for y in range(1,r+1)]
+        return M

@@ -9,7 +9,7 @@ class Ceps:
         self.pol = Polynomials()
 
     def run(self, my_value):
-g        self.share_my_intput_value(my_value)
+        self.share_my_intput_value(my_value)
 
     def share_my_intput_value(self, my_value):
         n = config.player_count

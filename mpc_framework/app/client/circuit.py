@@ -8,11 +8,17 @@ class Gate:
         self.output_value = None
         self.shares = []
         self.scalar = 1
+        self.a = None
+        self.b = None
+        self.c = None
+        self.r = None
 
 class CircuitCreator:
     def __init__(self):
         self.circuit = []
         self.gate_id = 0
+        self.m_gates = []
+        self.i_gates = []
 
     def create_circuit(self):
         # 1*2 + 3*4 * 4
@@ -21,11 +27,12 @@ class CircuitCreator:
     def get_circuit(self):
         gate = Gate(id=self.gate_id, type="output", wires_in=[self.gate_id - 1])
         self.circuit.insert(self.gate_id, gate)
-        return self.circuit
+        return [self.circuit, self.i_gates, self.m_gates]
 
     def input(self, player_id):
         gate = Gate(id=self.gate_id, type="input", wires_in=[player_id])
         self.circuit.insert(self.gate_id, gate)
+        self.i_gates.append(gate)
         self.gate_id = self.gate_id + 1
         return self.gate_id - 1;
 
@@ -45,6 +52,7 @@ class CircuitCreator:
 
     def mult(self, gid_in_l, gid_in_r):
         gate = Gate(id=self.gate_id, type="mult", wires_in=[gid_in_l, gid_in_r])
+        self.m_gates.append(self.gate_id)
         self.update_input_gate(gid_in_l)
         self.update_input_gate(gid_in_r)
         self.update_circuit(gate)

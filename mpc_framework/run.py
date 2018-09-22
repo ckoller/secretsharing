@@ -2,18 +2,21 @@ from app import create_app
 import argparse
 import config
 from app.api.ceps.ceps import Ceps
+from app.api.ceps_speed.preprocessor import Ceps_Speed
+
 from app.client.routes import Client
 
 
 def setup():
     host, port, id, player_count = get_host_info()
-    players = create_player_dict(host, port, player_count)
+    players, all = create_player_dict(host, port, player_count)
     config.players = players
     config.host = host
     config.port = port
     config.id = id
     config.player_count = int(player_count)
-    config.protocol = Ceps(Client().create_circuit())
+    config.all_players = all
+    config.protocol = Ceps_Speed(Client().create_circuit())
 
 def get_host_info():
     parser = argparse.ArgumentParser(description='P2P multiparty computation app')
@@ -26,7 +29,8 @@ def get_host_info():
 
 def create_player_dict(ip, my_port, player_count):
     players = {x: ip + ":" + str(5000 + x) for x in range(1, int(player_count) + 1) if 5000 + x != int(my_port)}
-    return players
+    all = {x: ip + ":" + str(5000 + x) for x in range(1, int(player_count) + 1)}
+    return players, all
 
 if __name__ == '__main__':
     setup()
