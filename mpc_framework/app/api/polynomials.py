@@ -7,7 +7,7 @@ class Polynomials:
     prime = 1069
     prime = 2 ** 127 - 1
     prime = 110503
-    prime = 47
+    #prime = 47
 
     def get_prime(self):
         return self.prime

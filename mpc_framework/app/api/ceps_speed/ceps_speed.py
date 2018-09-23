@@ -15,16 +15,15 @@ class Ceps_Speed:
         self.my_value = None
         self.open = Open()
 
-
     def run(self, my_value):
         self.my_value = my_value
         self.preprocessing.run()
 
     def get_preprossing_circuit(self, circuit):
         self.circuit = circuit
-        self.share_my_input_value(self.my_value)
+        self.share_my_input_value()
 
-    def share_my_input_value(self, my_value):
+    def share_my_input_value(self):
         n = config.player_count
         for gate in self.circuit:
             if gate.type == 'input' and gate.wires_in[0] == int(config.id):
@@ -63,20 +62,42 @@ class Ceps_Speed:
                 scalar = gate.scalar
                 gate.output_value = val_in * scalar
                 self.cur_gid = self.cur_gid + 1
+            elif gate.type == 'mult':
+                val_in_l = self.circuit[gate.wires_in[0]].output_value
+                val_in_r = self.circuit[gate.wires_in[1]].output_value
+                alpha = val_in_l + gate.a
+                beta = val_in_r + gate.b
+                self.open.request([alpha, beta], "alpha_beta")
+                break
             elif gate.type == 'output':
                 prev_gate = self.circuit[self.cur_gid - 1]
                 gate.output_value = prev_gate.output_value
                 self.cur_gid = self.cur_gid + 1
                 result = gate.output_value
                 self.open.request(result, "output")
-        #self.protocol_done(3)
 
     def handle_protocol_open_answer(self, answer, type):
-        print("RESULT", answer)
+        if type == "output":
+            Client().get_response(answer, self.circuit)
+        elif type == "alpha_beta":
+            gate = self.circuit[self.cur_gid]
+            alpha_open = answer[0]
+            beta_open = answer[1]
+            x = (alpha_open*beta_open - alpha_open*gate.b - beta_open*gate.a + gate.c)
+            gate.output_value = x
+            self.cur_gid = self.cur_gid + 1
+            self.evaluate_circuit()
 
-    def protocol_done(self, result):
-        Client().get_response(result, self.circuit)
 
+
+    def handle_mult_share(self, share, gate_id):
+        gate = self.circuit[gate_id]
+        gate.shares.append(share)
+        if self.received_all_mult_shares(gate):
+            result = self.reconstruct(gate.shares)[1]
+            gate.output_value = result
+            self.cur_gid = self.cur_gid + 1
+            self.evaluate_circuit()
 
 class Preprocessing:
     def __init__(self, circuit):
@@ -103,7 +124,7 @@ class Preprocessing:
         protocol_double_random_count = int(m / (self.l)) + 1
         protocol_random_count = (protocol_double_random_count * 2) + int(i / 2) + 1
         #print("number of input gates", i, "so it need protocol random to run", int(i / 2) + 1)
-        #print("number of mult gates", m)
+        #print("number of mult gates", m, "so it need protocol random to run", 2*protocol_double_random_count)
         #print("number of protocol random should run", protocol_random_count)
         #print("number of protocol double random should run", protocol_double_random_count)
         #print("number of random protocols produce (l)", self.l)
@@ -137,7 +158,13 @@ class Preprocessing:
 
         if protocol_random_shares is not None:
             i = len(self.input_gates)
-            input, mult = np.hsplit(protocol_random_shares, [i-1])
+            m = len(self.input_gates)
+
+            i_runs = int(i / 2) + 1
+
+            #print("i_runs", i_runs)
+            #print("2m_runs", m*2)
+            input, mult = np.hsplit(protocol_random_shares, [i_runs]) #l x i_runs, l x 2m_runs
             #print("input random shares", input)
             #print("mult random shares", mult)
             self.add_random_input_values_to_circuit(input)
@@ -148,7 +175,6 @@ class Preprocessing:
 
     def add_random_input_values_to_circuit(self, input_random_shares):
         shares = np.concatenate(input_random_shares).tolist()
-        print("shares", shares)
         for gate in self.input_gates:
             r = shares.pop()
             gate.r = r
@@ -216,6 +242,7 @@ class Open:
         url = "http://" + king + "/api/ceps_speed/protocolOpen/share/"
         data = {"shares": json.dumps(np.array(data).tolist()), "type": type}
         r = requests.post(url, data)
+        #print("got request of type", type)
 
     def handle_request(self, data, type):
         if type in self.shares.keys():
@@ -223,19 +250,27 @@ class Open:
             array.append(data)
         else:
             self.shares[type] = [data]
+
         received_all = len(self.shares[type]) == config.player_count
         if received_all:
             rec = None
-            if type == "output":
-                rec = self.pol.lagrange_interpolate(self.shares[type])[1]
-            else:
+            if type == "D":
                 x = self.shares[type]
                 shares = [[x[i][j] for i in range(0, len(x))] for j in range(0, len(x[0]))]
                 rec = [self.pol.lagrange_interpolate(shares[x])[1] for x in range(0, len(x[0]))]
+            elif type == "alpha_beta":
+                aplha = [self.shares[type][x][0] for x in range(len(self.shares[type]))]
+                beta = [self.shares[type][x][1] for x in range(len(self.shares[type]))]
+                rec_aplha = self.pol.lagrange_interpolate(aplha)[1]
+                rec_beta = self.pol.lagrange_interpolate(beta)[1]
+                rec = [rec_aplha, rec_beta]
+                del self.shares["alpha_beta"]
+            else:
+                rec = self.pol.lagrange_interpolate(self.shares[type])[1]
             for player_id, player in config.all_players.items():
                 url = "http://" + player + "/api/ceps_speed/protocolOpen/reconstruction/"
                 data = {"rec": json.dumps(rec), "type": type}
-                r = requests.post(url, data)
+                requests.post(url, data)
 
 class ProtocolTriples:
     def __init__(self, l, open, type):

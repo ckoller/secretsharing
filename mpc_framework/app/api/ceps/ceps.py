@@ -4,7 +4,7 @@ from app.client.routes import Client
 
 class Ceps:
     def __init__(self, circuit):
-        self.circuit = circuit
+        self.circuit = circuit[0]
         self.cur_gid = 0
         self.pol = Polynomials()
 

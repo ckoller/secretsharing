@@ -32,7 +32,7 @@ def handle_protocol_open_answer():
     if request.method == 'POST':
         rec = json.loads(request.form['rec'])
         type = request.form['type']
-        if type == "output":
+        if type == "output" or type == "alpha_beta":
             config.protocol.handle_protocol_open_answer(rec, type)
         else:
             config.protocol.preprocessing.handle_protocol_open_answer(rec, type)

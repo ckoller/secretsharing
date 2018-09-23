@@ -16,7 +16,7 @@ def setup():
     config.id = id
     config.player_count = int(player_count)
     config.all_players = all
-    config.protocol = Ceps_Speed(Client().create_circuit())
+    config.protocol = Ceps(Client().create_circuit())
 
 def get_host_info():
     parser = argparse.ArgumentParser(description='P2P multiparty computation app')
