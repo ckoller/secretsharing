@@ -2,8 +2,26 @@ from app.api.polynomials import Polynomials
 import random, math
 import numpy as np
 import config, json, requests
+from app.client.routes import Client
 
 class Ceps_Speed:
+    def __init__(self, circuit):
+        self.circuit = circuit[0]
+        self.input_gates = circuit[1]
+        self.cur_gid = 0
+        self.preprocessing = Preprocessing(circuit)
+        self.pol = Polynomials()
+        self.my_value = None
+
+    def run(self, my_value):
+        self.my_value = my_value
+        self.preprocessing.run()
+
+    def get_preprossing_circuit(self, circuit):
+        self.circuit = circuit
+
+
+class Preprocessing:
     def __init__(self, circuit):
         self.circuit = circuit[0]
         self.input_gates = circuit[1]
@@ -20,32 +38,26 @@ class Ceps_Speed:
         self.a_open = None
         self.b_open = None
         self.c_open = None
+        self.input_shares = {}
 
-    def run(self, my_value):
-        self.preprocessing()
-
-    def preprocessing(self):
+    def run(self):
         i = len(self.input_gates)
         m = len(self.mult_gates)
-        pdr_count = int(m / (self.l)) + 1
-        pr_count = pdr_count * 2
-        print("number of input gates", i)
-        print("number of protocol random should run (input)", int(i / 2 + 1))
+        protocol_double_random_count = int(m / (self.l)) + 1
+        protocol_random_count = (protocol_double_random_count * 2) + int(i / 2) + 1
+        #print("number of input gates", i, "so it need protocol random to run", int(i / 2) + 1)
+        #print("number of mult gates", m)
+        #print("number of protocol random should run", protocol_random_count)
+        #print("number of protocol double random should run", protocol_double_random_count)
+        #print("number of random protocols produce (l)", self.l)
+        #print("number of players (n)", self.n)
+        pr_shares = self.pr.generate_random_shares(protocol_random_count)
+        pdr_shares_r, pdr_shares_R = self.pdr.generate_random_shares(protocol_double_random_count)
 
-        print("number of mult gates", m)
-        print("number of protocol random should run", pr_count)
-        print("number of protocol double random should run", pdr_count)
-        print("number of random protocols produce (l)", self.l)
-        print("number of players (n)", self.n)
 
-        pr_shares = self.pr.generate_random_shares(i)
-
-        pr_shares = self.pr.generate_random_shares(pr_count)
-        pdr_shares_r, pdr_shares_R = self.pdr.generate_random_shares(pdr_count)
-
-        #print("pr", pr_shares)
-        #print("pdr_r", pdr_shares_r)
-        #print("pdr_R", pdr_shares_R)
+        #print("pr\n", pr_shares)
+        #print("pdr_r\n", pdr_shares_r)
+        #print("pdr_R\n", pdr_shares_R)
 
         self.deal_rand_shares(pr_shares, pdr_shares_r, pdr_shares_R)
 
@@ -63,14 +75,43 @@ class Ceps_Speed:
     def compute_preprossing_randomness(self, pr_share, pdr_share_r, pdr_share_R):
         protocol_random_shares = self.pr.calculate_r(pr_share)
         protocol_double_random_shares = self.pdr.calculate_r(pdr_share_r, pdr_share_R)
-        #print("single", protocol_random_shares)
-        #print("double", protocol_double_random_shares)
+        #print("single\n", protocol_random_shares)
+        #print("double\n", protocol_double_random_shares)
 
         if protocol_random_shares is not None:
+            i = len(self.input_gates)
+            input, mult = np.hsplit(protocol_random_shares, [i-1])
+            #print("input random shares", input)
+            #print("mult random shares", mult)
+            self.add_random_input_values_to_circuit(input)
             #print(protocol_random_shares)
             #print(protocol_double_random_shares[0])
             #print(protocol_double_random_shares[1])
-            self.protocol_triples.run(protocol_random_shares, protocol_double_random_shares[0], protocol_double_random_shares[1])
+            self.protocol_triples.run(mult, protocol_double_random_shares[0], protocol_double_random_shares[1])
+
+    def add_random_input_values_to_circuit(self, input_random_shares):
+        shares = np.concatenate(input_random_shares).tolist()
+        print("shares", shares)
+        for gate in self.input_gates:
+            r = shares.pop()
+            gate.r = r
+            player_id = gate.wires_in[0]
+            player = config.all_players[player_id]
+            url = "http://" + player + "/api/ceps_speed/input_shares/"
+            data = {"r": r, "gid": gate.id}
+            requests.post(url, data)
+
+
+    def handle_random_input_shares(self, r, gate_id):
+        if gate_id in self.input_shares:
+            shares = self.input_shares[gate_id]
+            shares.append(r)
+            received_all = len(shares) == config.player_count
+            if received_all:
+                gate = self.circuit[gate_id]
+                gate.r_open = self.pol.lagrange_interpolate(shares)[1]
+        else:
+            self.input_shares[gate_id] = [r]
 
     def open_request(self, data, type):
         self.protocol_open.request(data, type)
@@ -81,7 +122,7 @@ class Ceps_Speed:
     def handle_protocol_open_answer(self, data, type):
         if type == "D":
             a, b, c = self.protocol_triples.calculate_c(data)
-            self.preproccess_circuit(a, b, c)
+            self.add_triples_to_circuit(a, b, c)
         elif type == "A":
             self.a_open = data
         elif type == "B":
@@ -94,11 +135,25 @@ class Ceps_Speed:
             for x in range(len(self.a_open)):
                 print("triples", self.a_open[x] * self.b_open[x] % self.prime, "==", self.c_open[x])
 
-    def preproccess_circuit(self, a, b, c):
-        self.protocol_open.request(a, "A")
-        self.protocol_open.request(b, "B")
-        self.protocol_open.request(c, "C")
+    def add_triples_to_circuit(self, a, b, c):
+        #print("a", a)
+        #print("b", b)
+        #print("c", c)
+        counter = 0
+        for id in self.mult_gates:
+            gate = self.circuit[id]
+            gate.a = a[counter]
+            gate.b = b[counter]
+            gate.c = c[counter]
+            counter = counter + 1
+        config.protocol.get_preprossing_circuit(self.circuit)
+        self.protocol_done(4)
+        #self.protocol_open.request(a, "A")
+        #self.protocol_open.request(b, "B")
+        #self.protocol_open.request(c, "C")
 
+    def protocol_done(self, result):
+        Client().get_response(result, self.circuit)
 
 class Open:
     def __init__(self):

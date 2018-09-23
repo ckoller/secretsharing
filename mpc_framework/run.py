@@ -2,7 +2,7 @@ from app import create_app
 import argparse
 import config
 from app.api.ceps.ceps import Ceps
-from app.api.ceps_speed.preprocessor import Ceps_Speed
+from app.api.ceps_speed.ceps_speed import Ceps_Speed
 
 from app.client.routes import Client
 

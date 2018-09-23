@@ -12,6 +12,7 @@ class Gate:
         self.b = None
         self.c = None
         self.r = None
+        self.r_open = None
 
 class CircuitCreator:
     def __init__(self):
@@ -92,5 +93,22 @@ class CircuitCreator:
             print("shares", gate.shares)
             print("output_value", gate.output_value)
             print("scalar", gate.scalar)
+            print("")
+        print("\n\n")
+
+    def print_circuit_v2(self, circuit):
+        for gate in circuit:
+            print("id", gate.id)
+            print("type", gate.type)
+            print("wires_in", gate.wires_in)
+            print("wires_out", gate.wires_out)
+            print("shares", gate.shares)
+            print("output_value", gate.output_value)
+            print("a", gate.a)
+            print("b", gate.b)
+            print("c", gate.c)
+            print("r", gate.r)
+            print("r_open", gate.r_open)
+
             print("")
         print("\n\n")
