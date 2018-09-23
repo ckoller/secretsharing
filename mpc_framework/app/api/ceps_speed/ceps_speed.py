@@ -11,7 +11,10 @@ class Ceps_Speed:
         self.cur_gid = 0
         self.preprocessing = Preprocessing(circuit)
         self.pol = Polynomials()
+        self.prime = self.pol.get_prime()
         self.my_value = None
+        self.open = Open()
+
 
     def run(self, my_value):
         self.my_value = my_value
@@ -19,6 +22,60 @@ class Ceps_Speed:
 
     def get_preprossing_circuit(self, circuit):
         self.circuit = circuit
+        self.share_my_input_value(self.my_value)
+
+    def share_my_input_value(self, my_value):
+        n = config.player_count
+        for gate in self.circuit:
+            if gate.type == 'input' and gate.wires_in[0] == int(config.id):
+                d = self.my_value + gate.r_open
+                for player_id, player in config.all_players.items():
+                    url = "http://" + player + "/api/ceps_speed/input_d_shares/"
+                    data = {"d": d, "gid": gate.id}
+                    requests.post(url, data)
+        if self.received_all_input_shares():
+            self.evaluate_circuit()
+
+    def received_all_input_shares(self):
+        for gate in self.circuit:
+            if gate.type == 'input' and gate.output_value is None:
+                return False
+        return True
+
+    def handle_input_share(self, d, gate_id):
+        gate = self.circuit[gate_id]
+        gate.output_value = d - gate.r
+        if self.received_all_input_shares():
+            self.evaluate_circuit()
+
+    def evaluate_circuit(self):
+        for gate_id in range(self.cur_gid, len(self.circuit)):
+            gate = self.circuit[gate_id]
+            if gate.type == 'input':
+                self.cur_gid = self.cur_gid + 1
+            elif gate.type == 'add':
+                val_in_l = self.circuit[gate.wires_in[0]].output_value
+                val_in_r = self.circuit[gate.wires_in[1]].output_value
+                gate.output_value = val_in_l + val_in_r
+                self.cur_gid = self.cur_gid + 1
+            elif gate.type == 'scalar_mult':
+                val_in = self.circuit[gate.wires_in[0]].output_value
+                scalar = gate.scalar
+                gate.output_value = val_in * scalar
+                self.cur_gid = self.cur_gid + 1
+            elif gate.type == 'output':
+                prev_gate = self.circuit[self.cur_gid - 1]
+                gate.output_value = prev_gate.output_value
+                self.cur_gid = self.cur_gid + 1
+                result = gate.output_value
+                self.open.request(result, "output")
+        #self.protocol_done(3)
+
+    def handle_protocol_open_answer(self, answer, type):
+        print("RESULT", answer)
+
+    def protocol_done(self, result):
+        Client().get_response(result, self.circuit)
 
 
 class Preprocessing:
@@ -113,11 +170,6 @@ class Preprocessing:
         else:
             self.input_shares[gate_id] = [r]
 
-    def open_request(self, data, type):
-        self.protocol_open.request(data, type)
-
-    def handle_protocol_open_request(self, data, type):
-        self.protocol_open.handle_request(data, type)
 
     def handle_protocol_open_answer(self, data, type):
         if type == "D":
@@ -147,13 +199,11 @@ class Preprocessing:
             gate.c = c[counter]
             counter = counter + 1
         config.protocol.get_preprossing_circuit(self.circuit)
-        self.protocol_done(4)
+
         #self.protocol_open.request(a, "A")
         #self.protocol_open.request(b, "B")
         #self.protocol_open.request(c, "C")
 
-    def protocol_done(self, result):
-        Client().get_response(result, self.circuit)
 
 class Open:
     def __init__(self):
@@ -175,9 +225,13 @@ class Open:
             self.shares[type] = [data]
         received_all = len(self.shares[type]) == config.player_count
         if received_all:
-            x = self.shares[type]
-            shares = [[x[i][j] for i in range(0, len(x))] for j in range(0, len(x[0]))]
-            rec = [self.pol.lagrange_interpolate(shares[x])[1] for x in range(0, len(x[0]))]
+            rec = None
+            if type == "output":
+                rec = self.pol.lagrange_interpolate(self.shares[type])[1]
+            else:
+                x = self.shares[type]
+                shares = [[x[i][j] for i in range(0, len(x))] for j in range(0, len(x[0]))]
+                rec = [self.pol.lagrange_interpolate(shares[x])[1] for x in range(0, len(x[0]))]
             for player_id, player in config.all_players.items():
                 url = "http://" + player + "/api/ceps_speed/protocolOpen/reconstruction/"
                 data = {"rec": json.dumps(rec), "type": type}

@@ -24,7 +24,7 @@ def handle_protocol_open_share():
     if request.method == 'POST':
         shares = json.loads(request.form['shares'])
         type = request.form['type']
-        config.protocol.preprocessing.handle_protocol_open_request(shares, type)
+        config.protocol.preprocessing.protocol_open.handle_request(shares, type)
     return "share"
 
 @module.route('/protocolOpen/reconstruction/', methods=['POST'])
@@ -32,7 +32,10 @@ def handle_protocol_open_answer():
     if request.method == 'POST':
         rec = json.loads(request.form['rec'])
         type = request.form['type']
-        config.protocol.preprocessing.handle_protocol_open_answer(rec, type)
+        if type == "output":
+            config.protocol.handle_protocol_open_answer(rec, type)
+        else:
+            config.protocol.preprocessing.handle_protocol_open_answer(rec, type)
     return "share"
 
 

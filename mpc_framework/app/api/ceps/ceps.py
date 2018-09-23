@@ -126,8 +126,6 @@ class Ceps:
                 gate.shares.append(result)
                 self.share_my_output_value(result)
 
-
-
     def reconstruct(self, shares):
         rec = self.pol.lagrange_interpolate(shares)
         return rec
