@@ -22,7 +22,7 @@ class Ceps:
                     url = "http://" + player + "/api/ceps/share/"
                     data = {"share": json.dumps(shares[player_id - 1]),
                             "gate_id": json.dumps(gate.id)}
-                    r = requests.post(url, data)
+                    requests.post(url, data)
                 gate.output_value = shares[int(config.id) - 1]
         if self.received_all_input_shares():
             self.evaluate_circuit()
@@ -43,7 +43,6 @@ class Ceps:
             self.evaluate_circuit()
 
     def share_my_output_value(self, my_value):
-        n = config.player_count
         for player_id, player in config.players.items():
             url = "http://" + player + "/api/ceps/output_share/"
             data = {"share": json.dumps(my_value)}
