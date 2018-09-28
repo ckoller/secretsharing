@@ -81,7 +81,7 @@ class SetupDev:
         return players, all
 
 if __name__ == '__main__':
-    s = SetupProd()
+    s = SetupDev()
     s.setup()
     host = config.host
     port = config.port

@@ -24,3 +24,4 @@ def handle_output_share():
         share = json.loads(request.form['share'])
         config.protocol.handle_output_share(share)
     return "share"
+

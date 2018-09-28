@@ -12,6 +12,10 @@ def home():
 
     return "Welcome"
 
+@module.route('/test/')
+def test():
+    return "Welcome"
+
 class Client:
 
     def create_circuit(self):
