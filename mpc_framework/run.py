@@ -13,7 +13,7 @@ class SetupProd:
         players, all = self.create_player_dict()
         config.players = players
         config.host = "0.0.0.0"
-        config.port = None
+        config.port = 8080
         config.id = "5"
         config.player_count = 5
         config.all_players = all
@@ -49,8 +49,8 @@ class SetupDevProd: # spin up 4
     def create_player_dict(self, ip, my_port, player_count):
         players = {x: ip + ":" + str(5000 + x) for x in range(1, int(player_count) + 1) if 5000 + x != int(my_port)}
         all = {x: ip + ":" + str(5000 + x) for x in range(1, int(player_count) + 1)}
-        players[5] = "ec2-18-222-238-248.us-east-2.compute.amazonaws.com"
-        all[5] = "ec2-18-222-238-248.us-east-2.compute.amazonaws.com"
+        players[5] = "ec2-18-217-212-130.us-east-2.compute.amazonaws.com"
+        all[5] = "ec2-18-217-212-130.us-east-2.compute.amazonaws.com"
         return players, all
 
 

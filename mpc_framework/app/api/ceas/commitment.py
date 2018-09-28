@@ -76,7 +76,7 @@ class Commitment:
                 "commit_id": self.commit_id}
             self.broadcast(rest_url, data, "post")
 
-    # 4. For each dispute reported in the previous step, P i broadcasts the correct value of β k,j
+    # 4. For each dispute reported in the previous step, P i broadcasts the correct value of beta k,j
     def handle_dispute(self, status, sender_id, disputes):
         self.disputes[sender_id] = disputes
         if None not in self.disputes.values() and self.my_id == self.prover_id and self.dispute_flag:
@@ -153,7 +153,7 @@ class Commitment:
     # accused P i , players output fail.
     # Otherwise, players who accused P i and had a new polynomial f k (X) broadcast will
     # accept it as their polynomial. All others keep the polynoshare_polymial they received in the first
-    # step. Now each P k outputs success and stores (cid, i, β k = f k (0)). In addition P i
+    # step. Now each P k outputs success and stores (cid, i, beta k = f k (0)). In addition P i
     # stores the polynomial g a (X) = f a (X, 0).
     def handle_share_accusation(self, accusation, sender_id):
         if accusation is not None:

@@ -2,4 +2,4 @@ players = ["27.0.0.1:5001",
            "127.0.0.1:5002",
            "127.0.0.1:5003",
            "127.0.0.1:5004"
-           "ec2-18-222-238-248.us-east-2.compute.amazonaws.com"]
+           "ec2-18-217-212-130.us-east-2.compute.amazonaws.com"]
