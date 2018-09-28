@@ -13,7 +13,7 @@ class SetupProd:
         players, all = self.create_player_dict()
         config.players = players
         config.host = "0.0.0.0"
-        config.port = 8080
+        config.port = "8080"
         config.id = "5"
         config.player_count = 5
         config.all_players = all
