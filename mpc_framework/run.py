@@ -93,9 +93,9 @@ def print_config():
     print(config.player_count)
 
 if __name__ == '__main__':
-    s = Test()
+    s = Prod()
     s.setup()
-    #print_config()
+    print_config()
 
 
     host = config.host
