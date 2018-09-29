@@ -1,8 +1,4 @@
 from flask import Flask
-from celery import Celery
-
-celery = Celery(__name__)
-celery.config_from_object('jobs.celeryconfig')
 
 def create_app():
     app = Flask(__name__)
