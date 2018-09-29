@@ -16,7 +16,7 @@ class Prod:
         config.id = my_player_id
         config.player_count = player_count
         config.all_players = all
-        config.protocol = Ceps(Client().create_circuit())
+        config.protocol = Ceps_Speed(Client().create_circuit())
 
     def create_player_dict(self):
         my_ip = requests.get('https://ipapi.co/ip/').text
