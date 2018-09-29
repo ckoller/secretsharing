@@ -16,7 +16,6 @@ class Prod:
         config.id = my_player_id
         config.player_count = player_count
         config.all_players = all
-        config.protocol = Ceps_Speed(Client().create_circuit())
 
     def create_player_dict(self):
         my_ip = requests.get('https://ipapi.co/ip/').text
@@ -38,7 +37,6 @@ class Test:
         config.id = id
         config.player_count = int(player_count)
         config.all_players = all
-        config.protocol = Ceps_Speed(Client().create_circuit())
 
     def get_host_info(self):
         parser = argparse.ArgumentParser(description='P2P multiparty computation app')
@@ -68,7 +66,6 @@ class Dev:
         config.id = id
         config.player_count = int(player_count)
         config.all_players = all
-        config.protocol = Ceps(Client().create_circuit())
 
     def get_host_info(self):
         parser = argparse.ArgumentParser(description='P2P multiparty computation app')
@@ -93,11 +90,11 @@ def print_config():
     print(config.player_count)
 
 if __name__ == '__main__':
-    s = Prod()
+    s = Test()
     s.setup()
+    config.ceps = Ceps(Client().create_circuit(1))
+    config.ceps_speed = Ceps_Speed(Client().create_circuit(1))
     #print_config()
-
-
     host = config.host
     port = config.port
     app = create_app()

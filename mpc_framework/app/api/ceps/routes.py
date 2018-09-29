@@ -7,7 +7,7 @@ def handle_input_share():
     if request.method == 'POST':
         share = json.loads(request.form['share'])
         gate_id = json.loads(request.form['gate_id'])
-        config.protocol.handle_input_share(share, gate_id)
+        config.ceps.handle_input_share(share, gate_id)
     return "share"
 
 @module.route('/mult_share/', methods=['GET', 'POST'])
@@ -15,13 +15,13 @@ def handle_mult_share():
     if request.method == 'POST':
         share = json.loads(request.form['share'])
         gate_id = json.loads(request.form['gate_id'])
-        config.protocol.handle_mult_share(share, gate_id)
+        config.ceps.handle_mult_share(share, gate_id)
     return "share"
 
 @module.route('/output_share/', methods=['GET', 'POST'])
 def handle_output_share():
     if request.method == 'POST':
         share = json.loads(request.form['share'])
-        config.protocol.handle_output_share(share)
+        config.ceps.handle_output_share(share)
     return "share"
 

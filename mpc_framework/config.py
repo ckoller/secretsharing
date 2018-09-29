@@ -4,6 +4,7 @@ port = 'port'
 id = ""
 player_count = 0
 my_value = 5
-protocol = ""
+ceps = ""
+ceps_speed = ""
 all_players = 'players'
 

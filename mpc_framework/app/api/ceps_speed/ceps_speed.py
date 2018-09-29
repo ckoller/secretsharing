@@ -15,6 +15,16 @@ class Ceps_Speed:
         self.my_value = None
         self.open = Open()
 
+    def set_new_circuit(self, circuit):
+        self.circuit = circuit[0]
+        self.input_gates = circuit[1]
+        self.cur_gid = 0
+        self.preprocessing = Preprocessing(circuit)
+        self.pol = Polynomials()
+        self.prime = self.pol.get_prime()
+        self.my_value = None
+        self.open = Open()
+
     def run(self, my_value):
         self.my_value = my_value
         self.preprocessing.run()
@@ -224,7 +234,7 @@ class Preprocessing:
             gate.b = b[counter]
             gate.c = c[counter]
             counter = counter + 1
-        config.protocol.get_preprossing_circuit(self.circuit)
+        config.ceps_speed.get_preprossing_circuit(self.circuit)
 
         #self.protocol_open.request(a, "A")
         #self.protocol_open.request(b, "B")
