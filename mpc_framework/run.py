@@ -93,7 +93,7 @@ def print_config():
     print(config.player_count)
 
 if __name__ == '__main__':
-    s = Dev()
+    s = Prod()
     s.setup()
     #print_config()
 
