@@ -38,7 +38,7 @@ class Test:
         config.id = id
         config.player_count = int(player_count)
         config.all_players = all
-        config.protocol = Ceps(Client().create_circuit())
+        config.protocol = Ceps_Speed(Client().create_circuit())
 
     def get_host_info(self):
         parser = argparse.ArgumentParser(description='P2P multiparty computation app')
@@ -93,9 +93,9 @@ def print_config():
     print(config.player_count)
 
 if __name__ == '__main__':
-    s = Prod()
+    s = Dev()
     s.setup()
-    print_config()
+    #print_config()
 
 
     host = config.host
