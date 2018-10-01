@@ -1,3 +1,4 @@
+import config
 
 class Gate:
     def __init__(self, id, type, wires_in):
@@ -6,7 +7,7 @@ class Gate:
         self.wires_in = wires_in
         self.wires_out = []
         self.output_value = None
-        self.shares = []
+        self.shares = [None] * config.player_count
         self.scalar = 1
         self.a = None
         self.b = None

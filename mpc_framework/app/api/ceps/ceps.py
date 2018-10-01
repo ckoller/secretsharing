@@ -8,24 +8,28 @@ class Ceps:
         self.cur_gid = 0
         self.pol = Polynomials()
 
-    def run(self, my_value):
-        self.share_my_intput_value(my_value)
+    def run(self, my_values):
+        self.share_my_intput_value(my_values)
 
     def set_new_circuit(self, circuit):
         self.circuit = circuit[0]
         self.cur_gid = 0
 
-    def share_my_intput_value(self, my_value):
+    def share_my_intput_value(self, my_values):
         n = config.player_count
+        value_count = 0
         for gate in self.circuit:
             if gate.type == 'input' and gate.wires_in[0] == int(config.id):
+                my_value = my_values[value_count]
                 poly, shares = self.pol.create_poly_and_shares(my_value, degree=int(n / 3), shares=n)
+                value_count = value_count + 1
                 print("my_poly", poly)
                 print("my_shares", shares)
                 for player_id, player in config.players.items():
                     url = "http://" + player + "/api/ceps/share/"
                     data = {"share": json.dumps(shares[player_id - 1]),
-                            "gate_id": json.dumps(gate.id)}
+                            "gate_id": json.dumps(gate.id),
+                            "sender_id": json.dumps(config.id)}
                     requests.post(url, data)
                 gate.output_value = shares[int(config.id) - 1]
         if self.received_all_input_shares():
@@ -37,9 +41,11 @@ class Ceps:
         for player_id, player in config.players.items():
             url = "http://" + player + "/api/ceps/mult_share/"
             data = {"share": json.dumps(shares[player_id - 1]),
-                    "gate_id": json.dumps(gate.id)}
+                    "gate_id": json.dumps(gate.id),
+                    "sender_id": json.dumps(config.id)}
             requests.post(url, data)
-        gate.shares.append(shares[int(config.id) - 1])
+        id = int(config.id)
+        gate.shares[id - 1] = shares[id - 1]
         if self.received_all_mult_shares(gate):
             result = self.reconstruct(gate.shares)[1]
             gate.output_value = result
@@ -49,7 +55,8 @@ class Ceps:
     def share_my_output_value(self, my_value):
         for player_id, player in config.players.items():
             url = "http://" + player + "/api/ceps/output_share/"
-            data = {"share": json.dumps(my_value)}
+            data = {"share": json.dumps(my_value),
+                    "sender_id": json.dumps(config.id)}
             requests.post(url, data)
         if self.received_all_output_shares():
             output_gate = self.circuit[-1]
@@ -62,18 +69,18 @@ class Ceps:
         if self.received_all_input_shares():
             self.evaluate_circuit()
 
-    def handle_mult_share(self, share, gate_id):
+    def handle_mult_share(self, share, gate_id, sender_id):
         gate = self.circuit[gate_id]
-        gate.shares.append(share)
+        gate.shares[sender_id - 1] = share
         if self.received_all_mult_shares(gate):
             result = self.reconstruct(gate.shares)[1]
             gate.output_value = result
             self.cur_gid = self.cur_gid + 1
             self.evaluate_circuit()
 
-    def handle_output_share(self, share):
+    def handle_output_share(self, share, sender_id):
         output_gate = self.circuit[-1]
-        output_gate.shares.append(share)
+        output_gate.shares[sender_id - 1] = share
         if self.received_all_output_shares():
             result = self.reconstruct(output_gate.shares)[1]
             self.protocol_done(result)
@@ -88,11 +95,11 @@ class Ceps:
         return True
 
     def received_all_mult_shares(self, gate):
-        return len(gate.shares) == config.player_count
+        return None not in gate.shares
 
     def received_all_output_shares(self):
         output_gate = self.circuit[-1]
-        return len(output_gate.shares) == config.player_count
+        return None not in output_gate.shares
 
     def evaluate_circuit(self):
         for gate_id in range(self.cur_gid, len(self.circuit)):
@@ -126,11 +133,11 @@ class Ceps:
                 gate.output_value = prev_gate.output_value
                 self.cur_gid = self.cur_gid + 1
                 result = gate.output_value
-                gate.shares.append(result)
+                gate.shares[int(config.id) - 1] = result
                 self.share_my_output_value(result)
 
     def reconstruct(self, shares):
-        rec = self.pol.lagrange_interpolate(shares)
+        rec = self.pol.lagrange_interpolate(shares[0:])
         return rec
 
 
