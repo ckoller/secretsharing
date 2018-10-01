@@ -14,6 +14,7 @@ class Ceps_Speed:
         self.prime = self.pol.get_prime()
         self.my_value = []
         self.open = Open()
+        self.preprocessed = False
 
     def set_new_circuit(self, circuit):
         self.circuit = circuit[0]
@@ -29,12 +30,16 @@ class Ceps_Speed:
         self.my_values = my_values
         self.preprocessing.run()
 
-    def get_preprossing_circuit(self, circuit):
+    def set_preprossing_circuit(self, circuit):
         self.circuit = circuit
+        self.preprocessed = True
         self.share_my_input_value()
 
+
     def share_my_input_value(self):
-        n = config.player_count
+        if self.received_all_input_shares():
+            #print("**************************share_my_input_value EVAL****************************")
+            self.evaluate_circuit()
         for gate in self.circuit:
             if gate.type == 'input' and gate.wires_in[0] == int(config.id):
                 d = self.my_values[0] + gate.r_open
@@ -42,12 +47,13 @@ class Ceps_Speed:
                     url = "http://" + player + "/api/ceps_speed/input_d_shares/"
                     data = {"d": d, "gid": gate.id}
                     requests.post(url, data)
-        if self.received_all_input_shares():
-            self.evaluate_circuit()
+
 
     def received_all_input_shares(self):
         for gate in self.circuit:
             if gate.type == 'input' and gate.output_value is None:
+                return False
+            if not self.preprocessed:
                 return False
         return True
 
@@ -55,6 +61,8 @@ class Ceps_Speed:
         gate = self.circuit[gate_id]
         gate.output_value = d - gate.r
         if self.received_all_input_shares():
+            #print("**************************handle_input_share****************************")
+
             self.evaluate_circuit()
 
     def evaluate_circuit(self):
@@ -77,6 +85,8 @@ class Ceps_Speed:
                 val_in_r = self.circuit[gate.wires_in[1]].output_value
                 alpha = val_in_l + gate.a
                 beta = val_in_r + gate.b
+                print("**************************OPEN ALPHA BETA****************************")
+
                 self.open.request([alpha, beta], "alpha_beta")
                 break
             elif gate.type == 'output':
@@ -93,9 +103,11 @@ class Ceps_Speed:
             gate = self.circuit[self.cur_gid]
             alpha_open = answer[0]
             beta_open = answer[1]
+            #("**************************", gate.c, "****************************")
             x = (alpha_open*beta_open - alpha_open*gate.b - beta_open*gate.a + gate.c)
             gate.output_value = x
             self.cur_gid = self.cur_gid + 1
+            #print("**************************handle_protocol_open_answer****************************")
             self.evaluate_circuit()
 
 class Preprocessing:
@@ -213,9 +225,9 @@ class Preprocessing:
                 print("triples", self.a_open[x] * self.b_open[x] % self.prime, "==", self.c_open[x])
 
     def add_triples_to_circuit(self, a, b, c):
-        #print("a", a)
-        #print("b", b)
-        #print("c", c)
+        print("a", a)
+        print("b", b)
+        print("c", c)
         counter = 0
         for id in self.mult_gates:
             gate = self.circuit[id]
@@ -223,7 +235,7 @@ class Preprocessing:
             gate.b = b[counter]
             gate.c = c[counter]
             counter = counter + 1
-        config.ceps_speed.get_preprossing_circuit(self.circuit)
+        config.ceps_speed.set_preprossing_circuit(self.circuit)
 
         #self.protocol_open.request(a, "A")
         #self.protocol_open.request(b, "B")
@@ -249,9 +261,11 @@ class Open:
             array.append(data)
         else:
             self.shares[type] = [data]
-
+        #print("HAHHAHAHAHA", type,  self.shares[type])
         received_all = len(self.shares[type]) == config.player_count
         if received_all:
+            #print("GOOTOTOTOTOTOTOTOTOTOTOTO ALLALALALLALALALALAALAL",  type, self.shares[type])
+
             rec = None
             if type == "D":
                 x = self.shares[type]
@@ -367,3 +381,19 @@ class ProtocolRandom:
         return None
 
 
+def print_circuit_v2(circuit):
+    for gate in circuit:
+        print("id", gate.id)
+        print("type", gate.type)
+        print("wires_in", gate.wires_in)
+        print("wires_out", gate.wires_out)
+        print("shares", gate.shares)
+        print("output_value", gate.output_value)
+        print("a", gate.a)
+        print("b", gate.b)
+        print("c", gate.c)
+        print("r", gate.r)
+        print("r_open", gate.r_open)
+
+        print("")
+    print("\n\n")
