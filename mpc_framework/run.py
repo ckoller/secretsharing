@@ -92,8 +92,8 @@ def print_config():
 if __name__ == '__main__':
     s = Dev()
     s.setup()
-    config.ceps = Ceps(Client().create_circuit(2))
-    config.ceps_speed = Ceps_Speed(Client().create_circuit(1))
+    config.ceps = Ceps(Client().create_circuit(1))
+    config.ceps_speed = Ceps_Speed(Client().create_circuit(0))
     #print_config()
     host = config.host
     port = config.port

@@ -12,10 +12,9 @@ def home(protocol):
             config.ceps.run(my_values=[])
 
     if protocol == "ceps_speed":
-        if config.id == '5':
-            config.ceps_speed.run(my_value=Polynomials().mult_invers(8))
-        else:
-            config.ceps_speed.run(my_value=8)
+        #config.ceps_speed.run(my_value=Polynomials().mult_invers(8))
+
+        config.ceps_speed.run(my_values=[8])
     return "Welcome"
 
 
@@ -37,26 +36,20 @@ class Client:
         elif id == 1:
             c.add(c.mult(c.input(1),c.input(2)), c.input(3))                               # 8*8+8     =   72      n=3
         elif id == 2:
-            c.add(c.mult(c.input(5),c.input(3)), c.mult(c.add(c.add(c.input(3), c.input(5)), c.input(1)), c.input(1)))     # 8*8+8+8   =   80      n=3
+            c.add(c.mult(c.input(5),c.input(3)), c.mult(c.add(c.add(c.input(3), c.input(5)), c.input(1)), c.input(1)))          # 8*8+8+8   =   80      n=3
         elif id == 3:
             c.add(c.mult(c.input(2),c.input(1)), c.mult(c.input(3), c.input(4)))           # 8*8 + 8*8 =   128     n=4
-
         elif id == 4:
-            c.scalar_mult(c.add(c.mult(c.input(2),c.input(1)), c.mult(c.input(3), c.input(4))), scalar=2)                     # (8*8 + 8*8)*2)/2  = 256
+            c.scalar_mult(c.add(c.mult(c.input(2),c.input(1)), c.mult(c.input(3), c.input(4))), scalar=2)                       # (8*8 + 8*8)*2)/2  = 256
         else:
             c.mult(c.scalar_mult(c.add(c.mult(c.input(2),c.input(1)), c.mult(c.input(3), c.input(4))), scalar=2), c.input(5))   # (8*8 + 8*8)*2)*8  = 2048
         circuit = c.get_circuit()
         #c.print_circuit_v2(circuit[0])
         return circuit
 
-
-
-
     def get_response(self, result, circuit):
         CircuitCreator().print_circuit_v2(circuit)
         print("client got result", result)
-
-
 
     #TODO multiple protocols
     #TODO multiple input per player

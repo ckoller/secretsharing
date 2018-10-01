@@ -12,7 +12,7 @@ class Ceps_Speed:
         self.preprocessing = Preprocessing(circuit)
         self.pol = Polynomials()
         self.prime = self.pol.get_prime()
-        self.my_value = None
+        self.my_value = []
         self.open = Open()
 
     def set_new_circuit(self, circuit):
@@ -22,11 +22,11 @@ class Ceps_Speed:
         self.preprocessing = Preprocessing(circuit)
         self.pol = Polynomials()
         self.prime = self.pol.get_prime()
-        self.my_value = None
+        self.my_values = []
         self.open = Open()
 
-    def run(self, my_value):
-        self.my_value = my_value
+    def run(self, my_values):
+        self.my_values = my_values
         self.preprocessing.run()
 
     def get_preprossing_circuit(self, circuit):
@@ -37,7 +37,7 @@ class Ceps_Speed:
         n = config.player_count
         for gate in self.circuit:
             if gate.type == 'input' and gate.wires_in[0] == int(config.id):
-                d = self.my_value + gate.r_open
+                d = self.my_values[0] + gate.r_open
                 for player_id, player in config.all_players.items():
                     url = "http://" + player + "/api/ceps_speed/input_d_shares/"
                     data = {"d": d, "gid": gate.id}
@@ -95,17 +95,6 @@ class Ceps_Speed:
             beta_open = answer[1]
             x = (alpha_open*beta_open - alpha_open*gate.b - beta_open*gate.a + gate.c)
             gate.output_value = x
-            self.cur_gid = self.cur_gid + 1
-            self.evaluate_circuit()
-
-
-
-    def handle_mult_share(self, share, gate_id):
-        gate = self.circuit[gate_id]
-        gate.shares.append(share)
-        if self.received_all_mult_shares(gate):
-            result = self.reconstruct(gate.shares)[1]
-            gate.output_value = result
             self.cur_gid = self.cur_gid + 1
             self.evaluate_circuit()
 
