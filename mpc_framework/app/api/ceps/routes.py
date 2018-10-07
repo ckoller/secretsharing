@@ -24,7 +24,8 @@ def handle_mult_share():
 def handle_output_share():
     if request.method == 'POST':
         share = json.loads(request.form['share'])
+        gate_id = int(json.loads(request.form['gate_id']))
         sender_id = int(json.loads(request.form['sender_id']))
-        config.ceps.handle_output_share(share, sender_id)
+        config.ceps.handle_output_share(share, gate_id, sender_id)
     return "share"
 

@@ -18,6 +18,6 @@ sleep 2
 #curl "http://127.0.0.1:$port/api/ceps/share/?value=5"
 for ((i=5001; i<=5001+$@-1; i++))
 do
-curl "http://127.0.0.1:$i/ceps_speed"
+curl "http://127.0.0.1:$i/ceps"
 done
 fi

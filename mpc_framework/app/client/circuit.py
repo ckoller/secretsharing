@@ -20,6 +20,7 @@ class CircuitCreator:
         self.circuit = []
         self.gate_id = 0
         self.m_gates = []
+        self.o_gates = []
         self.i_gates = []
 
     def create_circuit(self):
@@ -27,9 +28,15 @@ class CircuitCreator:
         self.scalar_mult(self.add(self.mult(self.input(1), self.input(2)), self.mult(self.input(3), self.input(4))), 4)
 
     def get_circuit(self):
+        self.output()
+        return [self.circuit, self.i_gates, self.m_gates, self.o_gates]
+
+    def output(self):
         gate = Gate(id=self.gate_id, type="output", wires_in=[self.gate_id - 1])
+        self.o_gates.append(gate)
         self.circuit.insert(self.gate_id, gate)
-        return [self.circuit, self.i_gates, self.m_gates]
+        self.gate_id = self.gate_id + 1
+
 
     def input(self, player_id):
         gate = Gate(id=self.gate_id, type="input", wires_in=[player_id])

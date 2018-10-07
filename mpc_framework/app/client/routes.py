@@ -6,11 +6,7 @@ from app.api.polynomials import Polynomials
 @module.route('/<protocol>')
 def home(protocol):
     if protocol == "ceps":
-        if config.id == '1' or config.id == '5' or config.id == '3':
-            config.ceps.run(my_values=[8, 8])
-        else:
-            config.ceps.run(my_values=[])
-
+        config.ceps.run(my_values=[8,8])
     if protocol == "ceps_speed":
         #config.ceps_speed.run(my_value=Polynomials().mult_invers(8))
 
@@ -33,11 +29,11 @@ class Client:
         c = CircuitCreator()
         if id == 0:
             c.mult(c.add(c.input(3),c.input(2)), c.input(1))                               # 8*(8+8)   =   128     n=3
+            c.output()
+            c.mult(c.add(c.input(3), c.input(2)), c.input(1))
         elif id == 1:
             c.add(c.mult(c.input(1),c.input(2)), c.input(3))                               # 8*8+8     =   72      n=3
         elif id == 2:
-            8*8+((8+8+8) * 8)
-
             c.add(c.mult(c.input(5),c.input(3)), c.mult(c.add(c.add(c.input(3), c.input(5)), c.input(1)), c.input(1)))          # 8*8+8+8   =   80      n=3
         elif id == 3:
             c.add(c.mult(c.input(2),c.input(1)), c.mult(c.input(3), c.input(4)))           # 8*8 + 8*8 =   128     n=4
@@ -50,8 +46,9 @@ class Client:
         return circuit
 
     def get_response(self, result, circuit):
-        CircuitCreator().print_circuit_v2(circuit)
+        CircuitCreator().print_circuit(circuit)
         print("client got result", result)
 
-    #TODO multiple protocols
-    #TODO multiple input per player
+    # TODO multiple outputs
+    # TODO read boolean circuit from file
+    # TODO evaluate boolean circuit by emulation
