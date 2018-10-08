@@ -3,7 +3,7 @@ import argparse, requests
 import config, prod_config
 from app.api.ceps.ceps import Ceps
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
-
+import os
 from app.client.routes import Client
 
 
@@ -26,7 +26,7 @@ class Prod:
         all = {x + 1: player_list[x] for x in range(0, len(player_list)) if player_list[x]}
         return player_count, my_player_id, players, all
 
-class Test:
+class Emulate_Prod:
 
     def setup(self):
         host, port, id, _ = self.get_host_info()
@@ -56,6 +56,29 @@ class Test:
         return player_count, players, all
 
 
+class TestSetup:
+
+    def __init__(self, host, port, id, player_count):
+        self.host = host
+        self.port = port
+        self.id = id
+        self.player_count = player_count
+
+    def setup(self):
+        players, all = self.create_player_dict(self.host, self.port, self.player_count)
+        config.players = players
+        config.host = self.host
+        config.port = self.port
+        config.id = id
+        config.player_count = int(self.player_count)
+        config.all_players = all
+
+    def create_player_dict(self, ip, my_port, player_count):
+        players = {x: ip + ":" + str(5000 + x) for x in range(1, int(player_count) + 1) if 5000 + x != int(my_port)}
+        all = {x: ip + ":" + str(5000 + x) for x in range(1, int(player_count) + 1)}
+        return players, all
+
+
 class Dev:
     def setup(self):
         host, port, id, player_count = self.get_host_info()
@@ -81,21 +104,36 @@ class Dev:
         all = {x: ip + ":" + str(5000 + x) for x in range(1, int(player_count) + 1)}
         return players, all
 
-def print_config():
-    print(config.players)
-    print(config.all_players)
-    print(config.host)
-    print(config.port)
-    print(config.id)
-    print(config.player_count)
+class Server:
+    def __init__(self, setup, circuit):
+        setup = setup
+        setup.setup()
+        config.ceps = Ceps(circuit)
+        config.ceps_speed = Ceps_Speed(Client().create_circuit(5, None))
+        # print_config()
+        self.host = config.host
+        self.port = config.port
+        self.app = create_app()
+
+    def start(self):
+        self.app.run(debug=True, host=self.host, port=self.port)
+
+    def print_config(self):
+        print(config.players)
+        print(config.all_players)
+        print(config.host)
+        print(config.port)
+        print(config.id)
+        print(config.player_count)
 
 if __name__ == '__main__':
-    s = Dev()
-    s.setup()
+    setup = Dev()
+    setup.setup()
     config.ceps = Ceps(Client().create_circuit(0))
     config.ceps_speed = Ceps_Speed(Client().create_circuit(5))
-    #print_config()
+    # print_config()
     host = config.host
     port = config.port
     app = create_app()
     app.run(debug=True, host=host, port=port)
+

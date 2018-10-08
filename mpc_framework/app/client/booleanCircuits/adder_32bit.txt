@@ -1,0 +1,594 @@
+0 input
+32 input
+0 1 xor
+2 output
+5 input
+37 input
+4 5 and
+4 input
+36 input
+7 8 and
+10 input
+42 input
+10 11 and
+14 input
+46 input
+13 14 and
+24 input
+56 input
+16 17 and
+8 input
+40 input
+19 20 and
+1 input
+33 input
+22 23 and
+7 input
+39 input
+25 26 and
+28 input
+60 input
+28 29 and
+19 input
+51 input
+31 32 and
+2 input
+34 input
+34 35 and
+30 input
+62 input
+37 38 and
+13 input
+45 input
+40 41 and
+18 input
+50 input
+43 44 and
+11 input
+43 input
+46 47 and
+3 input
+35 input
+49 50 and
+16 input
+48 input
+52 53 and
+31 input
+63 input
+55 56 and
+27 input
+59 input
+58 59 and
+15 input
+47 input
+61 62 and
+17 input
+49 input
+64 65 and
+9 input
+41 input
+67 68 and
+32 input
+0 input
+70 71 and
+29 input
+61 input
+73 74 and
+6 input
+38 input
+76 77 and
+25 input
+57 input
+79 80 and
+20 input
+52 input
+82 83 and
+22 input
+54 input
+85 86 and
+21 input
+53 input
+88 89 and
+12 input
+44 input
+91 92 and
+23 input
+55 input
+94 95 and
+26 input
+58 input
+97 98 and
+56 input
+100 inv
+3 input
+102 inv
+40 input
+104 inv
+62 input
+106 inv
+6 input
+108 inv
+28 input
+110 inv
+10 input
+112 inv
+13 input
+114 inv
+27 input
+116 inv
+7 input
+118 inv
+24 input
+120 inv
+54 input
+122 inv
+36 input
+124 inv
+52 input
+126 inv
+50 input
+128 inv
+57 input
+130 inv
+31 input
+132 inv
+55 input
+134 inv
+18 input
+136 inv
+60 input
+138 inv
+5 input
+140 inv
+14 input
+142 inv
+47 input
+144 inv
+8 input
+146 inv
+19 input
+148 inv
+53 input
+150 inv
+29 input
+152 inv
+1 input
+154 inv
+34 input
+156 inv
+20 input
+158 inv
+37 input
+160 inv
+45 input
+162 inv
+11 input
+164 inv
+42 input
+166 inv
+12 input
+168 inv
+38 input
+170 inv
+23 input
+172 inv
+41 input
+174 inv
+61 input
+176 inv
+15 input
+178 inv
+48 input
+180 inv
+26 input
+182 inv
+43 input
+184 inv
+59 input
+186 inv
+9 input
+188 inv
+58 input
+190 inv
+17 input
+192 inv
+44 input
+194 inv
+21 input
+196 inv
+49 input
+198 inv
+16 input
+200 inv
+25 input
+202 inv
+51 input
+204 inv
+4 input
+206 inv
+2 input
+208 inv
+39 input
+210 inv
+46 input
+212 inv
+35 input
+214 inv
+22 input
+216 inv
+63 input
+218 inv
+33 input
+220 inv
+30 input
+222 inv
+215 103 and
+125 207 and
+135 173 and
+191 183 and
+161 141 and
+133 219 and
+199 193 and
+123 217 and
+177 153 and
+87 inv
+127 159 and
+187 117 and
+9 inv
+185 165 and
+96 inv
+12 inv
+18 inv
+21 inv
+24 inv
+157 209 and
+105 147 and
+27 inv
+30 inv
+33 inv
+36 inv
+42 inv
+45 inv
+81 inv
+48 inv
+51 inv
+57 inv
+60 inv
+54 inv
+63 inv
+66 inv
+75 inv
+69 inv
+39 inv
+78 inv
+15 inv
+84 inv
+99 inv
+195 169 and
+90 inv
+93 inv
+6 inv
+151 197 and
+167 113 and
+107 223 and
+129 137 and
+155 221 and
+205 149 and
+211 119 and
+171 109 and
+163 115 and
+175 189 and
+213 143 and
+181 201 and
+101 121 and
+139 111 and
+145 179 and
+131 203 and
+224 inv
+225 inv
+226 inv
+228 inv
+229 inv
+234 inv
+230 inv
+231 inv
+232 inv
+272 inv
+235 inv
+237 inv
+275 inv
+276 inv
+271 inv
+273 inv
+270 inv
+227 inv
+244 inv
+266 inv
+277 inv
+278 inv
+279 inv
+280 inv
+274 inv
+281 inv
+282 inv
+283 inv
+243 inv
+284 inv
+285 inv
+310 242 and
+290 254 and
+310 72 and
+317 72 xor
+320 output
+318 inv
+319 inv
+323 242 and
+324 inv
+2 input
+326 325 xor
+325 314 and
+34 input
+329 327 xor
+330 output
+328 inv
+332 248 and
+333 inv
+3 input
+335 334 xor
+334 286 and
+35 input
+338 336 xor
+339 output
+337 inv
+341 253 and
+342 inv
+4 input
+344 343 xor
+343 287 and
+36 input
+347 345 xor
+348 output
+346 inv
+350 236 and
+351 inv
+5 input
+353 352 xor
+352 289 and
+37 input
+356 354 xor
+357 output
+355 inv
+359 269 and
+360 inv
+6 input
+362 361 xor
+361 306 and
+38 input
+365 363 xor
+366 output
+364 inv
+368 262 and
+369 inv
+7 input
+371 370 xor
+370 299 and
+39 input
+374 372 xor
+375 output
+373 inv
+377 245 and
+378 inv
+8 input
+380 379 xor
+379 304 and
+40 input
+383 381 xor
+384 output
+382 inv
+386 241 and
+387 inv
+9 input
+389 388 xor
+388 308 and
+41 input
+392 390 xor
+393 output
+391 inv
+395 260 and
+396 inv
+10 input
+398 397 xor
+397 300 and
+42 input
+401 399 xor
+402 output
+400 inv
+404 239 and
+405 inv
+11 input
+407 406 xor
+406 297 and
+43 input
+410 408 xor
+411 output
+409 inv
+413 252 and
+414 inv
+12 input
+416 415 xor
+415 305 and
+44 input
+419 417 xor
+420 output
+418 inv
+422 268 and
+423 inv
+13 input
+425 424 xor
+424 307 and
+45 input
+428 426 xor
+429 output
+427 inv
+431 249 and
+432 inv
+14 input
+434 433 xor
+433 309 and
+46 input
+437 435 xor
+438 output
+436 inv
+440 263 and
+441 inv
+15 input
+443 442 xor
+442 315 and
+47 input
+446 444 xor
+447 output
+445 inv
+449 257 and
+450 inv
+48 input
+452 451 xor
+451 311 and
+16 input
+455 453 xor
+456 output
+454 inv
+458 256 and
+459 inv
+17 input
+461 460 xor
+460 292 and
+49 input
+464 462 xor
+465 output
+463 inv
+467 258 and
+468 inv
+18 input
+470 469 xor
+469 301 and
+50 input
+473 471 xor
+474 output
+472 inv
+476 250 and
+477 inv
+19 input
+479 478 xor
+478 298 and
+51 input
+482 480 xor
+483 output
+481 inv
+485 247 and
+486 inv
+20 input
+488 487 xor
+487 291 and
+52 input
+491 489 xor
+492 output
+490 inv
+494 264 and
+495 inv
+53 input
+497 496 xor
+496 302 and
+21 input
+500 498 xor
+501 output
+499 inv
+503 267 and
+504 inv
+22 input
+506 505 xor
+505 293 and
+54 input
+509 507 xor
+510 output
+508 inv
+512 233 and
+513 inv
+23 input
+515 514 xor
+514 288 and
+55 input
+518 516 xor
+519 output
+517 inv
+521 238 and
+522 inv
+24 input
+524 523 xor
+523 312 and
+56 input
+527 525 xor
+528 output
+526 inv
+530 240 and
+531 inv
+25 input
+533 532 xor
+532 316 and
+57 input
+536 534 xor
+537 output
+535 inv
+539 251 and
+540 inv
+26 input
+542 541 xor
+541 303 and
+58 input
+545 543 xor
+546 output
+544 inv
+548 265 and
+549 inv
+59 input
+551 550 xor
+550 296 and
+27 input
+554 552 xor
+555 output
+553 inv
+557 255 and
+558 inv
+28 input
+560 559 xor
+559 313 and
+60 input
+563 561 xor
+564 output
+562 inv
+566 246 and
+567 inv
+61 input
+569 568 xor
+568 294 and
+29 input
+572 570 xor
+573 output
+571 inv
+575 259 and
+576 inv
+30 input
+578 577 xor
+577 295 and
+62 input
+581 579 xor
+582 output
+580 inv
+584 261 and
+585 322 xor
+586 output
+585 inv
+588 290 and
+589 inv
+590 254 and
+591 inv
+592 output

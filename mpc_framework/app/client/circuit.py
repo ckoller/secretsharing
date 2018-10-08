@@ -1,5 +1,5 @@
 import config
-
+import os
 class Gate:
     def __init__(self, id, type, wires_in):
         self.id = id
@@ -15,7 +15,54 @@ class Gate:
         self.r = None
         self.r_open = None
 
-class CircuitCreator:
+class BooleanCircuit:
+    def __init__(self):
+        self.circuit = []
+        self.gate_id = 0
+        self.i_gates = []
+        self.m_gates = []
+        self.o_gates = []
+        self.x_gates = []
+
+
+    def init_parsed_circuit(self):
+        self.circuit = []
+        path = file = os.getcwd() + "/app/client/booleanCircuits/adder_32bit.txt"
+
+        f = open(path, "r")
+        circuit_file = f.readlines()
+        for gate_id in range(len(circuit_file)):
+            line = circuit_file[gate_id]
+            numbers = line.split()
+            type = numbers[-1]
+            wires_in = []
+            if type == "and" or type == "xor":
+                wires_in.append(int(numbers[0]))
+                wires_in.append(int(numbers[1]))
+            elif type == "input" or type == "output" or type == "inv":
+                wires_in.append(int(numbers[0]))
+            gate = Gate(gate_id, type, wires_in)
+            if type == "input":
+                self.i_gates.append(gate)
+            if type == "and":
+                self.m_gates.append(gate)
+            if type == "xor":
+                self.x_gates.append(gate)
+            if type == "output":
+                self.o_gates.append(gate)
+            self.circuit.insert(gate_id, gate)
+        f.close()
+
+    def get_circuit(self):
+        circuit = {"type": "bool",
+                   "circuit": self.circuit,
+                   "input_gates": self.i_gates,
+                   "mult_gates": self.m_gates,
+                   "xor_gates": self.x_gates,
+                   "output_gates": self.o_gates}
+        return circuit
+
+class ArithmeticCircuit:
     def __init__(self):
         self.circuit = []
         self.gate_id = 0
@@ -120,3 +167,6 @@ class CircuitCreator:
 
             print("")
         print("\n\n")
+
+
+
