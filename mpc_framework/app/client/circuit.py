@@ -7,6 +7,7 @@ class Gate:
         self.wires_in = wires_in
         self.wires_out = []
         self.output_value = None
+        self.layer = 0
         self.shares = [None] * config.player_count
         self.scalar = 1
         self.a = None
@@ -24,23 +25,23 @@ class BooleanCircuit:
         self.o_gates = []
         self.x_gates = []
 
-
     def init_parsed_circuit(self):
         self.circuit = []
-        path = file = os.getcwd() + "/app/client/booleanCircuits/adder_32bit.txt"
+        path = file = os.getcwd() + "/app/client/booleanCircuits/AES.txt"
 
         f = open(path, "r")
         circuit_file = f.readlines()
         for gate_id in range(len(circuit_file)):
             line = circuit_file[gate_id]
             numbers = line.split()
+            layer = int(numbers[0])
             type = numbers[-1]
             wires_in = []
             if type == "and" or type == "xor":
-                wires_in.append(int(numbers[0]))
                 wires_in.append(int(numbers[1]))
+                wires_in.append(int(numbers[2]))
             elif type == "input" or type == "output" or type == "inv":
-                wires_in.append(int(numbers[0]))
+                wires_in.append(int(numbers[1]))
             gate = Gate(gate_id, type, wires_in)
             if type == "input":
                 self.i_gates.append(gate)
@@ -50,6 +51,7 @@ class BooleanCircuit:
                 self.x_gates.append(gate)
             if type == "output":
                 self.o_gates.append(gate)
+            gate.layer = layer
             self.circuit.insert(gate_id, gate)
         f.close()
 
