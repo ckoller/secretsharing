@@ -9,7 +9,7 @@ def home(protocol):
     if protocol == "ceps_speed":
         #config.ceps_speed.run(my_value=Polynomials().mult_invers(8))
 
-        config.ceps_speed.run(my_values=[1])
+        config.ceps_speed.run(my_values=[8,8])
     return "Welcome"
 
 def config_adder():
@@ -59,7 +59,7 @@ class Client:
         elif id == 4:
             c.scalar_mult(c.add(c.mult(c.input(7),c.input(1)), c.mult(c.input(8), c.input(4))), scalar=2)                       # (8*8 + 8*8)*2)/2  = 256
         else:
-            c.mult(c.scalar_mult(c.add(c.mult(c.input(2),c.input(1)), c.mult(c.input(3), c.input(4))), scalar=2), c.input(5))   # (8*8 + 8*8)*2)*8  = 2048
+            c.mult(c.scalar_mult(c.add(c.mult(c.input(2),c.input(1)), c.mult(c.input(3), c.input(4))), scalar=2), c.input(1))   # (8*8 + 8*8)*2)*8  = 2048
         circuit = c.get_circuit()
         #c.print_circuit_v2(circuit[0])
         return circuit
@@ -69,10 +69,10 @@ class Client:
         #print("n1", mv[:32])
         #print("n2", mv[32:])
         print("res", result)
-        print("len", len(result))
-        res = [0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0]
-        res.reverse()
-        n3 = res + [0 for x in range(22)]
+        #print("len", len(result))
+        #res = [0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0]
+        #res.reverse()
+        #n3 = res + [0 for x in range(22)]
         #print("exp", n3)
 
 

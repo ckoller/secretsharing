@@ -40,9 +40,11 @@ class Ceps_Speed:
         if self.received_all_input_shares():
             #print("**************************share_my_input_value EVAL****************************")
             self.evaluate_circuit()
+        counter = 0
         for gate in self.circuit:
             if gate.type == 'input' and gate.wires_in[0] == int(config.id):
-                d = self.my_values[0] + gate.r_open
+                d = self.my_values[counter] + gate.r_open
+                counter = counter + 1
                 for player_id, player in config.all_players.items():
                     url = "http://" + player + "/api/ceps_speed/input_d_shares/"
                     data = {"d": d, "gid": gate.id}
@@ -98,7 +100,7 @@ class Ceps_Speed:
 
     def handle_protocol_open_answer(self, answer, type):
         if type == "output":
-            Client().get_response(answer, self.circuit)
+            Client().get_response(answer, self.circuit, None)
         elif type == "alpha_beta":
             gate = self.circuit[self.cur_gid]
             alpha_open = answer[0]
