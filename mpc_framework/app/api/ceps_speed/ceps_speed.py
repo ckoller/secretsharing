@@ -13,6 +13,7 @@ class Ceps_Speed:
         self.pol = Polynomials()
         self.prime = self.pol.get_prime()
         self.my_value = []
+        self.output = []
         self.open = Open()
         self.preprocessed = False
 
@@ -70,6 +71,8 @@ class Ceps_Speed:
     def evaluate_circuit(self):
         for gate_id in range(self.cur_gid, len(self.circuit)):
             gate = self.circuit[gate_id]
+            print("**************************", gate.type, gate.id, "****************************")
+
             if gate.type == 'input':
                 self.cur_gid = self.cur_gid + 1
             elif gate.type == 'add':
@@ -87,7 +90,6 @@ class Ceps_Speed:
                 val_in_r = self.circuit[gate.wires_in[1]].output_value
                 alpha = val_in_l + gate.a
                 beta = val_in_r + gate.b
-                print("**************************OPEN ALPHA BETA****************************")
 
                 self.open.request([alpha, beta], "alpha_beta")
                 break
@@ -96,11 +98,21 @@ class Ceps_Speed:
                 gate.output_value = prev_gate.output_value
                 self.cur_gid = self.cur_gid + 1
                 result = gate.output_value
+                Client().get_response(self.output, self.circuit, None)
                 self.open.request(result, "output")
+                break
 
     def handle_protocol_open_answer(self, answer, type):
         if type == "output":
-            Client().get_response(answer, self.circuit, None)
+            ("**************************", "output answer", "****************************")
+
+            self.output.append(answer)
+            if self.received_all_outputs():
+                Client().get_response(self.output, self.circuit, None)
+                print("done")
+            else:
+                self.cur_gid = self.cur_gid + 1
+                self.evaluate_circuit()
         elif type == "alpha_beta":
             gate = self.circuit[self.cur_gid]
             alpha_open = answer[0]
@@ -111,6 +123,13 @@ class Ceps_Speed:
             self.cur_gid = self.cur_gid + 1
             #print("**************************handle_protocol_open_answer****************************")
             self.evaluate_circuit()
+
+    def received_all_outputs(self):
+        for gate in self.circuit:
+            if gate.type == "output":
+                if gate.output_value == None:
+                    return False
+        return True
 
 class Preprocessing:
     def __init__(self, circuit):
@@ -280,6 +299,11 @@ class Open:
                 rec_beta = self.pol.lagrange_interpolate(beta)[1]
                 rec = [rec_aplha, rec_beta]
                 del self.shares["alpha_beta"]
+            elif type == "output":
+                print("HAHHAHAHAHA", type,  self.shares[type])
+                rec = self.pol.lagrange_interpolate(self.shares[type])[1]
+                del self.shares["output"]
+
             else:
                 rec = self.pol.lagrange_interpolate(self.shares[type])[1]
             for player_id, player in config.all_players.items():
