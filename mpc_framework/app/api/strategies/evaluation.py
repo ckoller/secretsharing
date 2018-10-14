@@ -1,6 +1,6 @@
-import config, requests
 from app.api.ceps_speed.preprocessing import Open
 from app.client.routes import Client
+
 class ArithmeticEvaluationStrategy:
     def __init__(self):
         self.cur_gid = 0
