@@ -1,5 +1,4 @@
 from app.api.ceps_speed.preprocessing import Preprocessing
-from app.client.routes import Client
 
 class Ceps_Speed:
     def __init__(self, circuit, sharingStrategy, evaluationStrategy):
