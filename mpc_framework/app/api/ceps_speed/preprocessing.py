@@ -2,64 +2,6 @@ from app.api.polynomials import Polynomials
 import random, math
 import numpy as np
 import config, json, requests
-from app.client.routes import Client
-
-class Ceps_Speed:
-    def __init__(self, circuit, sharingStrategy, evaluationStrategy):
-        self.sharingStrategy = sharingStrategy
-        self.evaluationStrategy = evaluationStrategy
-        self.circuit = circuit[0]
-        self.input_gates = circuit[1]
-        self.cur_gid = 0
-        self.preprocessing = Preprocessing(circuit)
-        self.pol = Polynomials()
-        self.prime = self.pol.get_prime()
-        self.my_value = []
-        self.output = []
-        self.open = Open()
-        self.preprocessed = False
-
-    def set_new_circuit(self, circuit):
-        self.circuit = circuit[0]
-        self.input_gates = circuit[1]
-        self.cur_gid = 0
-        self.preprocessing = Preprocessing(circuit)
-        self.pol = Polynomials()
-        self.prime = self.pol.get_prime()
-        self.my_values = []
-        self.open = Open()
-
-    def run(self, my_values):
-        self.my_values = my_values
-        self.preprocessing.run()
-
-    def set_preprossing_circuit(self, circuit):
-        self.circuit = circuit
-        self.preprocessed = True
-        self.share_my_input_value()
-
-    def share_my_input_value(self):
-        if self.received_all_input_shares():
-            self.evaluate_circuit()
-        self.sharingStrategy.share_my_input_value(self.circuit)
-
-
-    def received_all_input_shares(self):
-        return self.sharingStrategy.received_all_input_shares(self.circuit, self.preprocessed)
-
-    def handle_input_share(self, d, gate_id):
-        self.sharingStrategy.handle_input_share(d, gate_id, self.circuit)
-        if self.received_all_input_shares():
-            self.evaluate_circuit()
-
-    def evaluate_circuit(self):
-        self.evaluationStrategy.evaluate_circuit(self.circuit)
-
-    def handle_protocol_open_answer(self, answer, type):
-        self.evaluationStrategy.handle_protocol_open_answer(answer, type, self.circuit)
-
-    def received_all_outputs(self):
-        return self.evaluationStrategy.received_all_outputs(self.circuit)
 
 class Preprocessing:
     def __init__(self, circuit):
@@ -335,21 +277,3 @@ class ProtocolRandom:
             #print("r0", r, self.l)
             return r
         return None
-
-
-def print_circuit_v2(circuit):
-    for gate in circuit:
-        print("id", gate.id)
-        print("type", gate.type)
-        print("wires_in", gate.wires_in)
-        print("wires_out", gate.wires_out)
-        print("shares", gate.shares)
-        print("output_value", gate.output_value)
-        print("a", gate.a)
-        print("b", gate.b)
-        print("c", gate.c)
-        print("r", gate.r)
-        print("r_open", gate.r_open)
-
-        print("")
-    print("\n\n")

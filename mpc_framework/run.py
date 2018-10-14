@@ -3,7 +3,8 @@ import argparse, requests
 import config, prod_config
 from app.api.ceps.ceps import Ceps
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
-import os
+from app.api.strategies.sharing import ArithmeticSharingStrategy
+from app.api.strategies.evaluation import ArithmeticEvaluationStrategy
 from app.client.routes import Client
 
 
@@ -130,7 +131,9 @@ if __name__ == '__main__':
     setup = Dev()
     setup.setup()
     config.ceps = Ceps(Client().create_circuit(0))
-    config.ceps_speed = Ceps_Speed(Client().create_circuit(5))
+    sharingStrategy = ArithmeticSharingStrategy([8 for x in range(128)])
+    evaluationStrategy = ArithmeticEvaluationStrategy()
+    config.ceps_speed = Ceps_Speed(Client().create_circuit(5), sharingStrategy, evaluationStrategy)
     # print_config()
     host = config.host
     port = config.port
