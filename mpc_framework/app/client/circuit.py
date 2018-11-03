@@ -16,7 +16,7 @@ class Gate:
         self.r = None
         self.r_open = None
 
-class BooleanCircuit:
+class BooleanCircuitReader:
     def __init__(self):
         self.circuit = []
         self.gate_id = 0
@@ -27,7 +27,7 @@ class BooleanCircuit:
 
     def init_parsed_circuit(self):
         self.circuit = []
-        path = file = os.getcwd() + "/app/client/booleanCircuits/AES.txt"
+        path = file = "/home/koller/Projects/secretsharing/mpc_framework/app/client/booleanCircuits/AES.txt"
 
         f = open(path, "r")
         circuit_file = f.readlines()
@@ -64,7 +64,7 @@ class BooleanCircuit:
                    "output_gates": self.o_gates}
         return circuit
 
-class ArithmeticCircuit:
+class ArithmeticCircuitCreator:
     def __init__(self):
         self.circuit = []
         self.gate_id = 0

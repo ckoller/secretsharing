@@ -1,6 +1,6 @@
 from . import module
 import config
-from app.client.circuit import ArithmeticCircuit, BooleanCircuit
+from app.client.circuit import ArithmeticCircuitCreator, BooleanCircuitReader
 
 @module.route('/<protocol>')
 def home(protocol):
@@ -8,7 +8,7 @@ def home(protocol):
         config_aes()
     if protocol == "ceps_speed":
         #config.ceps_speed.run(my_value=Polynomials().mult_invers(8))
-
+        print("inside")
         config.ceps_speed.run(my_values=[8,8,8,8,8])
     return "Welcome"
 
@@ -42,11 +42,14 @@ def setup_new_circuit(protocol, circuit_id):
     return "Welcome"
 
 class Client:
+    def __init__(self):
+        self.result = ""
+
     def create_circuit(self, id):
-        c = ArithmeticCircuit()
+        c = ArithmeticCircuitCreator()
         if id == 0:
             #(c.mult(c.input(1), c.input(1)))  # 8*8+8     =   72      n=3
-            c = BooleanCircuit()
+            c = BooleanCircuitReader()
             c.init_parsed_circuit()
             return c.get_circuit()
 
@@ -67,10 +70,11 @@ class Client:
         return circuit
 
     def get_response(self, result, circuit, mv):
-        ArithmeticCircuit().print_circuit(circuit)
+        ArithmeticCircuitCreator().print_circuit(circuit)
         #print("n1", mv[:32])
         #print("n2", mv[32:])
         print("res", result)
+        self.result = result
         #print("len", len(result))
         #res = [0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0]
         #res.reverse()

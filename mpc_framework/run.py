@@ -6,6 +6,8 @@ from app.api.ceps_speed.ceps_speed import Ceps_Speed
 from app.api.strategies.sharing import ArithmeticSharingStrategy
 from app.api.strategies.evaluation import ArithmeticEvaluationStrategy
 from app.client.routes import Client
+from app.client.ArithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
+
 
 
 class Prod:
@@ -70,7 +72,7 @@ class TestSetup:
         config.players = players
         config.host = self.host
         config.port = self.port
-        config.id = id
+        config.id = self.id
         config.player_count = int(self.player_count)
         config.all_players = all
 
@@ -82,7 +84,7 @@ class TestSetup:
 
 class Dev:
     def setup(self):
-        host, port, id, player_count = self.get_host_info()
+        host, port, id, player_count, type = self.get_host_info()
         players, all = self.create_player_dict(host, port, player_count)
         config.players = players
         config.host = host
@@ -90,6 +92,8 @@ class Dev:
         config.id = id
         config.player_count = int(player_count)
         config.all_players = all
+        if type == "arit":
+            self.arithmetic_circuit_setup()
 
     def get_host_info(self):
         parser = argparse.ArgumentParser(description='P2P multiparty computation app')
@@ -97,27 +101,39 @@ class Dev:
         parser.add_argument('--port')
         parser.add_argument('--player_id')
         parser.add_argument('--player_count')
+        parser.add_argument('--type')
         args = parser.parse_args()
-        return args.host, args.port, args.player_id, args.player_count
+        return args.host, args.port, args.player_id, args.player_count, args.type
 
     def create_player_dict(self, ip, my_port, player_count):
         players = {x: ip + ":" + str(5000 + x) for x in range(1, int(player_count) + 1) if 5000 + x != int(my_port)}
         all = {x: ip + ":" + str(5000 + x) for x in range(1, int(player_count) + 1)}
         return players, all
 
+    def arithmetic_circuit_setup(self):
+        # choose circuit for the party that we test on
+        circuit = ArithmeticCircuits().add_1_mult_2_3()
+        circuit_input = [8 for x in range(128)]
+
+        # choose strategies
+        sharingStrategy = ArithmeticSharingStrategy(circuit_input)
+        evaluationStrategy = ArithmeticEvaluationStrategy(Client())
+        config.ceps_speed = Ceps_Speed(circuit, sharingStrategy, evaluationStrategy)
+
 class Server:
-    def __init__(self, setup, circuit):
+    def __init__(self, setup):
         setup = setup
         setup.setup()
-        config.ceps = Ceps(circuit)
-        config.ceps_speed = Ceps_Speed(Client().create_circuit(5, None))
-        # print_config()
+        config.ceps = Ceps(Client().create_circuit(0))
+        self.print_config()
         self.host = config.host
         self.port = config.port
         self.app = create_app()
 
     def start(self):
-        self.app.run(debug=True, host=self.host, port=self.port)
+        print("***************** starting ******************")
+        self.print_config()
+        self.app.run(debug=True, host=self.host, port=self.port, use_reloader=False)
 
     def print_config(self):
         print(config.players)
@@ -131,12 +147,15 @@ if __name__ == '__main__':
     setup = Dev()
     setup.setup()
     config.ceps = Ceps(Client().create_circuit(0))
-    sharingStrategy = ArithmeticSharingStrategy([8 for x in range(128)])
-    evaluationStrategy = ArithmeticEvaluationStrategy()
-    config.ceps_speed = Ceps_Speed(Client().create_circuit(5), sharingStrategy, evaluationStrategy)
-    # print_config()
+
+    print(config.players)
+    print(config.all_players)
+    print(config.host)
+    print(config.port)
+    print(config.id)
+    print(config.player_count)
+
     host = config.host
     port = config.port
     app = create_app()
     app.run(debug=True, host=host, port=port)
-

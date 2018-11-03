@@ -1,8 +1,8 @@
 from app.api.ceps_speed.open import Open
-from app.client.routes import Client
 
 class BooleanEvaluationStrategy:
-    def __init__(self):
+    def __init__(self, client):
+        self.client = client
         self.cur_gid = 0
         self.output = []
         self.open = Open()
@@ -40,7 +40,7 @@ class BooleanEvaluationStrategy:
 
             self.output.append(answer)
             if self.received_all_outputs(circuit):
-                Client().get_response(self.output, circuit, None)
+                self.client.get_response(self.output, circuit, None)
                 print("done")
             else:
                 self.cur_gid = self.cur_gid + 1
@@ -65,7 +65,8 @@ class BooleanEvaluationStrategy:
 
 
 class ArithmeticEvaluationStrategy:
-    def __init__(self):
+    def __init__(self, client):
+        self.client = client
         self.cur_gid = 0
         self.output = []
         self.open = Open()
@@ -109,7 +110,7 @@ class ArithmeticEvaluationStrategy:
 
             self.output.append(answer)
             if self.received_all_outputs(circuit):
-                Client().get_response(self.output, circuit, None)
+                self.client.get_response(self.output, circuit, None)
                 print("done")
             else:
                 self.cur_gid = self.cur_gid + 1
