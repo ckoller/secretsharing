@@ -7,8 +7,15 @@ class Ceps_Speed:
         self.circuit = circuit[0]
         self.preprocessing = Preprocessing(circuit)
         self.preprocessed = False
+        self.my_input_values = []
 
-    def run(self, my_values):
+    def setup(self, circuit, my_input_values):
+        self.my_input_values = my_input_values
+        self.circuit = circuit[0]
+        self.preprocessing = Preprocessing(circuit)
+        self.preprocessed = False
+
+    def run(self):
         self.preprocessing.run()
 
     def set_preprossing_circuit(self, circuit):
@@ -19,7 +26,7 @@ class Ceps_Speed:
     def share_my_input_value(self):
         if self.received_all_input_shares():
             self.evaluate_circuit()
-        self.sharingStrategy.share_my_input_value(self.circuit)
+        self.sharingStrategy.share_my_input_value(self.circuit, self.my_input_values)
 
 
     def received_all_input_shares(self):

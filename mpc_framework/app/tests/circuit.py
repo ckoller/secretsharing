@@ -27,7 +27,7 @@ class BooleanCircuitReader:
 
     def init_parsed_circuit(self):
         self.circuit = []
-        path = file = "/home/koller/Projects/secretsharing/mpc_framework/app/client/booleanCircuits/AES.txt"
+        path = file = "/home/koller/Projects/secretsharing/mpc_framework/app/tests/booleanCircuits/AES.txt"
 
         f = open(path, "r")
         circuit_file = f.readlines()

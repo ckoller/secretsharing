@@ -7,4 +7,4 @@ my_value = 5
 ceps = ""
 ceps_speed = ""
 all_players = 'players'
-
+result = []

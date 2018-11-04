@@ -1,16 +1,29 @@
 from . import module
-import config
-from app.client.circuit import ArithmeticCircuitCreator, BooleanCircuitReader
+import config, json
+from app.tests.circuit import ArithmeticCircuitCreator, BooleanCircuitReader
+from app.tests.arithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
 
-@module.route('/<protocol>')
-def home(protocol):
-    if protocol == "ceps":
-        config_aes()
+# these routes are made to the purpose of testing the correctness of the protocols.
+# the should not be a part of the API, if you wish use this app in production
+
+@module.route('/<protocol>/setup/<int:circuit_id>/<input_values>')
+def setup(protocol, circuit_id, input_values):
+    my_input_values = json.loads(input_values)
+    circuit = get_circuit(circuit_id)
     if protocol == "ceps_speed":
-        #config.ceps_speed.run(my_value=Polynomials().mult_invers(8))
-        print("inside")
-        config.ceps_speed.run(my_values=[8,8,8,8,8])
+        # config.ceps_speed.run(my_value=Polynomials().mult_invers(8))
+        config.ceps_speed.setup(circuit, my_input_values)
     return "Welcome"
+
+@module.route('/<protocol>/run/')
+def run(protocol):
+    if protocol == "ceps_speed":
+        config.ceps_speed.run()
+    return "Welcome"
+
+def get_circuit(circuit_id):
+    if circuit_id == 1:
+        return ArithmeticCircuits().add_1_mult_2_3()
 
 def config_adder():
     n1_val = [1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
@@ -30,20 +43,9 @@ def config_aes():
     n2 = [0 for x in range(128)]
     config.ceps.run(n1+n2)
 
-
-@module.route('/<protocol>/<int:circuit_id>')
-def setup_new_circuit(protocol, circuit_id):
-    c = Client()
-    circuit = c.create_circuit(circuit_id)
-    if protocol == "ceps":
-        config.ceps.set_new_circuit(circuit)
-    if protocol == "ceps_speed":
-        config.ceps_speed.set_new_circuit(circuit)
-    return "Welcome"
-
 class Client:
     def __init__(self):
-        self.result = ""
+        self.result = []
 
     def create_circuit(self, id):
         c = ArithmeticCircuitCreator()
@@ -73,8 +75,9 @@ class Client:
         ArithmeticCircuitCreator().print_circuit(circuit)
         #print("n1", mv[:32])
         #print("n2", mv[32:])
-        print("res", result)
         self.result = result
+        print("res", self.result)
+
         #print("len", len(result))
         #res = [0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0]
         #res.reverse()

@@ -1,6 +1,6 @@
 from app.api.polynomials import Polynomials
 import config, json, requests
-from app.client.routes import Client
+from app.tests.routes import Client
 
 class Ceps:
     def __init__(self, circuit):

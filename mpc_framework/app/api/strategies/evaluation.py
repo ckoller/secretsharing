@@ -1,4 +1,5 @@
 from app.api.ceps_speed.open import Open
+import config
 
 class BooleanEvaluationStrategy:
     def __init__(self, client):
@@ -100,7 +101,6 @@ class ArithmeticEvaluationStrategy:
                 gate.output_value = prev_gate.output_value
                 self.cur_gid = self.cur_gid + 1
                 result = gate.output_value
-                #Client().get_response(self.output, self.circuit, None)
                 self.open.request(result, "output")
                 break
 
@@ -112,6 +112,8 @@ class ArithmeticEvaluationStrategy:
             if self.received_all_outputs(circuit):
                 self.client.get_response(self.output, circuit, None)
                 print("done")
+                config.result[:] = self.output
+                print("eval strat res", config.result)
             else:
                 self.cur_gid = self.cur_gid + 1
                 self.evaluate_circuit(circuit)
@@ -125,6 +127,9 @@ class ArithmeticEvaluationStrategy:
             self.cur_gid = self.cur_gid + 1
             #print("**************************handle_protocol_open_answer****************************")
             self.evaluate_circuit(circuit)
+
+    def print_result(self):
+        print(self.result, "baa")
 
     def received_all_outputs(self, circuit):
         for gate in circuit:

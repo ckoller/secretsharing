@@ -12,10 +12,6 @@ class Preprocessing:
         self.n = config.player_count
         self.t = int(math.ceil((self.n - 1) / 2))
         self.l = self.n-self.t
-        print(self.t, "n  aasasasdasdadasdasdasdadas")
-
-        print(self.t, "t  aasasasdasdadasdasdasdadas")
-        print(self.l, "l  aasasasdasdadasdasdasdadas")
         self.protocol_open = Op()
         self.pr = ProtocolRandom(self.l, "pre") # TODO Cleanup types
         self.pdr = ProtocolDoubleRandom(self.l, "pre")

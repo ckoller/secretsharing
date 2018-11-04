@@ -5,8 +5,8 @@ from app.api.ceps.ceps import Ceps
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
 from app.api.strategies.sharing import ArithmeticSharingStrategy
 from app.api.strategies.evaluation import ArithmeticEvaluationStrategy
-from app.client.routes import Client
-from app.client.ArithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
+from app.tests.routes import Client
+from app.tests.arithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
 
 
 
@@ -113,10 +113,8 @@ class Dev:
     def arithmetic_circuit_setup(self):
         # choose circuit for the party that we test on
         circuit = ArithmeticCircuits().add_1_mult_2_3()
-        circuit_input = [8 for x in range(128)]
-
         # choose strategies
-        sharingStrategy = ArithmeticSharingStrategy(circuit_input)
+        sharingStrategy = ArithmeticSharingStrategy()
         evaluationStrategy = ArithmeticEvaluationStrategy(Client())
         config.ceps_speed = Ceps_Speed(circuit, sharingStrategy, evaluationStrategy)
 
@@ -124,15 +122,14 @@ class Server:
     def __init__(self, setup):
         setup = setup
         setup.setup()
-        config.ceps = Ceps(Client().create_circuit(0))
-        self.print_config()
         self.host = config.host
         self.port = config.port
         self.app = create_app()
 
-    def start(self):
+    def start(self, circuit, sharingStrategy, evaluationStrategy, result_arr):
         print("***************** starting ******************")
-        self.print_config()
+        config.result = result_arr
+        config.ceps = Ceps(Client().create_circuit(0))
         self.app.run(debug=True, host=self.host, port=self.port, use_reloader=False)
 
     def print_config(self):
@@ -147,14 +144,6 @@ if __name__ == '__main__':
     setup = Dev()
     setup.setup()
     config.ceps = Ceps(Client().create_circuit(0))
-
-    print(config.players)
-    print(config.all_players)
-    print(config.host)
-    print(config.port)
-    print(config.id)
-    print(config.player_count)
-
     host = config.host
     port = config.port
     app = create_app()
