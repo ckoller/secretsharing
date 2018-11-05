@@ -126,7 +126,7 @@ class Server:
         self.port = config.port
         self.app = create_app()
 
-    def start(self, circuit, sharingStrategy, evaluationStrategy, result_arr):
+    def start(self, result_arr):
         print("***************** starting ******************")
         config.result = result_arr
         config.ceps = Ceps(Client().create_circuit(0))

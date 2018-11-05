@@ -24,6 +24,15 @@ def run(protocol):
 def get_circuit(circuit_id):
     if circuit_id == 1:
         return ArithmeticCircuits().add_1_mult_2_3()
+    elif circuit_id == 2:
+        return ArithmeticCircuits().mult_add_5_people_where_one_person_has_multiple_inputs()
+    elif circuit_id == 3:
+        return ArithmeticCircuits().add_mult_scalarmult_where_some_player_has_no_input()
+    elif circuit_id == 4:
+        return ArithmeticCircuits().add_mult_scalarmult_with_multiple_outputs()
+
+
+
 
 def config_adder():
     n1_val = [1, 0, 1, 0, 1, 0, 1, 0, 1, 0]

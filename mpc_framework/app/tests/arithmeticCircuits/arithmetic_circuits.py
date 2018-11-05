@@ -14,16 +14,18 @@ class ArithmeticCircuits:
         return circuit
 
     def mult_add_5_people_where_one_person_has_multiple_inputs(self):
-        # fx.    8*8+(8+8+8)*8)
+        # fx.    8*8+(8+8+8)*8) = 256
         c = ArithmeticCircuitCreator()
         c.add(c.mult(c.input(5), c.input(3)), c.mult(c.add(c.add(c.input(3), c.input(5)), c.input(1)), c.input(1)))
         circuit = c.get_circuit()
         return circuit
 
     def add_mult_scalarmult_where_some_player_has_no_input(self):
-        # fx.   (8*8 + 8*8)*2)*2  = 256
+        # fx.   (8*8 + 8*8)*2)  = 256
         c = ArithmeticCircuitCreator()
         c.scalar_mult(c.add(c.mult(c.input(7), c.input(1)), c.mult(c.input(8), c.input(4))), scalar=2)
+        circuit = c.get_circuit()
+        return circuit
 
     def add_mult_scalarmult_with_multiple_outputs(self):
         c = ArithmeticCircuitCreator()
@@ -31,4 +33,5 @@ class ArithmeticCircuits:
         c.output()
         c.mult(c.scalar_mult(c.add(c.mult(c.input(2), c.input(1)), c.mult(c.input(3), c.input(4))), scalar=2), c.input(1))
         circuit = c.get_circuit()
+        return circuit
 
