@@ -6,9 +6,9 @@ from app.api.ceps_speed.open import Open as Op
 
 class Preprocessing:
     def __init__(self, circuit):
-        self.circuit = circuit[0]
-        self.input_gates = circuit[1]
-        self.mult_gates = circuit[2]
+        self.circuit = circuit["circuit"]
+        self.input_gates = circuit["input_gates"]
+        self.mult_gates = circuit["mult_gates"]
         self.n = config.player_count
         self.t = int(math.ceil((self.n - 1) / 2))
         self.l = self.n-self.t

@@ -3,8 +3,8 @@ import argparse, requests
 import config, prod_config
 from app.api.ceps.ceps import Ceps
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
-from app.api.strategies.sharing import ArithmeticSharingStrategy
-from app.api.strategies.evaluation import ArithmeticEvaluationStrategy
+from app.api.strategies.sharing import ArithmeticSharingStrategy, BooleanSharingStrategy
+from app.api.strategies.evaluation import ArithmeticEvaluationStrategy, BooleanEvaluationStrategy
 from app.tests.routes import Client
 from app.tests.arithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
 
@@ -94,6 +94,8 @@ class Dev:
         config.all_players = all
         if type == "arit":
             self.arithmetic_circuit_setup()
+        elif type == "bool":
+            self.boolean_circuit_setup()
 
     def get_host_info(self):
         parser = argparse.ArgumentParser(description='P2P multiparty computation app')
@@ -116,6 +118,14 @@ class Dev:
         # choose strategies
         sharingStrategy = ArithmeticSharingStrategy()
         evaluationStrategy = ArithmeticEvaluationStrategy(Client())
+        config.ceps_speed = Ceps_Speed(circuit, sharingStrategy, evaluationStrategy)
+
+    def boolean_circuit_setup(self):
+        # choose circuit for the party that we test on
+        circuit = ArithmeticCircuits().add_1_mult_2_3()
+        # choose strategies
+        sharingStrategy = BooleanSharingStrategy()
+        evaluationStrategy = BooleanEvaluationStrategy(Client())
         config.ceps_speed = Ceps_Speed(circuit, sharingStrategy, evaluationStrategy)
 
 class Server:

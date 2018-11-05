@@ -25,9 +25,10 @@ class BooleanCircuitReader:
         self.o_gates = []
         self.x_gates = []
 
-    def init_parsed_circuit(self):
+    def init_parsed_circuit(self, circuit_name):
         self.circuit = []
-        path = file = "/home/koller/Projects/secretsharing/mpc_framework/app/tests/booleanCircuits/AES.txt"
+        path = "/home/koller/Projects/secretsharing/mpc_framework/app/tests/booleanCircuits/" + circuit_name
+        print(path)
 
         f = open(path, "r")
         circuit_file = f.readlines()
@@ -78,7 +79,12 @@ class ArithmeticCircuitCreator:
 
     def get_circuit(self):
         self.output()
-        return [self.circuit, self.i_gates, self.m_gates, self.o_gates]
+        circuit = {"type": "arit",
+                   "circuit": self.circuit,
+                   "input_gates": self.i_gates,
+                   "mult_gates": self.m_gates,
+                   "output_gates": self.o_gates}
+        return circuit
 
     def output(self):
         gate = Gate(id=self.gate_id, type="output", wires_in=[self.gate_id - 1])

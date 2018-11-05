@@ -6,10 +6,14 @@ from app.tests.arithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
 # these routes are made to the purpose of testing the correctness of the protocols.
 # the should not be a part of the API, if you wish use this app in production
 
-@module.route('/<protocol>/setup/<int:circuit_id>/<input_values>')
-def setup(protocol, circuit_id, input_values):
+@module.route('/<protocol>/setup/<circuit_type>/<int:circuit_id>/<input_values>')
+def setup(protocol, circuit_type, circuit_id, input_values):
     my_input_values = json.loads(input_values)
-    circuit = get_circuit(circuit_id)
+    if circuit_type == "bool":
+        circuit = get_bool_circuit(circuit_id)
+    elif circuit_type == "arit":
+        circuit = get_arit_circuit(circuit_id)
+
     if protocol == "ceps_speed":
         # config.ceps_speed.run(my_value=Polynomials().mult_invers(8))
         config.ceps_speed.setup(circuit, my_input_values)
@@ -21,7 +25,14 @@ def run(protocol):
         config.ceps_speed.run()
     return "Welcome"
 
-def get_circuit(circuit_id):
+def get_bool_circuit(circuit_id):
+    if circuit_id == 1:
+        c = BooleanCircuitReader()
+        c.init_parsed_circuit("single_and.txt")
+        circuit = c.get_circuit()
+        return circuit
+
+def get_arit_circuit(circuit_id):
     if circuit_id == 1:
         return ArithmeticCircuits().add_1_mult_2_3()
     elif circuit_id == 2:
@@ -61,7 +72,7 @@ class Client:
         if id == 0:
             #(c.mult(c.input(1), c.input(1)))  # 8*8+8     =   72      n=3
             c = BooleanCircuitReader()
-            c.init_parsed_circuit()
+            c.init_parsed_circuit("AES.txt")
             return c.get_circuit()
 
         elif id == 1:
