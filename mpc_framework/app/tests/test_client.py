@@ -11,7 +11,7 @@ from multiprocessing import Process, Array, Manager
 
 
 
-class TestApplication(TestCase):
+class TestCepsSpeedArit(TestCase):
 
     def setUp(self):
         self.result_arr = None
@@ -26,7 +26,7 @@ class TestApplication(TestCase):
 
     def test_add_mult_3players(self):
         # start the server we want to test on
-        self.start_test_server(player_count=3, port=5003)
+        self.start_test_server(player_count=3)
 
         # start 2 parties in gnome-shells
         self.start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="arit")
@@ -45,10 +45,9 @@ class TestApplication(TestCase):
         number_of_players = 6
         circuit_id = 2
         input = json.dumps([8, 8, 8])
-        port = 5006
 
         # start the server we want to test on
-        self.start_test_server(number_of_players, port)
+        self.start_test_server(number_of_players)
 
         # start 2 parties in gnome-shells
         parties = number_of_players -1
@@ -63,14 +62,14 @@ class TestApplication(TestCase):
         # 8*8+(8+8+8)*8) = 256
         self.assertListEqual(list(self.result_arr), [256])
 
+
     def test_add_mult_scalarmult_where_some_player_has_no_input(self):
         number_of_players = 9
         circuit_id = 3
         input = json.dumps([4])
-        port = 5009
 
         # start the server we want to test on
-        self.start_test_server(number_of_players, port)
+        self.start_test_server(number_of_players)
 
         # start 2 parties in gnome-shells
         parties = number_of_players -1
@@ -86,13 +85,34 @@ class TestApplication(TestCase):
         self.assertListEqual(list(self.result_arr), [64])
 
 
+    def test_add_mult_scalarmult_with_multiple_outputs(self):
+        number_of_players = 4
+        circuit_id = 4
+        input = json.dumps([8,8,8,8,8,8])
 
-    def start_test_server(self, player_count, port):
+        # start the server we want to test on
+        self.start_test_server(number_of_players)
+
+        # start 2 parties in gnome-shells
+        parties = number_of_players -1
+        self.start_parties_in_gnome_shells(parties=parties, number_of_players=number_of_players, protocol_type="arit")
+
+        # choose protocol and input for players
+        self.setup_ceps_speed(number_of_players, circuit_id, circuit_input=input)
+
+        # start protocols
+        self.start_ceps_speed(number_of_players)
+
+        # (8*8 + 8*8)*2) * 8  = 2048
+        # (8*8 + 8*8)*2) * 8  = 2048
+        self.assertListEqual(list(self.result_arr), [2048, 2048])
+
+    def start_test_server(self, player_count):
         # choose circuit for the party that we test on
         circuit = ArithmeticCircuits().add_1_mult_2_3()
 
         # read config parameters
-        test_setup = TestSetup(host='127.0.0.1', port=str(port), id=str(player_count), player_count=player_count)
+        test_setup = TestSetup(host='127.0.0.1', port='5001', id='1', player_count=player_count)
 
         # create shares memory (a list) between test tread and server tread for getting the result of the computaiton.
         multiprocessing_manager = Manager()

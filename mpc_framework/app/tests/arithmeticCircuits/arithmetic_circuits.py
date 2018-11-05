@@ -28,6 +28,8 @@ class ArithmeticCircuits:
         return circuit
 
     def add_mult_scalarmult_with_multiple_outputs(self):
+        # fx.   (8*8 + 8*8)*2) * 8  = 2048
+        #       (8*8 + 8*8)*2) * 8  = 2048
         c = ArithmeticCircuitCreator()
         c.mult(c.scalar_mult(c.add(c.mult(c.input(2), c.input(1)), c.mult(c.input(3), c.input(4))), scalar=2), c.input(1))
         c.output()
