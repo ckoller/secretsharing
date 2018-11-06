@@ -23,7 +23,6 @@ class BooleanCircuitReader:
         self.i_gates = []
         self.m_gates = []
         self.o_gates = []
-        self.x_gates = []
 
     def init_parsed_circuit(self, circuit_name):
         self.circuit = []
@@ -47,7 +46,7 @@ class BooleanCircuitReader:
             if type == "and":
                 self.m_gates.append(gate)
             if type == "xor":
-                self.x_gates.append(gate)
+                self.m_gates.append(gate)
             if type == "output":
                 self.o_gates.append(gate)
             gate.layer = layer
@@ -59,7 +58,6 @@ class BooleanCircuitReader:
                    "circuit": self.circuit,
                    "input_gates": self.i_gates,
                    "mult_gates": self.m_gates,
-                   "xor_gates": self.x_gates,
                    "output_gates": self.o_gates}
         return circuit
 

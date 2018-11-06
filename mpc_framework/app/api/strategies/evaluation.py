@@ -54,12 +54,22 @@ class BooleanEvaluationStrategy:
             gate = circuit[self.cur_gid]
             alpha_open = answer[0]
             beta_open = answer[1]
-            #("**************************", gate.c, "****************************")
             x = (alpha_open*beta_open - alpha_open*gate.b - beta_open*gate.a + gate.c)
             gate.output_value = x
             self.cur_gid = self.cur_gid + 1
-            #print("**************************handle_protocol_open_answer****************************")
             self.evaluate_circuit(circuit)
+        elif type == "xor":
+            gate = circuit[self.cur_gid]
+            alpha_open = answer[0]
+            beta_open = answer[1]
+            x = (alpha_open*beta_open - alpha_open*gate.b - beta_open*gate.a + gate.c)
+            val_in_l = circuit[gate.wires_in[0]].output_value
+            val_in_r = circuit[gate.wires_in[1]].output_value
+            result = (val_in_l + val_in_r) - 2 * (x)
+            gate.output_value = result
+            self.cur_gid = self.cur_gid + 1
+            self.evaluate_circuit(circuit)
+
 
     def received_all_outputs(self, circuit):
         for gate in circuit:

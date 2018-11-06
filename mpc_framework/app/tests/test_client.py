@@ -179,14 +179,85 @@ class TestCepsSpeedBool(TestCase):
         start_ceps_speed(number_of_players=3)
         self.assertListEqual(list(self.result_arr), [1])
 
+    def test_xor_0_0(self):
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool")
+        input = json.dumps([0,0])
+        setup_ceps_speed(number_of_players=3, circuit_type='bool', circuit_id=2, circuit_input=input)
+        start_ceps_speed(number_of_players=3)
+        self.assertListEqual(list(self.result_arr), [0])
+
+    def test_xor_0_1(self):
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool")
+        input = json.dumps([0,1])
+        setup_ceps_speed(number_of_players=3, circuit_type='bool', circuit_id=2, circuit_input=input)
+        start_ceps_speed(number_of_players=3)
+        self.assertListEqual(list(self.result_arr), [1])
+
+    def test_xor_1_0(self):
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool")
+        input = json.dumps([1,0])
+        setup_ceps_speed(number_of_players=3, circuit_type='bool', circuit_id=2, circuit_input=input)
+        start_ceps_speed(number_of_players=3)
+        self.assertListEqual(list(self.result_arr), [1])
+
     def test_xor_1_1(self):
         self.start_test_server(player_count=3)
         start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool")
         input = json.dumps([1,1])
         setup_ceps_speed(number_of_players=3, circuit_type='bool', circuit_id=2, circuit_input=input)
         start_ceps_speed(number_of_players=3)
+        self.assertListEqual(list(self.result_arr), [0])
+
+    def test_single_not_0(self):
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool")
+        input = json.dumps([0])
+        setup_ceps_speed(number_of_players=3, circuit_type='bool', circuit_id=3, circuit_input=input)
+        start_ceps_speed(number_of_players=3)
         self.assertListEqual(list(self.result_arr), [1])
 
+    def test_single_not_1(self):
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool")
+        input = json.dumps([1])
+        setup_ceps_speed(number_of_players=3, circuit_type='bool', circuit_id=3, circuit_input=input)
+        start_ceps_speed(number_of_players=3)
+        self.assertListEqual(list(self.result_arr), [0])
+
+    def test_3_single_and_11_11_11(self):
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool")
+        input = json.dumps([1,1,1,1,1,1])
+        setup_ceps_speed(number_of_players=3, circuit_type='bool', circuit_id=4, circuit_input=input)
+        start_ceps_speed(number_of_players=3)
+        self.assertListEqual(list(self.result_arr), [1,1,1])
+
+    def test_3_single_and_11_10_01(self):
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool")
+        input = json.dumps([1,1,1,0,0,1])
+        setup_ceps_speed(number_of_players=3, circuit_type='bool', circuit_id=4, circuit_input=input)
+        start_ceps_speed(number_of_players=3)
+        self.assertListEqual(list(self.result_arr), [1,0,0])
+
+    def test_3_single_xor_11_11_11(self):
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool")
+        input = json.dumps([1,1,1,1,1,1])
+        setup_ceps_speed(number_of_players=3, circuit_type='bool', circuit_id=5, circuit_input=input)
+        start_ceps_speed(number_of_players=3)
+        self.assertListEqual(list(self.result_arr), [0,0,0])
+
+    def test_3_single_xor_11_10_01(self):
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool")
+        input = json.dumps([1,1,1,0,0,1])
+        setup_ceps_speed(number_of_players=3, circuit_type='bool', circuit_id=5, circuit_input=input)
+        start_ceps_speed(number_of_players=3)
+        self.assertListEqual(list(self.result_arr), [0,1,1])
 
     def start_test_server(self, player_count):
         # choose circuit for the party that we test on
