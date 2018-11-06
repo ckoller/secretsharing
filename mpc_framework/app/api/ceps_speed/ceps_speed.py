@@ -5,14 +5,14 @@ class Ceps_Speed:
         self.sharingStrategy = sharingStrategy
         self.evaluationStrategy = evaluationStrategy
         self.circuit = circuit["circuit"]
-        self.preprocessing = Preprocessing(circuit)
+        self.preprocessing = Preprocessing(circuit, sharingStrategy)
         self.preprocessed = False
         self.my_input_values = []
 
     def setup(self, circuit, my_input_values):
         self.my_input_values = my_input_values
         self.circuit = circuit["circuit"]
-        self.preprocessing = Preprocessing(circuit)
+        self.preprocessing = Preprocessing(circuit, self.sharingStrategy)
         self.preprocessed = False
 
     def run(self):

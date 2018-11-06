@@ -108,7 +108,7 @@ class TestCepsSpeedArit(TestCase):
     def start_test_server(self, player_count):
         # choose circuit for the party that we test on
         circuit = ArithmeticCircuits().add_1_mult_2_3()
-
+        print_circuit(circuit["circuit"])
         # read config parameters
         test_setup = TestSetup(host='127.0.0.1', port='5001', id='1', player_count=player_count)
 
@@ -139,7 +139,7 @@ class TestCepsSpeedBool(TestCase):
         # stop the thread containing the server we test on
         self.process.terminate()
 
-    def test_add_mult_3players(self):
+    def test_add_0_0(self):
         # start the server we want to test on
         self.start_test_server(player_count=3)
 
@@ -147,14 +147,46 @@ class TestCepsSpeedBool(TestCase):
         start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool")
 
         # choose protocol and input for players
-        input = json.dumps([1,1,1,1])
+        input = json.dumps([0,0])
         setup_ceps_speed(number_of_players=3, circuit_type='bool', circuit_id=1, circuit_input=input)
 
         # start protocols
         start_ceps_speed(number_of_players=3)
 
-        # 8 + 8 * 8 = 72
-        #self.assertListEqual(list(self.result_arr), [72])
+        self.assertListEqual(list(self.result_arr), [0])
+
+    def test_add_0_1(self):
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool")
+        input = json.dumps([0,1])
+        setup_ceps_speed(number_of_players=3, circuit_type='bool', circuit_id=1, circuit_input=input)
+        start_ceps_speed(number_of_players=3)
+        self.assertListEqual(list(self.result_arr), [0])
+
+    def test_add_1_0(self):
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool")
+        input = json.dumps([1,0])
+        setup_ceps_speed(number_of_players=3, circuit_type='bool', circuit_id=1, circuit_input=input)
+        start_ceps_speed(number_of_players=3)
+        self.assertListEqual(list(self.result_arr), [0])
+
+    def test_add_1_1(self):
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool")
+        input = json.dumps([1,1])
+        setup_ceps_speed(number_of_players=3, circuit_type='bool', circuit_id=1, circuit_input=input)
+        start_ceps_speed(number_of_players=3)
+        self.assertListEqual(list(self.result_arr), [1])
+
+    def test_xor_1_1(self):
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool")
+        input = json.dumps([1,1])
+        setup_ceps_speed(number_of_players=3, circuit_type='bool', circuit_id=2, circuit_input=input)
+        start_ceps_speed(number_of_players=3)
+        self.assertListEqual(list(self.result_arr), [1])
+
 
     def start_test_server(self, player_count):
         # choose circuit for the party that we test on
@@ -188,8 +220,11 @@ def print_circuit(circuit):
         print("wires_out", gate.wires_out)
         print("shares", gate.shares)
         print("output_value", gate.output_value)
-        print("scalar", gate.scalar)
-        print("")
+        print("a", gate.a)
+        print("b", gate.b)
+        print("c", gate.c)
+        print("r", gate.r)
+        print("r_open", gate.r_open)
     print("\n\n")
 
 def start_ceps_speed(number_of_players):

@@ -24,9 +24,10 @@ class BooleanEvaluationStrategy:
                 val_in_r = circuit[gate.wires_in[1]].output_value
                 alpha = val_in_l + gate.a
                 beta = val_in_r + gate.b
-                self.open.request([alpha, beta], "alpha_beta")
+                self.open.request([alpha, beta], gate.type)
                 break
             elif gate.type == 'output':
+                print("in output")
                 prev_gate = circuit[self.cur_gid - 1]
                 gate.output_value = prev_gate.output_value
                 self.cur_gid = self.cur_gid + 1
@@ -36,12 +37,15 @@ class BooleanEvaluationStrategy:
                 break
 
     def handle_protocol_open_answer(self, answer, type, circuit):
+        print("in handle protocol answer:", type)
         if type == "output":
             #("**************************", "output answer", "****************************")
 
             self.output.append(answer)
             if self.received_all_outputs(circuit):
                 self.client.get_response(self.output, circuit, None)
+                config.result[:] = self.output
+                print("eval strat res", config.result)
                 print("done")
             else:
                 self.cur_gid = self.cur_gid + 1
@@ -90,6 +94,7 @@ class ArithmeticEvaluationStrategy:
                 gate.output_value = val_in * scalar
                 self.cur_gid = self.cur_gid + 1
             elif gate.type == 'mult':
+                print(gate.a, "hahah")
                 val_in_l = circuit[gate.wires_in[0]].output_value
                 val_in_r = circuit[gate.wires_in[1]].output_value
                 alpha = val_in_l + gate.a

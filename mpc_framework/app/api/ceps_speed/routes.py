@@ -32,7 +32,7 @@ def handle_protocol_open_answer():
     if request.method == 'POST':
         rec = json.loads(request.form['rec'])
         type = request.form['type']
-        if type == "output" or type == "alpha_beta":
+        if type == "output" or type == "alpha_beta" or type == "and" or type == "xor":
             config.ceps_speed.handle_protocol_open_answer(rec, type)
         else:
             config.ceps_speed.preprocessing.handle_protocol_open_answer(rec, type)

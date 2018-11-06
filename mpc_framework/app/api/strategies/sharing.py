@@ -1,4 +1,5 @@
 import config, requests
+import numpy as np
 
 class ArithmeticSharingStrategy:
     def share_my_input_value(self, circuit, my_input_values):
@@ -24,6 +25,17 @@ class ArithmeticSharingStrategy:
                 return False
         return True
 
+    def add_random_input_values_to_circuit(self, input_random_shares, input_gates):
+        shares = np.concatenate(input_random_shares).tolist()
+        for gate in input_gates:
+            r = shares.pop()
+            gate.r = r
+            player_id = gate.wires_in[0]
+            player = config.all_players[player_id]
+            url = "http://" + player + "/api/ceps_speed/input_shares/"
+            data = {"r": r, "gid": gate.id}
+            requests.post(url, data)
+
 class BooleanSharingStrategy:
     def share_my_input_value(self, circuit, my_input_values):
         counter = 0
@@ -48,3 +60,14 @@ class BooleanSharingStrategy:
             if not is_preprocessed:
                 return False
         return True
+
+    def add_random_input_values_to_circuit(self, input_random_shares, input_gates):
+        shares = np.concatenate(input_random_shares).tolist()
+        for gate in input_gates:
+            r = shares.pop()
+            gate.r = r
+            player_id = 1
+            player = config.all_players[player_id]
+            url = "http://" + player + "/api/ceps_speed/input_shares/"
+            data = {"r": r, "gid": gate.id}
+            requests.post(url, data)

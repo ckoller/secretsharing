@@ -5,7 +5,8 @@ import config, json, requests
 from app.api.ceps_speed.open import Open as Op
 
 class Preprocessing:
-    def __init__(self, circuit):
+    def __init__(self, circuit, sharingStrategy):
+        self.sharingStrategy = sharingStrategy
         self.circuit = circuit["circuit"]
         self.input_gates = circuit["input_gates"]
         self.mult_gates = circuit["mult_gates"]
@@ -79,15 +80,7 @@ class Preprocessing:
             self.protocol_triples.run(mult, protocol_double_random_shares[0], protocol_double_random_shares[1])
 
     def add_random_input_values_to_circuit(self, input_random_shares):
-        shares = np.concatenate(input_random_shares).tolist()
-        for gate in self.input_gates:
-            r = shares.pop()
-            gate.r = r
-            player_id = gate.wires_in[0]
-            player = config.all_players[player_id]
-            url = "http://" + player + "/api/ceps_speed/input_shares/"
-            data = {"r": r, "gid": gate.id}
-            requests.post(url, data)
+        self.sharingStrategy.add_random_input_values_to_circuit(input_random_shares, self.input_gates)
 
 
     def handle_random_input_shares(self, r, gate_id):
@@ -123,8 +116,9 @@ class Preprocessing:
         print("b", b)
         print("c", c)
         counter = 0
-        for id in self.mult_gates:
-            gate = self.circuit[id]
+        for g in self.mult_gates:
+            print(type(g), "hihi")
+            gate = self.circuit[g.id]
             gate.a = a[counter]
             gate.b = b[counter]
             gate.c = c[counter]

@@ -26,11 +26,27 @@ def run(protocol):
     return "Welcome"
 
 def get_bool_circuit(circuit_id):
+    c = BooleanCircuitReader()
     if circuit_id == 1:
-        c = BooleanCircuitReader()
         c.init_parsed_circuit("single_and.txt")
-        circuit = c.get_circuit()
-        return circuit
+    elif circuit_id == 2:
+        c.init_parsed_circuit("single_xor.txt")
+    elif circuit_id == 3:
+        c.init_parsed_circuit("single_not.txt")
+    elif circuit_id == 4:
+        c.init_parsed_circuit("3_single_and.txt")
+    elif circuit_id == 5:
+        c.init_parsed_circuit("3_single_xor.txt")
+    elif circuit_id == 6:
+        c.init_parsed_circuit("mixed_input_xor_and.txt")
+    elif circuit_id == 7:
+        c.init_parsed_circuit("adder_32_bit.txt")
+    elif circuit_id == 7:
+        c.init_parsed_circuit("adder_32_bit_with_layer.txt")
+    elif circuit_id == 8:
+        c.init_parsed_circuit("AES.txt")
+    circuit = c.get_circuit()
+    return circuit
 
 def get_arit_circuit(circuit_id):
     if circuit_id == 1:

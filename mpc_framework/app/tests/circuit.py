@@ -28,8 +28,6 @@ class BooleanCircuitReader:
     def init_parsed_circuit(self, circuit_name):
         self.circuit = []
         path = "/home/koller/Projects/secretsharing/mpc_framework/app/tests/booleanCircuits/" + circuit_name
-        print(path)
-
         f = open(path, "r")
         circuit_file = f.readlines()
         for gate_id in range(len(circuit_file)):
@@ -116,18 +114,10 @@ class ArithmeticCircuitCreator:
 
     def mult(self, gid_in_l, gid_in_r):
         gate = Gate(id=self.gate_id, type="mult", wires_in=[gid_in_l, gid_in_r])
-        self.m_gates.append(self.gate_id)
         self.update_input_gate(gid_in_l)
         self.update_input_gate(gid_in_r)
         self.update_circuit(gate)
-        return self.gate_id - 1;
-
-    def div(self, gid_in_l, gid_in_r):
-        gate = Gate(id=self.gate_id, type="div", wires_in=[gid_in_l, gid_in_r])
-        self.update_input_gate(gid_in_l)
-        self.update_input_gate(gid_in_r)
-        self.update_circuit(gate)
-        self.gate_id = self.gate_id + 1
+        self.m_gates.append(gate)
         return self.gate_id - 1;
 
     def update_input_gate(self, gid_in):

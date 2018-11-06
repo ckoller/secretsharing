@@ -31,15 +31,14 @@ class Open:
                 x = self.shares[type]
                 shares = [[x[i][j] for i in range(0, len(x))] for j in range(0, len(x[0]))]
                 rec = [self.pol.lagrange_interpolate(shares[x])[1] for x in range(0, len(x[0]))]
-            elif type == "alpha_beta":
+            elif type == "alpha_beta" or type == "and" or type == "xor":
                 aplha = [self.shares[type][x][0] for x in range(len(self.shares[type]))]
                 beta = [self.shares[type][x][1] for x in range(len(self.shares[type]))]
                 rec_aplha = self.pol.lagrange_interpolate(aplha)[1]
                 rec_beta = self.pol.lagrange_interpolate(beta)[1]
                 rec = [rec_aplha, rec_beta]
-                del self.shares["alpha_beta"]
+                del self.shares[type]
             elif type == "output":
-                print("HAHHAHAHAHA", type,  self.shares[type])
                 rec = self.pol.lagrange_interpolate(self.shares[type])[1]
                 del self.shares["output"]
 
