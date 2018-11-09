@@ -119,6 +119,7 @@ class Dev:
         sharingStrategy = ArithmeticSharingStrategy()
         evaluationStrategy = ArithmeticEvaluationStrategy(Client())
         config.ceps_speed = Ceps_Speed(circuit, sharingStrategy, evaluationStrategy)
+        config.ceps = Ceps(Client().create_circuit(0))
 
     def boolean_circuit_setup(self):
         # choose circuit for the party that we test on
@@ -127,6 +128,8 @@ class Dev:
         sharingStrategy = BooleanSharingStrategy()
         evaluationStrategy = BooleanEvaluationStrategy(Client())
         config.ceps_speed = Ceps_Speed(circuit, sharingStrategy, evaluationStrategy)
+        config.ceps = Ceps(Client().create_circuit(0))
+
 
 class Server:
     def __init__(self, setup):
@@ -139,7 +142,6 @@ class Server:
     def start(self, result_arr):
         print("***************** starting ******************")
         config.result = result_arr
-        config.ceps = Ceps(Client().create_circuit(0))
         self.app.run(debug=True, host=self.host, port=self.port, use_reloader=False)
 
     def print_config(self):

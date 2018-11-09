@@ -14,13 +14,15 @@ class Ceps:
         self.mv = []
         self.cur_layer = 1
 
+    def run(self):
+        self.share_my_input_values(self.mv)
 
-    def run(self, my_values):
+    def setup(self, circuit, my_values):
         self.mv = my_values
-        self.share_my_input_values(my_values)
-
-    def set_new_circuit(self, circuit):
-        self.circuit = circuit[0]
+        self.circuit = circuit["circuit"]
+        self.output_gate_count = len(circuit["output_gates"])
+        self.input_gates = circuit["input_gates"]
+        self.circuit_type = circuit["type"]
         self.cur_gid = 0
 
     def share_my_input_values(self, my_values):
@@ -162,7 +164,8 @@ class Ceps:
         return rec
 
     def protocol_done(self, result):
-        Client().get_response(result, self.circuit, self.mv)
+        config.result[:] = result
+        #Client().get_response(result, self.circuit, self.mv)
 
 
 

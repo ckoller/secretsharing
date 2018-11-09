@@ -41,7 +41,7 @@ class BooleanSharingStrategy:
         counter = 0
         for gate in circuit:
             if gate.type == 'input' and config.id == '1':
-                print(gate.r_open, "hahah")
+                print(counter, "hahah")
                 d = my_input_values[counter] + gate.r_open
                 counter = counter + 1
                 for player_id, player in config.all_players.items():

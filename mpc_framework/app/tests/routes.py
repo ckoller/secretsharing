@@ -17,12 +17,16 @@ def setup(protocol, circuit_type, circuit_id, input_values):
     if protocol == "ceps_speed":
         # config.ceps_speed.run(my_value=Polynomials().mult_invers(8))
         config.ceps_speed.setup(circuit, my_input_values)
+    if protocol == "ceps":
+        config.ceps.setup(circuit, my_input_values)
     return "Welcome"
 
 @module.route('/<protocol>/run/')
 def run(protocol):
     if protocol == "ceps_speed":
         config.ceps_speed.run()
+    elif protocol == "ceps":
+        config.ceps.run()
     return "Welcome"
 
 def get_bool_circuit(circuit_id):
@@ -40,9 +44,7 @@ def get_bool_circuit(circuit_id):
     elif circuit_id == 6:
         c.init_parsed_circuit("mixed_input_xor_and.txt")
     elif circuit_id == 7:
-        c.init_parsed_circuit("adder_32_bit.txt")
-    elif circuit_id == 7:
-        c.init_parsed_circuit("adder_32_bit_with_layer.txt")
+        c.init_parsed_circuit("adder_32bit_with_layer.txt")
     elif circuit_id == 8:
         c.init_parsed_circuit("AES.txt")
     circuit = c.get_circuit()
