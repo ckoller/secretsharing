@@ -4,7 +4,7 @@ import requests, subprocess, config, json
 from time import sleep
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
 from app.api.ceps.ceps import Ceps
-from app.api.strategies.sharing import ArithmeticSharingStrategy, BooleanSharingStrategy
+from app.api.strategies.sharing import ArithmeticSharingStrategy, BooleanSharingStrategy, BooleanLayerSharingStrategy
 from app.api.strategies.evaluation import ArithmeticEvaluationStrategy, BooleanEvaluationStrategy
 from app.tests.arithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
 from app.tests.routes import Client
@@ -300,19 +300,6 @@ class TestCepsSpeedBool(TestCase):
         # (a xor b) and c
         self.assertListEqual(list(self.result_arr), [0])
 
-    def test_32_bit_adder_0_plus_0(self):
-        n1 = [0 for x in range(32)]
-        n2 = [0 for x in range(32)]
-        n3 = [0 for x in range(33)]
-        inp = n1+n2
-        input = json.dumps(inp)
-        self.start_test_server(player_count=3)
-        setup_protocol('ceps_speed', 3, circuit_type='bool', circuit_id=1, circuit_input=input)
-        start_protocol('ceps_speed', 3)
-        #start_ceps_speed(number_of_players=3)
-        #self.assertListEqual(list(self.result_arr), n3)
-
-
     def start_test_server(self, player_count):
         # choose circuit for the party that we test on
         c = BooleanCircuitReader()
@@ -336,6 +323,61 @@ class TestCepsSpeedBool(TestCase):
         # start the server in a thread
         self.process = Process(target=s.start, args=[self.result_arr])
         self.process.start()
+
+class TestCepsSpeedBoolLayer(TestCase):
+
+    def setUp(self):
+        self.result_arr = None
+        self.process = None
+
+    def tearDown(self):
+        # kill all gnome-shell instances
+        subprocess.call(['./kill.sh'], cwd="/home/koller/Projects/secretsharing/mpc_framework/")
+        # stop the thread containing the server we test on
+        self.process.terminate()
+
+    def test_add_0_0(self):
+        number_of_players = 3
+        # start the server we want to test on
+        self.start_test_server(player_count=3)
+
+        # start 2 parties in gnome-shells
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool_layer")
+
+        # choose protocol and input for players
+        input = json.dumps([0,0])
+        # choose protocol and input for players
+        setup_protocol('ceps_speed', number_of_players, circuit_type='bool', circuit_id=1, circuit_input=input)
+
+        # start protocols
+        start_protocol('ceps_speed', number_of_players)
+
+        self.assertListEqual(list(self.result_arr), [0])
+
+    def start_test_server(self, player_count):
+        # choose circuit for the party that we test on
+        c = BooleanCircuitReader()
+        c.init_parsed_circuit("single_and.txt")
+        circuit = c.get_circuit()
+        # read config parameters
+        test_setup = TestSetup(host='127.0.0.1', port='5001', id='1', player_count=player_count)
+
+        # create shares memory (a list) between test tread and server tread for getting the result of the computaiton.
+        multiprocessing_manager = Manager()
+        self.result_arr = multiprocessing_manager.list()
+
+        # choose strategies and start the server
+        s = Server(setup=test_setup)
+        client = Client()
+        sharingStrategy = BooleanLayerSharingStrategy()
+        evaluationStrategy = BooleanEvaluationStrategy(client)
+        config.ceps_speed = Ceps_Speed(circuit, sharingStrategy, evaluationStrategy)
+        config.ceps = Ceps(Client().create_circuit(0))
+
+        # start the server in a thread
+        self.process = Process(target=s.start, args=[self.result_arr])
+        self.process.start()
+
 
 class TestCepsBoolLayer(TestCase):
 

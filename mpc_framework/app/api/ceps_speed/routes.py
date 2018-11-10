@@ -63,3 +63,10 @@ def handle_input_share():
         gid = request.form['gid']
         config.ceps_speed.handle_input_share(int(d), int(gid))
     return "share"
+
+@module.route('/input_d_dict/', methods=['POST'])
+def handle_all_input_shares():
+    if request.method == 'POST':
+        d = json.loads(request.form['d'])
+        config.ceps_speed.handle_input_share(d, 0)
+    return "share"
