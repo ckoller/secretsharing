@@ -5,7 +5,7 @@ from time import sleep
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
 from app.api.ceps.ceps import Ceps
 from app.api.strategies.sharing import ArithmeticSharingStrategy, BooleanSharingStrategy, BooleanLayerSharingStrategy
-from app.api.strategies.evaluation import ArithmeticEvaluationStrategy, BooleanEvaluationStrategy
+from app.api.strategies.evaluation import ArithmeticEvaluationStrategy, BooleanEvaluationStrategy, BooleanLayerEvaluationStrategy
 from app.tests.arithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
 from app.tests.routes import Client
 from multiprocessing import Process, Manager
@@ -336,7 +336,7 @@ class TestCepsSpeedBoolLayer(TestCase):
         # stop the thread containing the server we test on
         self.process.terminate()
 
-    def test_add_0_0(self):
+    def test_and_0_0(self):
         number_of_players = 3
         # start the server we want to test on
         self.start_test_server(player_count=3)
@@ -354,6 +354,66 @@ class TestCepsSpeedBoolLayer(TestCase):
 
         self.assertListEqual(list(self.result_arr), [0])
 
+    def test_adder_0_plus_1(self):
+        n1 = [0 for x in range(32)]
+        n2 = [0 for x in range(32)]
+        n3 = [0 for x in range(33)]
+        n1[0] = 0
+        n2[0] = 1
+        n3[0] = 1
+        input = json.dumps(n1 + n2)
+
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool_layer")
+        setup_protocol(protocol_name='ceps_speed', number_of_players=3, circuit_type='bool', circuit_id=7, circuit_input=input)
+        start_protocol(protocol_name='ceps_speed', number_of_players=3)
+        self.assertListEqual(list(self.result_arr), n3)
+
+    def test_adder_10_plus_1(self):
+        n1 = [0 for x in range(32)]
+        n2 = [0 for x in range(32)]
+        n3 = [0 for x in range(33)]
+        n1[0] = 1
+        n2[1] = 1
+        n3[0] = 1
+        n3[1] = 1
+        input = json.dumps(n1 + n2)
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool_layer")
+        setup_protocol(protocol_name='ceps_speed', number_of_players=3, circuit_type='bool', circuit_id=7, circuit_input=input)
+        start_protocol(protocol_name='ceps_speed', number_of_players=3)
+        self.assertListEqual(list(self.result_arr), n3)
+
+    def test_adder_1010101010_plus_1000110(self):
+        n1_val = [1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+        n2_val = [1, 0, 0, 0, 1, 1, 0]
+        res = [0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0]
+        n1_val.reverse()
+        n2_val.reverse()
+        res.reverse()
+        n1 = n1_val + [0 for x in range(22)]
+        n2 = n2_val + [0 for x in range(25)]
+        n3 = res + [0 for x in range(22)]
+        input = json.dumps(n1 + n2)
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool_layer")
+        setup_protocol(protocol_name='ceps_speed', number_of_players=3, circuit_type='bool', circuit_id=7, circuit_input=input)
+        start_protocol(protocol_name='ceps_speed', number_of_players=3)
+        self.assertListEqual(list(self.result_arr), n3)
+
+    def AES(self):
+        n1 = [0 for x in range(128)]
+        ascii_0 = [0, 0, 1, 1, 0, 0, 0, 0]
+        n2 = ascii_0 * 16
+        n2 = [0 for x in range(128)]
+        input = json.dumps(n1 + n2)
+        self.start_test_server(player_count=3)
+        start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool_layer")
+        setup_protocol(protocol_name='ceps_speed', number_of_players=3, circuit_type='bool', circuit_id=7, circuit_input=input)
+        start_protocol(protocol_name='ceps_speed', number_of_players=3)
+        self.assertListEqual(list(self.result_arr), n3)
+        # self.assertListEqual(list(self.result_arr), n3)
+
     def start_test_server(self, player_count):
         # choose circuit for the party that we test on
         c = BooleanCircuitReader()
@@ -370,7 +430,7 @@ class TestCepsSpeedBoolLayer(TestCase):
         s = Server(setup=test_setup)
         client = Client()
         sharingStrategy = BooleanLayerSharingStrategy()
-        evaluationStrategy = BooleanEvaluationStrategy(client)
+        evaluationStrategy = BooleanLayerEvaluationStrategy(client)
         config.ceps_speed = Ceps_Speed(circuit, sharingStrategy, evaluationStrategy)
         config.ceps = Ceps(Client().create_circuit(0))
 
@@ -486,7 +546,7 @@ class TestCepsBoolLayer(TestCase):
         start_protocol(protocol_name='ceps', number_of_players=3)
         #self.assertListEqual(list(self.result_arr), n3)
 
-    def test_crypto_aes(self):
+    def crypto_aes(self):
         plaintext = b'0000000000000000'
         key = b'0000000000000000'
         IV = b'0000000000000000'

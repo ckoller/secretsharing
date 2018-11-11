@@ -112,12 +112,11 @@ class Preprocessing:
                 print("triples", self.a_open[x] * self.b_open[x] % self.prime, "==", self.c_open[x])
 
     def add_triples_to_circuit(self, a, b, c):
-        print("a", a)
-        print("b", b)
-        print("c", c)
+        #print("a", a)
+        #print("b", b)
+        #print("c", c)
         counter = 0
         for g in self.mult_gates:
-            print(type(g), "hihi")
             gate = self.circuit[g.id]
             gate.a = a[counter]
             gate.b = b[counter]

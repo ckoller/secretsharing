@@ -110,7 +110,7 @@ class Client:
         return circuit
 
     def get_response(self, result, circuit, mv):
-        ArithmeticCircuitCreator().print_circuit(circuit)
+        ArithmeticCircuitCreator().print_circuit_v2(circuit)
         #print("n1", mv[:32])
         #print("n2", mv[32:])
         self.result = result

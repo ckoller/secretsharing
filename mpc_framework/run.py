@@ -4,7 +4,7 @@ import config, prod_config
 from app.api.ceps.ceps import Ceps
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
 from app.api.strategies.sharing import ArithmeticSharingStrategy, BooleanSharingStrategy, BooleanLayerSharingStrategy
-from app.api.strategies.evaluation import ArithmeticEvaluationStrategy, BooleanEvaluationStrategy
+from app.api.strategies.evaluation import ArithmeticEvaluationStrategy, BooleanEvaluationStrategy, BooleanLayerEvaluationStrategy
 from app.tests.routes import Client
 from app.tests.arithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
 
@@ -139,7 +139,7 @@ class Dev:
         circuit = ArithmeticCircuits().add_1_mult_2_3()
         # choose strategies
         sharingStrategy = BooleanLayerSharingStrategy()
-        evaluationStrategy = BooleanEvaluationStrategy(Client())
+        evaluationStrategy = BooleanLayerEvaluationStrategy(Client())
         config.ceps_speed = Ceps_Speed(circuit, sharingStrategy, evaluationStrategy)
         config.ceps = Ceps(Client().create_circuit(0))
 
