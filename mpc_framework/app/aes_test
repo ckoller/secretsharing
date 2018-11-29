@@ -1,0 +1,17 @@
+
+    def crypto_aes(self):
+        plaintext = b'0000000000000000'
+        key = b'0000000000000000'
+        IV = b'0000000000000000'
+
+        obj = AES.new(key, AES.MODE_CBC, IV)
+        ciphertext = obj.encrypt(plaintext)
+        print(ciphertext)
+        print(list(ciphertext))
+        print("aes", [int.to_bytes(ciphertext, byteorder='big')])
+        print("aes", [int.to_bytes(ciphertext, byteorder='little')])
+        print("aes", [int.to_bytes(ciphertext, byteorder='big', signed=True)])
+        print("aes", [int.to_bytes(ciphertext, byteorder='big', signed=False )])
+
+        print("{0:b}".format(20))
+        print("{0:b}".format(125))

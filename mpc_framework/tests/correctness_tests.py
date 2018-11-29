@@ -3,7 +3,6 @@ from unittest import TestCase
 from run import Server
 from time import sleep
 from multiprocessing import Process, Manager
-from Crypto.Cipher import AES
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
 from app.api.ceps.ceps import Ceps
 from app.api.ceps_speed.strategies.sharing import ArithmeticSharingStrategy, BooleanSharingStrategy, BooleanLayerSharingStrategy
@@ -546,23 +545,6 @@ class TestCepsBoolLayer(TestCase):
                        circuit_input=input)
         start_protocol(protocol_name='ceps', number_of_players=3)
         #self.assertListEqual(list(self.result_arr), n3)
-
-    def crypto_aes(self):
-        plaintext = b'0000000000000000'
-        key = b'0000000000000000'
-        IV = b'0000000000000000'
-
-        obj = AES.new(key, AES.MODE_CBC, IV)
-        ciphertext = obj.encrypt(plaintext)
-        print(ciphertext)
-        print(list(ciphertext))
-        print("aes", [int.to_bytes(ciphertext, byteorder='big')])
-        print("aes", [int.to_bytes(ciphertext, byteorder='little')])
-        print("aes", [int.to_bytes(ciphertext, byteorder='big', signed=True)])
-        print("aes", [int.to_bytes(ciphertext, byteorder='big', signed=False )])
-
-        print("{0:b}".format(20))
-        print("{0:b}".format(125))
 
     def start_test_server(self, player_count):
         # choose circuit for the party that we test on
