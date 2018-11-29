@@ -1,9 +1,9 @@
 from app.api.polynomials import Polynomials
-import config, json, requests
-from app.tests.routes import Client
+import config, json, requests, time
 
 class Ceps:
-    def __init__(self, circuit):
+    def __init__(self, circuit, sharingStrategy):
+        self.sharingStrategy = sharingStrategy
         self.circuit = circuit["circuit"]
         self.output_gate_count = len(circuit["output_gates"])
         self.input_gates = circuit["input_gates"]
@@ -15,6 +15,7 @@ class Ceps:
         self.cur_layer = 1
 
     def run(self):
+        print("starting")
         self.share_my_input_values(self.mv)
 
     def setup(self, circuit, my_values):
@@ -26,39 +27,12 @@ class Ceps:
         self.cur_gid = 0
 
     def share_my_input_values(self, my_values):
-        n = config.player_count
-        input_shares = {}
-        for gate in self.circuit:
-            if gate.type == 'input':
-                if self.circuit_type == "bool" and config.id == '1':
-                    my_value = my_values[gate.wires_in[0]]
-                    poly, shares = self.pol.create_poly_and_shares(my_value, degree=int(n / 3), shares=n)
-                    print("poly", poly)
-                    print("shares", shares)
-                    for player_id, player in config.players.items():
-                        if player_id not in input_shares:
-                            input_shares[player_id] = []
-                        input_shares[player_id].append(shares[player_id - 1])
-                        gate.output_value = shares[int(config.id) - 1]
-        if input_shares != {}:
-            self.send_input_shares(input_shares)
-            if self.received_all_input_shares():
-                self.evaluate_circuit()
-
-    def send_input_shares(self, input_shares):
-        for player_id, player in config.players.items():
-            url = "http://" + player + "/api/ceps/share/"
-            data = {"shares": json.dumps(input_shares[player_id]),
-                    "sender_id": json.dumps(config.id)}
-            requests.post(url, data)
+        self.sharingStrategy.share_my_input_values(my_values=my_values, circuit=self.circuit)
+        if self.received_all_input_shares():
+            self.evaluate_circuit()
 
     def handle_input_shares(self, shares):
-        counter = 0
-        for gate in self.circuit:
-            if gate.type == 'input':
-                share = shares[counter]
-                gate.output_value = share
-                counter = counter + 1
+        self.sharingStrategy.handle_input_shares(shares, self.circuit)
         if self.received_all_input_shares():
             self.evaluate_circuit()
 
@@ -165,6 +139,7 @@ class Ceps:
 
     def protocol_done(self, result):
         config.result[:] = result
+        end = time.time()
         #Client().get_response(result, self.circuit, self.mv)
 
 

@@ -17,6 +17,8 @@ class Gate:
         self.r_open = None
 
 class BooleanCircuitReader:
+
+    # layer, in, in, type
     def __init__(self):
         self.circuit = []
         self.gate_id = 0
@@ -61,6 +63,82 @@ class BooleanCircuitReader:
                    "output_gates": self.o_gates}
         return circuit
 
+class BooleanCircuitCreator:
+    def __init__(self):
+        self.circuit = []
+        self.gate_id = 0
+        self.m_gates = []
+        self.o_gates = []
+        self.i_gates = []
+
+    def create_circuit(self, filename):
+        print_circuit(self.circuit)
+        layer = 1
+        f = open(filename, "w")
+        line = ""
+        for gate in self.circuit:
+            if gate.type == "and":
+                line = str(layer) + " " + str(gate.wires_in[0]) + " " + str(gate.wires_in[1]) + " " + gate.type
+                layer = layer + 1
+            elif gate.type == "input":
+                line = "0" + " " + str(gate.wires_in[0]) + " " + gate.type
+            elif gate.type == "output":
+                line = str(layer) + " " + str(gate.wires_in[0]) + " " + gate.type
+            f.write(line + "\n")
+
+
+    def get_circuit(self):
+        self.output()
+        circuit = {"type": "arit",
+                   "circuit": self.circuit,
+                   "input_gates": self.i_gates,
+                   "mult_gates": self.m_gates,
+                   "output_gates": self.o_gates}
+        return circuit
+
+    def output(self):
+        gate = Gate(id=self.gate_id, type="output", wires_in=[self.gate_id - 1])
+        self.o_gates.append(gate)
+        self.circuit.insert(self.gate_id, gate)
+        self.gate_id = self.gate_id + 1
+
+    def input(self, player_id):
+        gate = Gate(id=self.gate_id, type="input", wires_in=[player_id])
+        self.circuit.insert(self.gate_id, gate)
+        self.i_gates.append(gate)
+        self.gate_id = self.gate_id + 1
+        return self.gate_id - 1;
+
+    def not_gate(self, gid_in_l, gid_in_r):
+        gate = Gate(id=self.gate_id, type="inv", wires_in=[gid_in_l, gid_in_r])
+        self.update_input_gate(gid_in_l)
+        self.update_input_gate(gid_in_r)
+        self.update_circuit(gate)
+        return self.gate_id - 1;
+
+    def xor_gate(self, gid_in_l, gid_in_r):
+        gate = Gate(id=self.gate_id, type="xor", wires_in=[gid_in_l, gid_in_r])
+        self.update_input_gate(gid_in_l)
+        self.update_input_gate(gid_in_r)
+        self.update_circuit(gate)
+        self.m_gates.append(gate)
+        return self.gate_id - 1;
+
+    def and_gate(self, gid_in_l, gid_in_r):
+        gate = Gate(id=self.gate_id, type="and", wires_in=[gid_in_l, gid_in_r])
+        self.update_input_gate(gid_in_l)
+        self.update_input_gate(gid_in_r)
+        self.update_circuit(gate)
+        self.m_gates.append(gate)
+        return self.gate_id - 1;
+
+    def update_input_gate(self, gid_in):
+        g_in = self.circuit[gid_in]
+        g_in.wires_out.append(self.gate_id)
+
+    def update_circuit(self, gate):
+        self.circuit.insert(self.gate_id, gate)
+        self.gate_id = self.gate_id + 1
 class ArithmeticCircuitCreator:
     def __init__(self):
         self.circuit = []
@@ -135,17 +213,17 @@ class ArithmeticCircuitCreator:
         print("scalar", gate.scalar)
         print("")
 
-    def print_circuit(self, circuit):
-        for gate in circuit:
-            print("id", gate.id)
-            print("type", gate.type)
-            print("wires_in", gate.wires_in)
-            print("wires_out", gate.wires_out)
-            print("shares", gate.shares)
-            print("output_value", gate.output_value)
-            print("scalar", gate.scalar)
-            print("")
-        print("\n\n")
+def print_circuit(circuit):
+    for gate in circuit:
+        print("id", gate.id)
+        print("type", gate.type)
+        print("wires_in", gate.wires_in)
+        print("wires_out", gate.wires_out)
+        print("shares", gate.shares)
+        print("output_value", gate.output_value)
+        print("scalar", gate.scalar)
+        print("")
+    print("\n\n")
 
     def print_circuit_v2(self, circuit):
         for gate in circuit:

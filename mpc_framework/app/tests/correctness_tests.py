@@ -4,9 +4,10 @@ import requests, subprocess, config, json
 from time import sleep
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
 from app.api.ceps.ceps import Ceps
-from app.api.strategies.sharing import ArithmeticSharingStrategy, BooleanSharingStrategy, BooleanLayerSharingStrategy
-from app.api.strategies.evaluation import ArithmeticEvaluationStrategy, BooleanEvaluationStrategy, BooleanLayerEvaluationStrategy
+from app.api.ceps_speed.strategies.sharing import ArithmeticSharingStrategy, BooleanSharingStrategy, BooleanLayerSharingStrategy
+from app.api.ceps_speed.strategies.evaluation import ArithmeticEvaluationStrategy, BooleanEvaluationStrategy, BooleanLayerEvaluationStrategy
 from app.tests.arithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
+from app.api.ceps.strategies.sharing import ShareByWireId
 from app.tests.routes import Client
 from multiprocessing import Process, Manager
 from app.tests.circuit import BooleanCircuitReader
@@ -124,7 +125,7 @@ class TestCepsSpeedArit(TestCase):
         sharingStrategy = ArithmeticSharingStrategy()
         evaluationStrategy = ArithmeticEvaluationStrategy(client)
         config.ceps_speed = Ceps_Speed(circuit, sharingStrategy, evaluationStrategy)
-        config.ceps = Ceps(Client().create_circuit(0))
+        config.ceps = Ceps(Client().create_circuit(0), ShareByWireId())
 
         # start the server in a thread
         self.process = Process(target=s.start, args=[self.result_arr])
@@ -318,7 +319,7 @@ class TestCepsSpeedBool(TestCase):
         sharingStrategy = BooleanSharingStrategy()
         evaluationStrategy = BooleanEvaluationStrategy(client)
         config.ceps_speed = Ceps_Speed(circuit, sharingStrategy, evaluationStrategy)
-        config.ceps = Ceps(Client().create_circuit(0))
+        config.ceps = Ceps(Client().create_circuit(0), ShareByWireId())
 
         # start the server in a thread
         self.process = Process(target=s.start, args=[self.result_arr])
@@ -411,7 +412,7 @@ class TestCepsSpeedBoolLayer(TestCase):
         start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool_layer")
         setup_protocol(protocol_name='ceps_speed', number_of_players=3, circuit_type='bool', circuit_id=7, circuit_input=input)
         start_protocol(protocol_name='ceps_speed', number_of_players=3)
-        self.assertListEqual(list(self.result_arr), n3)
+        self.assertListEqual(list(self.result_arr), "")
         # self.assertListEqual(list(self.result_arr), n3)
 
     def start_test_server(self, player_count):
@@ -432,12 +433,11 @@ class TestCepsSpeedBoolLayer(TestCase):
         sharingStrategy = BooleanLayerSharingStrategy()
         evaluationStrategy = BooleanLayerEvaluationStrategy(client)
         config.ceps_speed = Ceps_Speed(circuit, sharingStrategy, evaluationStrategy)
-        config.ceps = Ceps(Client().create_circuit(0))
+        config.ceps = Ceps(Client().create_circuit(0), ShareByWireId())
 
         # start the server in a thread
         self.process = Process(target=s.start, args=[self.result_arr])
         self.process.start()
-
 
 class TestCepsBoolLayer(TestCase):
 
@@ -585,7 +585,8 @@ class TestCepsBoolLayer(TestCase):
         sharingStrategy = BooleanSharingStrategy()
         evaluationStrategy = BooleanEvaluationStrategy(client)
         config.ceps_speed = Ceps_Speed(circuit, sharingStrategy, evaluationStrategy)
-        config.ceps = Ceps(Client().create_circuit(0))
+
+        config.ceps = Ceps(Client().create_circuit(0), ShareByWireId())
 
 
         # start the server in a thread

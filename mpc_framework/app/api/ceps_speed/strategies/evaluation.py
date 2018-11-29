@@ -1,5 +1,5 @@
 from app.api.ceps_speed.open import Open
-import config, requests, json
+import config
 
 class BooleanEvaluationStrategy:
     def __init__(self, client):
@@ -44,8 +44,10 @@ class BooleanEvaluationStrategy:
             if self.received_all_outputs(circuit):
                 self.client.get_response(self.output, circuit, None)
                 config.result[:] = self.output
+
                 print("eval strat res", config.result)
                 print("done")
+                return True
             else:
                 self.cur_gid = self.cur_gid + 1
                 self.evaluate_circuit(circuit)
@@ -68,6 +70,7 @@ class BooleanEvaluationStrategy:
             gate.output_value = result
             self.cur_gid = self.cur_gid + 1
             self.evaluate_circuit(circuit)
+        return False
 
 
     def received_all_outputs(self, circuit):

@@ -47,6 +47,20 @@ def get_bool_circuit(circuit_id):
         c.init_parsed_circuit("adder_32bit_with_layer.txt")
     elif circuit_id == 8:
         c.init_parsed_circuit("AES.txt")
+    elif circuit_id == 10:
+        c.init_parsed_circuit("10_and")
+    elif circuit_id == 20:
+        c.init_parsed_circuit("20_and")
+    elif circuit_id == 30:
+        c.init_parsed_circuit("30_and")
+    elif circuit_id == 40:
+        c.init_parsed_circuit("40_and")
+    elif circuit_id == 50:
+        c.init_parsed_circuit("50_and")
+    elif circuit_id == 60:
+        c.init_parsed_circuit("60_and")
+    elif circuit_id == 80:
+        c.init_parsed_circuit("80_and")
     circuit = c.get_circuit()
     return circuit
 
@@ -110,20 +124,5 @@ class Client:
         return circuit
 
     def get_response(self, result, circuit, mv):
-        ArithmeticCircuitCreator().print_circuit_v2(circuit)
-        #print("n1", mv[:32])
-        #print("n2", mv[32:])
         self.result = result
         print("res", self.result)
-
-        #print("len", len(result))
-        #res = [0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0]
-        #res.reverse()
-        #n3 = res + [0 for x in range(22)]
-        #print("exp", n3)
-
-
-
-    # TODO multiple outputs
-    # TODO read boolean circuit from file
-    # TODO evaluate boolean circuit by emulation

@@ -38,7 +38,6 @@ def handle_protocol_open_answer():
             config.ceps_speed.preprocessing.handle_protocol_open_answer(rec, type)
     return "share"
 
-
 @module.route('/random_shares/', methods=['POST'])
 def handle_random_preprossing_shares():
     if request.method == 'POST':
