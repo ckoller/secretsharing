@@ -1,6 +1,6 @@
 from app import create_app
 import argparse, requests
-import config, prod_config
+import player_config, config
 from tests.setup import TestSetupLocalShell
 from app.api.ceps.ceps import Ceps
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
@@ -19,10 +19,15 @@ class Prod:
         config.id = my_player_id
         config.player_count = player_count
         config.all_players = all
+        circuit = ArithmeticCircuits().add_1_mult_2_3()
+        config.ceps_speed = Ceps_Speed(circuit=circuit,
+                                       sharingStrategy=BooleanLayerSharingStrategyByPlayerId(),
+                                       evaluationStrategy=BooleanLayerEvaluationStrategy(Client()))
+        config.ceps = Ceps(circuit=Client().create_circuit(0), sharingStrategy=ShareByWirePlayerId())
 
     def create_player_dict(self):
         my_ip = requests.get('https://ipapi.co/ip/').text
-        player_list = prod_config.players_prod
+        player_list = player_config.players_prod
         player_count = len(player_list)
         my_player_id = player_list.index(my_ip) + 1
         players = {x + 1: player_list[x] for x in range(0, len(player_list)) if player_list[x] != my_ip}
@@ -51,7 +56,7 @@ class Emulate_Prod:
         return args.host, args.port, args.player_id, args.player_count
 
     def create_player_dict(self, id):
-        player_list = prod_config.players_test
+        player_list = player_config.players_test
         my_ip = player_list[int(id) - 1]
         player_count = len(player_list)
         players = {x + 1: player_list[x] for x in range(0, len(player_list)) if player_list[x] != my_ip}
@@ -79,7 +84,7 @@ class Server:
         print(config.player_count)
 
 if __name__ == '__main__':
-    setup = TestSetupLocalShell()
+    setup = Prod()
     setup.setup()
     host = config.host
     port = config.port

@@ -30,19 +30,14 @@ class Ceps_Speed:
         if self.received_all_input_shares():
             self.evaluate_circuit()
         self.sharingStrategy.share_my_input_value(self.circuit, self.my_input_values)
-        print("***************************** done sharing **********************************")
 
 
     def received_all_input_shares(self):
         return self.sharingStrategy.received_all_input_shares(self.circuit, self.preprocessed)
 
     def handle_input_share(self, d, gate_id):
-        print("***************************** handle sharing **********************************")
-
         self.sharingStrategy.handle_input_share(d, gate_id, self.circuit)
         if self.received_all_input_shares():
-            print("***************************** gota all  **********************************")
-
             self.evaluate_circuit()
 
     def evaluate_circuit(self):

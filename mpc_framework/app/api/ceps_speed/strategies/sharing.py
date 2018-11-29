@@ -91,11 +91,9 @@ class BooleanLayerSharingStrategy:
                 requests.post(url, data)
 
     def handle_input_share(self, d, gate_id, circuit):
-        #print("*****************", d)
         for gate_id, d_val in d.items():
             gate = circuit[int(gate_id)]
             gate.output_value = d_val - gate.r
-            #print(gate.id, gate.output_value)
         self.received_input_shares = True
 
     def received_all_input_shares(self, circuit, is_preprocessed):
