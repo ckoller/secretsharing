@@ -13,9 +13,11 @@ class Ceps:
         self.output = []
         self.mv = []
         self.cur_layer = 1
+        self.start = None
 
     def run(self):
-        print("starting")
+        if self.start is None:
+            self.start = time.time()
         self.share_my_input_values(self.mv)
 
     def setup(self, circuit, my_values):
@@ -32,6 +34,8 @@ class Ceps:
             self.evaluate_circuit()
 
     def handle_input_shares(self, shares):
+        if self.start is None:
+            self.start = time.time()
         self.sharingStrategy.handle_input_shares(shares, self.circuit)
         if self.received_all_input_shares():
             self.evaluate_circuit()
@@ -140,6 +144,7 @@ class Ceps:
     def protocol_done(self, result):
         config.result[:] = result
         end = time.time()
+        print("Time:",   end - self.start)
         #Client().get_response(result, self.circuit, self.mv)
 
 

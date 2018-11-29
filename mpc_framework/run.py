@@ -3,9 +3,9 @@ import argparse, requests
 import config, prod_config
 from app.api.ceps.ceps import Ceps
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
-from app.api.ceps_speed.strategies.sharing import ArithmeticSharingStrategy, BooleanSharingStrategy, BooleanLayerSharingStrategy
+from app.api.ceps_speed.strategies.sharing import ArithmeticSharingStrategy, BooleanSharingStrategy, BooleanLayerSharingStrategy, BooleanLayerSharingStrategyByPlayerId
 from app.api.ceps_speed.strategies.evaluation import ArithmeticEvaluationStrategy, BooleanEvaluationStrategy, BooleanLayerEvaluationStrategy
-from app.api.ceps.strategies.sharing import ShareByWireId
+from app.api.ceps.strategies.sharing import ShareByWireId, ShareByWirePlayerId
 from app.tests.routes import Client
 from app.tests.arithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
 
@@ -99,8 +99,8 @@ class Dev:
             self.boolean_circuit_setup()
         elif type == "bool_layer":
             self.boolean_circuit_layer_setup()
-
-
+        elif type == "bool_player_id":
+            self.boolean_bool_player_id_setup()
 
     def get_host_info(self):
         parser = argparse.ArgumentParser(description='P2P multiparty computation app')
@@ -144,6 +144,16 @@ class Dev:
         config.ceps_speed = Ceps_Speed(circuit, sharingStrategy, evaluationStrategy)
         config.ceps = Ceps(Client().create_circuit(0), ShareByWireId())
 
+    def boolean_bool_player_id_setup(self):
+        # choose circuit for the party that we test on
+        circuit = ArithmeticCircuits().add_1_mult_2_3()
+        # choose strategies
+        sharingStrategy = BooleanLayerSharingStrategyByPlayerId()
+        evaluationStrategy = BooleanLayerEvaluationStrategy(Client())
+        config.ceps_speed = Ceps_Speed(circuit, sharingStrategy, evaluationStrategy)
+
+        config.ceps = Ceps(Client().create_circuit(0), ShareByWirePlayerId())
+
 
 class Server:
     def __init__(self, setup):
@@ -169,7 +179,6 @@ class Server:
 if __name__ == '__main__':
     setup = Dev()
     setup.setup()
-    config.ceps = Ceps(Client().create_circuit(0), ShareByWireId())
     host = config.host
     port = config.port
     app = create_app()

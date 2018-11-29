@@ -125,4 +125,22 @@ class Client:
 
     def get_response(self, result, circuit, mv):
         self.result = result
+        self.print_circuit(circuit)
         print("res", self.result)
+
+    def print_circuit(self, circuit):
+        for gate in circuit:
+            print("id", gate.id)
+            print("type", gate.type)
+            print("wires_in", gate.wires_in)
+            print("wires_out", gate.wires_out)
+            print("shares", gate.shares)
+            print("output_value", gate.output_value)
+            print("a", gate.a)
+            print("b", gate.b)
+            print("c", gate.c)
+            print("r", gate.r)
+            print("r_open", gate.r_open)
+
+            print("")
+        print("\n\n")

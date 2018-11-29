@@ -134,9 +134,9 @@ class BooleanLayerEvaluationStrategy:
                 gate.output_value = gate_answer[2]
                 if self.received_all_outputs(circuit):
                     print("we are done")
+                    self.client.get_response(self.output, circuit, None)
                     done = True
                     config.result[:] = self.output
-                    #self.client.get_response(self.output, circuit, None)
             elif gate.type == 'and':
                 alpha_open = gate_answer[2]
                 beta_open = gate_answer[3]
