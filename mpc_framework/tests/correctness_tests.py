@@ -1,17 +1,18 @@
-from unittest import TestCase
-from run import Server, TestSetup
 import requests, subprocess, config, json
+from unittest import TestCase
+from run import Server
 from time import sleep
+from multiprocessing import Process, Manager
+from Crypto.Cipher import AES
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
 from app.api.ceps.ceps import Ceps
 from app.api.ceps_speed.strategies.sharing import ArithmeticSharingStrategy, BooleanSharingStrategy, BooleanLayerSharingStrategy
 from app.api.ceps_speed.strategies.evaluation import ArithmeticEvaluationStrategy, BooleanEvaluationStrategy, BooleanLayerEvaluationStrategy
-from app.tests.arithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
 from app.api.ceps.strategies.sharing import ShareByWireId
-from app.tests.routes import Client
-from multiprocessing import Process, Manager
-from app.tests.circuit import BooleanCircuitReader
-from Crypto.Cipher import AES
+from tests.routes import Client
+from tests.arithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
+from tests.circuit import BooleanCircuitReader
+from tests.setup import TestSetupLocalProcess
 
 class TestCepsSpeedArit(TestCase):
 
@@ -113,7 +114,7 @@ class TestCepsSpeedArit(TestCase):
         # choose circuit for the party that we test on
         circuit = ArithmeticCircuits().add_1_mult_2_3()
         # read config parameters
-        test_setup = TestSetup(host='127.0.0.1', port='5001', id='1', player_count=player_count)
+        test_setup = TestSetupLocalProcess(host='127.0.0.1', port='5001', id='1', player_count=player_count)
 
         # create shares memory (a list) between test tread and server tread for getting the result of the computaiton.
         multiprocessing_manager = Manager()
@@ -307,7 +308,7 @@ class TestCepsSpeedBool(TestCase):
         c.init_parsed_circuit("single_and.txt")
         circuit = c.get_circuit()
         # read config parameters
-        test_setup = TestSetup(host='127.0.0.1', port='5001', id='1', player_count=player_count)
+        test_setup = TestSetupLocalProcess(host='127.0.0.1', port='5001', id='1', player_count=player_count)
 
         # create shares memory (a list) between test tread and server tread for getting the result of the computaiton.
         multiprocessing_manager = Manager()
@@ -421,7 +422,7 @@ class TestCepsSpeedBoolLayer(TestCase):
         c.init_parsed_circuit("single_and.txt")
         circuit = c.get_circuit()
         # read config parameters
-        test_setup = TestSetup(host='127.0.0.1', port='5001', id='1', player_count=player_count)
+        test_setup = TestSetupLocalProcess(host='127.0.0.1', port='5001', id='1', player_count=player_count)
 
         # create shares memory (a list) between test tread and server tread for getting the result of the computaiton.
         multiprocessing_manager = Manager()
@@ -563,9 +564,6 @@ class TestCepsBoolLayer(TestCase):
         print("{0:b}".format(20))
         print("{0:b}".format(125))
 
-
-
-
     def start_test_server(self, player_count):
         # choose circuit for the party that we test on
         c = BooleanCircuitReader()
@@ -573,7 +571,7 @@ class TestCepsBoolLayer(TestCase):
         circuit = c.get_circuit()
 
         # read config parameters
-        test_setup = TestSetup(host='127.0.0.1', port='5001', id='1', player_count=player_count)
+        test_setup = TestSetupLocalProcess(host='127.0.0.1', port='5001', id='1', player_count=player_count)
 
         # create shares memory (a list) between test tread and server tread for getting the result of the computaiton.
         multiprocessing_manager = Manager()
@@ -587,7 +585,6 @@ class TestCepsBoolLayer(TestCase):
         config.ceps_speed = Ceps_Speed(circuit, sharingStrategy, evaluationStrategy)
 
         config.ceps = Ceps(Client().create_circuit(0), ShareByWireId())
-
 
         # start the server in a thread
         self.process = Process(target=s.start, args=[self.result_arr])

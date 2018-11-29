@@ -1,5 +1,6 @@
 from unittest import TestCase
-from run import Server, TestSetup
+from tests.setup import TestSetupLocalProcess
+from run import Server
 import requests, subprocess, config, json
 from time import sleep
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
@@ -7,9 +8,9 @@ from app.api.ceps.ceps import Ceps
 from app.api.ceps.strategies.sharing import ShareByWirePlayerId
 from app.api.ceps_speed.strategies.sharing import BooleanLayerSharingStrategyByPlayerId
 from app.api.ceps_speed.strategies.evaluation import BooleanEvaluationStrategy, BooleanLayerEvaluationStrategy
-from app.tests.routes import Client
+from tests.routes import Client
 from multiprocessing import Process, Manager
-from app.tests.circuit import BooleanCircuitReader, BooleanCircuitCreator
+from tests.circuit import BooleanCircuitReader, BooleanCircuitCreator
 
 class TestCepsSpeedBoolLayer(TestCase):
     def test_create_circuit(self):
@@ -52,7 +53,7 @@ class TestCepsBoolLayer(TestCase):
         circuit = c.get_circuit()
 
         # read config parameters
-        test_setup = TestSetup(host='127.0.0.1', port='5001', id='1', player_count=player_count)
+        test_setup = TestSetupLocalProcess(host='127.0.0.1', port='5001', id='1', player_count=player_count)
 
         # create shares memory (a list) between test tread and server tread for getting the result of the computaiton.
         multiprocessing_manager = Manager()
@@ -79,7 +80,7 @@ class TestCepsSpeedBoolLayer(TestCase):
 
     def tearDown(self):
         # kill all gnome-shell instances
-        #subprocess.call(['./kill.sh'], cwd="/home/koller/Projects/secretsharing/mpc_framework/")
+        subprocess.call(['./kill.sh'], cwd="/home/koller/Projects/secretsharing/mpc_framework/")
         # stop the thread containing the server we test on
         self.process.terminate()
 
@@ -103,7 +104,7 @@ class TestCepsSpeedBoolLayer(TestCase):
         c.init_parsed_circuit("single_and.txt")
         circuit = c.get_circuit()
         # read config parameters
-        test_setup = TestSetup(host='127.0.0.1', port='5001', id='1', player_count=player_count)
+        test_setup = TestSetupLocalProcess(host='127.0.0.1', port='5001', id='1', player_count=player_count)
 
         # create shares memory (a list) between test tread and server tread for getting the result of the computaiton.
         multiprocessing_manager = Manager()

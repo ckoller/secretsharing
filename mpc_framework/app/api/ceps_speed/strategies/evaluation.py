@@ -7,12 +7,11 @@ class BooleanEvaluationStrategy:
         self.cur_gid = 0
         self.output = []
         self.open = Open()
+        self.is_done = False
 
     def evaluate_circuit(self, circuit):
         for gate_id in range(self.cur_gid, len(circuit)):
             gate = circuit[gate_id]
-            print("**************************", gate.type, gate.id, "****************************")
-
             if gate.type == 'input':
                 self.cur_gid = self.cur_gid + 1
             elif gate.type == 'inv':
@@ -36,17 +35,12 @@ class BooleanEvaluationStrategy:
                 break
 
     def handle_protocol_open_answer(self, answer, type, circuit):
-        print("in handle protocol answer:", type)
         if type == "output":
-            #("**************************", "output answer", "****************************")
-
             self.output.append(answer)
             if self.received_all_outputs(circuit):
                 self.client.get_response(self.output, circuit, None)
+                self.is_done = True
                 config.result[:] = self.output
-
-                print("eval strat res", config.result)
-                print("done")
                 return True
             else:
                 self.cur_gid = self.cur_gid + 1
@@ -87,16 +81,15 @@ class BooleanLayerEvaluationStrategy:
         self.output = []
         self.open = Open()
         self.cur_layer = 1 # layer 0 is input and they are already taken care of
+        self.is_done = False
 
     def evaluate_circuit(self, circuit):
         layer_shares = []
         found_gate_in_layer = True
-        #print("in eval")
         while found_gate_in_layer:
             found_gate_in_layer = False
             for gate in circuit:
                 if gate.layer == self.cur_layer:
-                    #print("*************", gate.id, gate.type, "*************")
                     if gate.type == 'input':
                         found_gate_in_layer = True
                     elif gate.type == 'inv':
@@ -115,9 +108,6 @@ class BooleanLayerEvaluationStrategy:
                         gate.output_value = prev_gate.output_value
                         layer_shares.append([gate.id, gate.type, gate.output_value, 0])
                         found_gate_in_layer = True
-            #print("layer: ", self.cur_layer)
-            #print(layer_shares)
-            #print("found gate in layer", found_gate_in_layer)
             self.cur_layer = self.cur_layer + 1
             if layer_shares != []:
                 self.open.request(layer_shares, "layer")
@@ -133,8 +123,8 @@ class BooleanLayerEvaluationStrategy:
                 self.output.append(res)
                 gate.output_value = gate_answer[2]
                 if self.received_all_outputs(circuit):
-                    print("we are done")
-                    self.client.get_response(self.output, circuit, None)
+                    self.is_done = True
+                    print("done:", self.output)
                     done = True
                     config.result[:] = self.output
             elif gate.type == 'and':
@@ -150,7 +140,6 @@ class BooleanLayerEvaluationStrategy:
                 val_in_r = circuit[gate.wires_in[1]].output_value
                 result = (val_in_l + val_in_r) - 2 * (x)
                 gate.output_value = result
-        #print("handled answer like a boss")
         if not done:
             self.evaluate_circuit(circuit)
 
@@ -167,12 +156,11 @@ class ArithmeticEvaluationStrategy:
         self.cur_gid = 0
         self.output = []
         self.open = Open()
+        self.is_done = False
 
     def evaluate_circuit(self, circuit):
         for gate_id in range(self.cur_gid, len(circuit)):
             gate = circuit[gate_id]
-            #print("**************************", gate.type, gate.id, "****************************")
-
             if gate.type == 'input':
                 self.cur_gid = self.cur_gid + 1
             elif gate.type == 'add':
@@ -186,7 +174,6 @@ class ArithmeticEvaluationStrategy:
                 gate.output_value = val_in * scalar
                 self.cur_gid = self.cur_gid + 1
             elif gate.type == 'mult':
-                #print(gate.a, "hahah")
                 val_in_l = circuit[gate.wires_in[0]].output_value
                 val_in_r = circuit[gate.wires_in[1]].output_value
                 alpha = val_in_l + gate.a
@@ -203,14 +190,10 @@ class ArithmeticEvaluationStrategy:
 
     def handle_protocol_open_answer(self, answer, type, circuit):
         if type == "output":
-            #("**************************", "output answer", "****************************")
-
             self.output.append(answer)
             if self.received_all_outputs(circuit):
-                self.client.get_response(self.output, circuit, None)
-                print("done")
                 config.result[:] = self.output
-                print("eval strat res", config.result)
+                self.is_done = True
             else:
                 self.cur_gid = self.cur_gid + 1
                 self.evaluate_circuit(circuit)
@@ -218,15 +201,10 @@ class ArithmeticEvaluationStrategy:
             gate = circuit[self.cur_gid]
             alpha_open = answer[0]
             beta_open = answer[1]
-            #("**************************", gate.c, "****************************")
             x = (alpha_open*beta_open - alpha_open*gate.b - beta_open*gate.a + gate.c)
             gate.output_value = x
             self.cur_gid = self.cur_gid + 1
-            #print("**************************handle_protocol_open_answer****************************")
             self.evaluate_circuit(circuit)
-
-    def print_result(self):
-        print(self.result, "baa")
 
     def received_all_outputs(self, circuit):
         for gate in circuit:

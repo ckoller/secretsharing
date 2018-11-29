@@ -1,4 +1,4 @@
-from app.tests.circuit import ArithmeticCircuitCreator
+from tests.circuit import ArithmeticCircuitCreator
 
 # Arithmetic circuit are created with the gates: add, mult and scalar_mult.
 # The gates can take gates as inputs.

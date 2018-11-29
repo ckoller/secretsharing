@@ -1,5 +1,5 @@
 import config
-import os
+
 class Gate:
     def __init__(self, id, type, wires_in):
         self.id = id
@@ -28,7 +28,7 @@ class BooleanCircuitReader:
 
     def init_parsed_circuit(self, circuit_name):
         self.circuit = []
-        path = "/home/koller/Projects/secretsharing/mpc_framework/app/tests/booleanCircuits/" + circuit_name
+        path = "/home/koller/Projects/secretsharing/mpc_framework/tests/booleanCircuits/" + circuit_name
         f = open(path, "r")
         circuit_file = f.readlines()
         for gate_id in range(len(circuit_file)):

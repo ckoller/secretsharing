@@ -1,7 +1,7 @@
 from . import module
 import config, json
-from app.tests.circuit import ArithmeticCircuitCreator, BooleanCircuitReader
-from app.tests.arithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
+from tests.circuit import ArithmeticCircuitCreator, BooleanCircuitReader
+from tests.arithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
 
 # these routes are made to the purpose of testing the correctness of the protocols.
 # the should not be a part of the API, if you wish use this app in production
