@@ -30,8 +30,8 @@ class Prod:
         player_list = player_config.players_prod
         player_count = len(player_list)
         my_player_id = player_list.index(my_ip) + 1
-        players = {x + 1: player_list[x] for x in range(0, len(player_list)) if player_list[x] != my_ip}
-        all = {x + 1: player_list[x] for x in range(0, len(player_list)) if player_list[x]}
+        players = {str(x + 1): player_list[x] for x in range(0, len(player_list)) if player_list[x] != my_ip}
+        all = {str(x + 1): player_list[x] for x in range(0, len(player_list)) if player_list[x]}
         return player_count, my_player_id, players, all
 
 class Emulate_Prod:
