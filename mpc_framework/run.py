@@ -92,6 +92,12 @@ class Server:
 if __name__ == '__main__':
     setup = Prod()
     setup.setup()
+    print(config.players)
+    print(config.all_players)
+    print(config.host)
+    print(config.port)
+    print(config.id)
+    print(config.player_count)
     host = config.host
     port = config.port
     app = create_app()

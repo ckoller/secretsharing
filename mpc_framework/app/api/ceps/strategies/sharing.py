@@ -63,6 +63,7 @@ class ShareByWirePlayerId:
     def send_input_shares(self, input_shares):
         for player_id, player in config.players.items():
             url = "http://" + player + "/api/ceps/share/"
+            print("sending to:", url)
             data = {"shares": json.dumps(input_shares[player_id]),
                     "sender_id": json.dumps(config.id)}
             requests.post(url, data)

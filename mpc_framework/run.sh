@@ -1,4 +1,7 @@
 #!/bin/bash
+gnome-terminal -- bash -c "python run.py --host=127.0.0.1 --port=5001 --player_count=3 --player_id=1; exec bash"
+gnome-terminal -- bash -c "python run.py --host=127.0.0.1 --port=5002 --player_count=3 --player_id=2; exec bash"
+gnome-terminal -- bash -c "python run.py --host=127.0.0.1 --port=5003 --player_count=3 --player_id=3; exec bash"
 
 
 sleep 2
