@@ -9,7 +9,7 @@ class Open:
         self.shares = {}
 
     def request(self, data, type):
-        king = "127.0.0.1:5001"
+        king = config.all_players[1]
         url = "http://" + king + "/api/ceps_speed/protocolOpen/share/"
         data = {"shares": json.dumps(np.array(data).tolist()), "type": type}
         r = requests.post(url, data)
@@ -82,5 +82,7 @@ class Open:
                 rec_o = self.pol.lagrange_interpolate(output_shares)[1]
                 rec.append([gate_id, gate_type, rec_o])
         return rec
+
+
 
 

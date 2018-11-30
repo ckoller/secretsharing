@@ -46,9 +46,7 @@ class ShareByWirePlayerId:
         n = config.player_count
         input_shares = {}
         counter = 0
-        print("in sharing")
         for gate in circuit:
-            print("gate:", gate.id, gate.type)
             if gate.type == 'input':
                 if config.id == str(gate.wires_in[0]):
                     my_value = my_values[counter]
@@ -65,7 +63,6 @@ class ShareByWirePlayerId:
     def send_input_shares(self, input_shares):
         for player_id, player in config.players.items():
             url = "http://" + player + "/api/ceps/share/"
-            print("sending to:", url)
             data = {"shares": json.dumps(input_shares[player_id]),
                     "sender_id": json.dumps(config.id)}
             requests.post(url, data)
