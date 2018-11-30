@@ -45,6 +45,12 @@ class Emulate_Prod:
         config.id = id
         config.player_count = int(player_count)
         config.all_players = all
+        circuit = ArithmeticCircuits().add_1_mult_2_3()
+        config.ceps_speed = Ceps_Speed(circuit=circuit,
+                                       sharingStrategy=BooleanLayerSharingStrategyByPlayerId(),
+                                       evaluationStrategy=BooleanLayerEvaluationStrategy(Client()))
+        config.ceps = Ceps(circuit=Client().create_circuit(0), sharingStrategy=ShareByWirePlayerId())
+
 
     def get_host_info(self):
         parser = argparse.ArgumentParser(description='P2P multiparty computation app')
@@ -84,7 +90,7 @@ class Server:
         print(config.player_count)
 
 if __name__ == '__main__':
-    setup = Prod()
+    setup = Emulate_Prod()
     setup.setup()
     host = config.host
     port = config.port

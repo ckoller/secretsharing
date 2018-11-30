@@ -28,8 +28,8 @@ class BooleanCircuitReader:
 
     def init_parsed_circuit(self, circuit_name):
         self.circuit = []
-        #path = "/home/koller/Projects/secretsharing/mpc_framework/tests/booleanCircuits/" + circuit_name
-        path = "/home/ubuntu/secretsharing/mpc_framework/tests/booleanCircuits/" + circuit_name
+        path = "/home/koller/Projects/secretsharing/mpc_framework/tests/booleanCircuits/" + circuit_name
+        #path = "/home/ubuntu/secretsharing/mpc_framework/tests/booleanCircuits/" + circuit_name
         f = open(path, "r")
         circuit_file = f.readlines()
         for gate_id in range(len(circuit_file)):

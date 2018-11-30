@@ -27,8 +27,12 @@ class Ceps:
         self.input_gates = circuit["input_gates"]
         self.circuit_type = circuit["type"]
         self.cur_gid = 0
+        self.cur_layer = 1
+        self.output = []
+        self.start = None
 
     def share_my_input_values(self, my_values):
+        print("*************************", my_values, "*********************'")
         self.sharingStrategy.share_my_input_values(my_values=my_values, circuit=self.circuit)
         if self.received_all_input_shares():
             self.evaluate_circuit()
@@ -130,7 +134,6 @@ class Ceps:
                     self.handle_mult_share(what, 0, config.id)
                 break
             self.cur_layer = self.cur_layer + 1
-            #print("layer: ", self.cur_layer, "last: ", found_gate_in_layer)
             if not found_gate_in_layer:
                 for gate in self.circuit:
                     if gate.type == "output":
