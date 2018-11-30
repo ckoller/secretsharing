@@ -113,8 +113,6 @@ class BooleanLayerSharingStrategy:
             data = {"r": r, "gid": gate.id}
             requests.post(url, data)
 
-
-
 class BooleanLayerSharingStrategyByPlayerId:
 
     def share_my_input_value(self, circuit, my_input_values):

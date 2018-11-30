@@ -90,7 +90,7 @@ class Server:
         print(config.player_count)
 
 if __name__ == '__main__':
-    setup = Emulate_Prod()
+    setup = TestSetupLocalShell()
     setup.setup()
     host = config.host
     port = config.port

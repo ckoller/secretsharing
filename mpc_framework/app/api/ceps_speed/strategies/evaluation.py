@@ -9,6 +9,12 @@ class BooleanEvaluationStrategy:
         self.open = Open()
         self.is_done = False
 
+    def reset(self):
+        self.cur_gid = 0
+        self.output = []
+        self.open = Open()
+        self.is_done = False
+
     def evaluate_circuit(self, circuit):
         for gate_id in range(self.cur_gid, len(circuit)):
             gate = circuit[gate_id]
@@ -83,6 +89,13 @@ class BooleanLayerEvaluationStrategy:
         self.cur_layer = 1 # layer 0 is input and they are already taken care of
         self.is_done = False
 
+    def reset(self):
+        self.cur_gid = 0
+        self.output = []
+        self.open = Open()
+        self.cur_layer = 1
+        self.is_done = False
+
     def evaluate_circuit(self, circuit):
         layer_shares = []
         found_gate_in_layer = True
@@ -153,6 +166,13 @@ class BooleanLayerEvaluationStrategy:
 class ArithmeticEvaluationStrategy:
     def __init__(self, client):
         self.client = client
+        self.cur_gid = 0
+        self.output = []
+        self.open = Open()
+        self.is_done = False
+
+
+    def reset(self):
         self.cur_gid = 0
         self.output = []
         self.open = Open()

@@ -20,7 +20,6 @@ MarkupSafe==1.0
 nltk==3.3
 numpy==1.14.5
 py==1.6.0
-pycrypto==2.6.1
 pytz==2018.5
 PyYAML==3.13
 requests==2.19.1
