@@ -4,9 +4,9 @@ import player_config, config
 from tests.setup import TestSetupLocalShell
 from app.api.ceps.ceps import Ceps
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
-from app.api.ceps_speed.strategies.sharing import ArithmeticSharingStrategy, BooleanSharingStrategy, BooleanLayerSharingStrategy, BooleanLayerSharingStrategyByPlayerId
-from app.api.ceps_speed.strategies.evaluation import ArithmeticEvaluationStrategy, BooleanEvaluationStrategy, BooleanLayerEvaluationStrategy
-from app.api.ceps.strategies.sharing import ShareByWireId, ShareByWirePlayerId
+from app.api.ceps_speed.strategies.sharing import BooleanLayerSharingStrategyByPlayerId
+from app.api.ceps_speed.strategies.evaluation import BooleanLayerEvaluationStrategy
+from app.api.ceps.strategies.sharing import ShareByWirePlayerId
 from tests.routes import Client
 from tests.arithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
 
@@ -90,7 +90,7 @@ class Server:
         print(config.player_count)
 
 if __name__ == '__main__':
-    setup = TestSetupLocalShell()
+    setup = Prod()
     setup.setup()
     host = config.host
     port = config.port
