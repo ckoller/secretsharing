@@ -9,6 +9,8 @@ Install:
 Amazon EC2 servers:
 
 * ssh -i "koller.pem" ubuntu@ec2-18-222-137-164.us-east-2.compute.amazonaws.com
+* ssh -i "koller.pem" utuntu@ec2-3-16-255-215.us-east-2.compute.amazonaws.com
+* ssh -i "koller.pem" ubuntu@ec2-3-16-206-106.us-east-2.compute.amazonaws.com
 * ssh -i "koller.pem" ubuntu@ec2-3-16-28-44.us-east-2.compute.amazonaws.com
 * ssh -i "koller.pem" ubuntu@ec2-18-223-152-184.us-east-2.compute.amazonaws.com
 
