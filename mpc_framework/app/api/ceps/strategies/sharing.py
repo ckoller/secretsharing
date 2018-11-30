@@ -46,7 +46,9 @@ class ShareByWirePlayerId:
         n = config.player_count
         input_shares = {}
         counter = 0
+        print("in sharing")
         for gate in circuit:
+            print("gate:", gate.id, gate.type)
             if gate.type == 'input':
                 if config.id == str(gate.wires_in[0]):
                     my_value = my_values[counter]

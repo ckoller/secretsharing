@@ -1,17 +1,11 @@
 #!/bin/bash
-gnome-terminal -- bash -c "python run.py --host=127.0.0.1 --port=5001 --player_count=3 --player_id=1; exec bash"
-gnome-terminal -- bash -c "python run.py --host=127.0.0.1 --port=5002 --player_count=3 --player_id=2; exec bash"
-gnome-terminal -- bash -c "python run.py --host=127.0.0.1 --port=5003 --player_count=3 --player_id=3; exec bash"
 
-
-sleep 2
-
-curl -g "http://127.0.0.1:5001/ceps_speed/setup/bool/10/[0,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200]"
-curl -g "http://127.0.0.1:5002/ceps_speed/setup/bool/10/[0,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200]"
-curl -g "http://127.0.0.1:5003/ceps_speed/setup/bool/10/[0,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200]"
+curl -g "http://18.222.137.164/ceps/setup/bool/10/[0,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200]"
+curl -g "http://3.16.28.44/ceps/setup/bool/10/[0,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200]"
+curl -g "http://18.223.152.184/ceps/setup/bool/10/[0,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200,%200]"
 
 sleep 2
 
-curl "http://127.0.0.1:5001/ceps_speed/run/"
-curl "http://127.0.0.1:5002/ceps_speed/run/"
-curl "http://127.0.0.1:5003/ceps_speed/run/"
+curl "http://18.222.137.164/ceps/run/"
+curl "http://3.16.28.44/ceps/run/"
+curl "http://18.223.152.184/ceps/run/"
