@@ -103,7 +103,6 @@ class BooleanLayerEvaluationStrategy:
             found_gate_in_layer = False
             for gate in circuit:
                 if gate.layer == self.cur_layer:
-                    print("gate:", gate.id, gate.type)
                     if gate.type == 'input':
                         found_gate_in_layer = True
                     elif gate.type == 'inv':
@@ -139,7 +138,6 @@ class BooleanLayerEvaluationStrategy:
             gid = int(gate_answer[0])
             gate = circuit[gid]
             if gate.type == 'output':
-                print("Output gate handling")
                 res = gate_answer[2]
                 self.output.append(res)
                 gate.output_value = gate_answer[2]
