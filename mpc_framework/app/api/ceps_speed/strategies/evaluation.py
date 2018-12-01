@@ -122,6 +122,12 @@ class BooleanLayerEvaluationStrategy:
                         gate.output_value = prev_gate.output_value
                         layer_shares.append([gate.id, gate.type, gate.output_value, 0])
                         found_gate_in_layer = True
+                    elif gate.type == "or":
+                        val_in_l = self.circuit[gate.wires_in[0]].output_value
+                        val_in_r = self.circuit[gate.wires_in[1]].output_value
+                        sum = val_in_l + val_in_r
+                        gate.output_value = sum
+                        found_gate_in_layer = True
             self.cur_layer = self.cur_layer + 1
             if layer_shares != []:
                 self.open.request(layer_shares, "layer")

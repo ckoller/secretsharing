@@ -108,6 +108,12 @@ class Ceps:
                             layer_shares[player_id].append(tuple)
                         gate.shares[int(config.id)-1] = shares[int(config.id)-1]
                         found_gate_in_layer = True
+                    elif gate.type == 'or':
+                        val_in_l = self.circuit[gate.wires_in[0]].output_value
+                        val_in_r = self.circuit[gate.wires_in[1]].output_value
+                        sum = val_in_l + val_in_r
+                        gate.output_value = sum
+                        found_gate_in_layer = True
                     elif gate.type == 'output':
                         val_in = self.circuit[gate.wires_in[0]].output_value
                         gate.output_value = val_in
