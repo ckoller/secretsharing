@@ -123,8 +123,8 @@ class BooleanLayerEvaluationStrategy:
                         layer_shares.append([gate.id, gate.type, gate.output_value, 0])
                         found_gate_in_layer = True
                     elif gate.type == "or":
-                        val_in_l = self.circuit[gate.wires_in[0]].output_value
-                        val_in_r = self.circuit[gate.wires_in[1]].output_value
+                        val_in_l = circuit[gate.wires_in[0]].output_value
+                        val_in_r = circuit[gate.wires_in[1]].output_value
                         sum = val_in_l + val_in_r
                         gate.output_value = sum
                         found_gate_in_layer = True
