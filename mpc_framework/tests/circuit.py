@@ -38,7 +38,7 @@ class BooleanCircuitReader:
             layer = int(numbers[0])
             type = numbers[-1]
             wires_in = []
-            if type == "and" or type == "xor":
+            if type == "and" or type == "xor" or type == "or":
                 wires_in.append(int(numbers[1]))
                 wires_in.append(int(numbers[2]))
             elif type == "input" or type == "output" or type == "inv":
