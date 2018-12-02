@@ -130,10 +130,10 @@ def start_protocol(protocol_name, number_of_players):
 
 def setup_protocol(protocol_name, number_of_players, circuit_type, circuit_id, circuit_input):
     for x in range(5001, 5001 + number_of_players):
-        server_name = "http://127.0.0.1:" + str(x)
-        params = "/"+ protocol_name + "/setup/" + circuit_type + "/" + str(circuit_id) + "/" + circuit_input
-        url = server_name + params
-        r = requests.get(url)
+            server_name = "http://127.0.0.1:" + str(x)
+            params = "/"+ protocol_name + "/setup/" + circuit_type + "/" + str(circuit_id) + "/" + circuit_input
+            url = server_name + params
+            r = requests.get(url)
     sleep(2)
 
 def start_parties_in_gnome_shells(parties, number_of_players, protocol_type):
