@@ -61,6 +61,7 @@ class ShareByWirePlayerId:
             self.send_input_shares(input_shares)
 
     def send_input_shares(self, input_shares):
+        print("***************** sending input shares *******************")
         for player_id, player in config.players.items():
             url = "http://" + player + "/api/ceps/share/"
             data = {"shares": json.dumps(input_shares[player_id]),
@@ -69,6 +70,7 @@ class ShareByWirePlayerId:
 
 
     def handle_input_shares(self, shares, circuit):
+        print("******************** got input shares *****************")
         for share in shares:
             gate_id = share[0]
             point = share[1]
