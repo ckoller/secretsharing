@@ -43,14 +43,12 @@ class ShareByWirePlayerId:
         self.pol = Polynomials()
 
     def share_my_input_values(self, my_values, circuit):
-        print("***************** in sharing **************")
         n = config.player_count
         input_shares = {}
         counter = 0
         for gate in circuit:
             if gate.type == 'input':
                 if config.id == str(gate.wires_in[0]):
-                    print("*************** inside my input ****************")
                     my_value = my_values[counter]
                     counter = counter + 1
                     poly, shares = self.pol.create_poly_and_shares(my_value, degree=int(n / 3), shares=n)
@@ -63,7 +61,6 @@ class ShareByWirePlayerId:
             self.send_input_shares(input_shares)
 
     def send_input_shares(self, input_shares):
-        print("***************** sending input shares *******************")
         for player_id, player in config.players.items():
             url = "http://" + player + "/api/ceps/share/"
             data = {"shares": json.dumps(input_shares[player_id]),
@@ -72,7 +69,6 @@ class ShareByWirePlayerId:
 
 
     def handle_input_shares(self, shares, circuit):
-        print("******************** got input shares *****************")
         for share in shares:
             gate_id = share[0]
             point = share[1]
