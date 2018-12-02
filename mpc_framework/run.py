@@ -39,7 +39,7 @@ class Prod:
         elif args.player_count == '20':
             player_list = player_config.players_prod[:20]
         else:
-            player_list = player_config.players_prod
+            player_list = player_config.players_prod[:5]
 
         player_count = len(player_list)
         my_player_id = str(player_list.index(my_ip) + 1)
