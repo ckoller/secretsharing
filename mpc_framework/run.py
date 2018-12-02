@@ -34,14 +34,10 @@ class Prod:
 
         if args.player_count == '10':
             player_list = player_config.players_prod[:10]
-        elif args.player_count == 15:
+        elif args.player_count == '15':
             player_list = player_config.players_prod[:15]
-        elif args.player_count == 20:
+        elif args.player_count == '20':
             player_list = player_config.players_prod[:20]
-        elif args.player_count == 25:
-            player_list = player_config.players_prod[:25]
-        elif args.player_count == 30:
-            player_list = player_config.players_prod[:30]
         else:
             player_list = player_config.players_prod
 
