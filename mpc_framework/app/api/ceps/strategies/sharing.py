@@ -43,12 +43,14 @@ class ShareByWirePlayerId:
         self.pol = Polynomials()
 
     def share_my_input_values(self, my_values, circuit):
+        print("***************** in sharing **************")
         n = config.player_count
         input_shares = {}
         counter = 0
         for gate in circuit:
             if gate.type == 'input':
                 if config.id == str(gate.wires_in[0]):
+                    print("*************** inside my input ****************")
                     my_value = my_values[counter]
                     counter = counter + 1
                     poly, shares = self.pol.create_poly_and_shares(my_value, degree=int(n / 3), shares=n)
