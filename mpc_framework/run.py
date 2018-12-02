@@ -32,7 +32,7 @@ class Prod:
         parser.add_argument('--player_count')
         args = parser.parse_args()
 
-        if args.player_count == 10:
+        if args.player_count == '10':
             player_list = player_config.players_prod[:10]
         elif args.player_count == 15:
             player_list = player_config.players_prod[:15]
