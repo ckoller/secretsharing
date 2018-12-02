@@ -1,6 +1,6 @@
 from app import create_app
 import argparse, requests
-import player_config, config
+import player_config, config, argparse
 from tests.setup import TestSetupLocalShell
 from app.api.ceps.ceps import Ceps
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
@@ -27,7 +27,24 @@ class Prod:
 
     def create_player_dict(self):
         my_ip = requests.get('https://ipapi.co/ip/').text
-        player_list = player_config.players_prod
+
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--player_count')
+        args = parser.parse_args()
+
+        if args.player_count == 10:
+            player_list = player_config.players_prod[:10]
+        elif args.player_count == 15:
+            player_list = player_config.players_prod[:15]
+        elif args.player_count == 20:
+            player_list = player_config.players_prod[:20]
+        elif args.player_count == 25:
+            player_list = player_config.players_prod[:25]
+        elif args.player_count == 30:
+            player_list = player_config.players_prod[:30]
+        else:
+            player_list = player_config.players_prod
+
         player_count = len(player_list)
         my_player_id = str(player_list.index(my_ip) + 1)
         players = {x + 1: player_list[x] for x in range(0, len(player_list)) if player_list[x] != my_ip}

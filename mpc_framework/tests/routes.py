@@ -48,15 +48,21 @@ def get_bool_circuit(circuit_id):
     elif circuit_id == 8:
         c.init_parsed_circuit("AES.txt")
     elif circuit_id == 10:
-        c.init_parsed_circuit("10_and")
+        c.init_parsed_circuit("80_and_10_in")
+    elif circuit_id == 15:
+        c.init_parsed_circuit("80_and_15_in")
     elif circuit_id == 20:
-        c.init_parsed_circuit("20_and")
+        c.init_parsed_circuit("80_and_20_in")
     elif circuit_id == 30:
-        c.init_parsed_circuit("30_and")
-    elif circuit_id == 40:
-        c.init_parsed_circuit("40_and")
-    elif circuit_id == 50:
-        c.init_parsed_circuit("50_and")
+        c.init_parsed_circuit("80_and_30_in")
+    elif circuit_id == 110:
+        c.init_parsed_circuit("80_or_10_in")
+    elif circuit_id == 115:
+        c.init_parsed_circuit("80_or_15_in")
+    elif circuit_id == 120:
+        c.init_parsed_circuit("80_or_20_in")
+    elif circuit_id == 130:
+        c.init_parsed_circuit("80_or_30_in")
     elif circuit_id == 80:
         c.init_parsed_circuit("80_and")
     circuit = c.get_circuit()
