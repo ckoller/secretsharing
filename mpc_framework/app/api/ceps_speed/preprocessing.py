@@ -82,8 +82,17 @@ class Preprocessing:
     def add_random_input_values_to_circuit(self, input_random_shares):
         self.sharingStrategy.add_random_input_values_to_circuit(input_random_shares, self.input_gates)
 
-
     def handle_random_input_shares(self, r, gate_id):
+        print(r)
+        if isinstance(r, list):
+            for tuple in r:
+                self.add_input_share_to_circuit(int(tuple[0]), int(tuple[1]))
+        else:
+            r = int(r)
+            gate_id = int(gate_id)
+            self.add_input_share_to_circuit(r, gate_id)
+
+    def add_input_share_to_circuit(self, r, gate_id):
         if gate_id in self.input_shares:
             shares = self.input_shares[gate_id]
             shares.append(r)
@@ -93,7 +102,6 @@ class Preprocessing:
                 gate.r_open = self.pol.lagrange_interpolate(shares)[1]
         else:
             self.input_shares[gate_id] = [r]
-
 
     def handle_protocol_open_answer(self, data, type):
         if type == "D":

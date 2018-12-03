@@ -89,8 +89,8 @@ class TestCepsSpeedBoolLayer(TestCase):
         protocol_type = "bool_player_id"
         protocol_name = 'ceps_speed'
         circuit_type = 'bool'
-        circuit_id = 10
-        circuit_input = json.dumps([0, 0]*10)
+        circuit_id = 80
+        circuit_input = json.dumps([0, 0]*80)
 
         self.start_test_server(player_count)
         start_parties_in_gnome_shells(player_count-1, player_count, protocol_type)

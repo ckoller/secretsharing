@@ -143,14 +143,23 @@ class BooleanLayerSharingStrategyByPlayerId:
         return True
 
     def add_random_input_values_to_circuit(self, input_random_shares, input_gates):
+        shares_to_players = {}
         shares = np.concatenate(input_random_shares).tolist()
         for gate in input_gates:
             r = shares.pop()
             gate.r = r
             player_id = gate.wires_in[0]
-            player = config.all_players[player_id]
-            url = "http://" + player + "/api/ceps_speed/input_shares/"
-            data = {"r": r, "gid": gate.id}
-            requests.post(url, data)
+            tuple = [r, gate.id]
+            if player_id in shares_to_players:
+                shares_to_players[player_id].append(tuple)
+            else:
+                shares_to_players[player_id] = [tuple]
+        for player_id, player in config.all_players.items():
+            if player_id in shares_to_players:
+                url = "http://" + player + "/api/ceps_speed/input_shares/"
+                s = json.dumps(shares_to_players[player_id])
+                data = {"r": s, "gid": 1}
+                requests.post(url, data)
+
 
 

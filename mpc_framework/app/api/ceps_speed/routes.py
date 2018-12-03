@@ -50,9 +50,9 @@ def handle_random_preprossing_shares():
 @module.route('/input_shares/', methods=['POST'])
 def handle_input_randomness():
     if request.method == 'POST':
-        r = request.form['r']
-        gid = request.form['gid']
-        config.ceps_speed.preprocessing.handle_random_input_shares(int(r), int(gid))
+        r = json.loads(request.form['r'])
+        gid = json.loads(request.form['gid'])
+        config.ceps_speed.preprocessing.handle_random_input_shares(r, gid)
     return "share"
 
 @module.route('/input_d_shares/', methods=['POST'])
