@@ -14,6 +14,23 @@ class Open:
         data = {"shares": json.dumps(np.array(data).tolist()), "type": type}
         r = requests.post(url, data)
 
+    def request_with_load_balancing(self, data, type):
+        counter = 0
+        shares_for_players = {}
+        for gate in data:
+            king_id = counter % config.player_count + 1
+            counter = counter + 1
+            if king_id in shares_for_players:
+                shares_for_players[king_id].append(gate)
+            else:
+                shares_for_players[king_id] = [gate]
+
+        for player_id, player in config.all_players.items():
+            if int(player_id) in shares_for_players:
+                url = "http://" + player + "/api/ceps_speed/protocolOpen/share/"
+                data = {"shares": json.dumps(np.array(shares_for_players[player_id]).tolist()), "type": type}
+                r = requests.post(url, data)
+
     def handle_request(self, data, type):
         if type in self.shares.keys():
             array = self.shares[type]

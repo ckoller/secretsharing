@@ -170,6 +170,7 @@ class BooleanLayerEvaluationStrategy:
         self.cur_layer_gates = []
 
     def evaluate_circuit(self, circuit):
+        print("******************** layer;", self.cur_layer)
         layer_shares = []
         found_gate_in_layer = True
         while found_gate_in_layer:
@@ -186,6 +187,7 @@ class BooleanLayerEvaluationStrategy:
                         val_in_l = circuit[gate.wires_in[0]].output_value
                         val_in_r = circuit[gate.wires_in[1]].output_value
                         alpha = val_in_l + gate.a
+                        #print("*******", circuit[gate.wires_in[1]].type, circuit[gate.wires_in[1]].id, circuit[gate.wires_in[1]].layer)
                         beta = val_in_r + gate.b
                         layer_shares.append([gate.id, gate.type, alpha, beta])
                         self.cur_layer_gates.append(gate)
@@ -202,10 +204,11 @@ class BooleanLayerEvaluationStrategy:
                         sum = val_in_l + val_in_r
                         gate.output_value = sum
                         found_gate_in_layer = True
-            self.cur_layer = self.cur_layer + 1
             if layer_shares != []:
+                #print("********** layer gates", layer_shares.__len__())
                 self.open.request(layer_shares, "layer")
                 break
+            self.cur_layer = self.cur_layer + 1
             if found_gate_in_layer is False:
                 self.is_done = True
                 print("done:", self.output)
@@ -233,6 +236,7 @@ class BooleanLayerEvaluationStrategy:
                 result = (val_in_l + val_in_r) - 2 * (x)
                 gate.output_value = result
         if self.received_all_opens_in_layer(circuit):
+            self.cur_layer = self.cur_layer + 1
             self.cur_layer_gates = []
             self.evaluate_circuit(circuit)
 
@@ -242,6 +246,7 @@ class BooleanLayerEvaluationStrategy:
             if gate.layer == self.cur_layer:
                 if gate.output_value == None:
                     return False
+            #print("*** cur_layer_gates", self.cur_layer_gates.__len__())
         return True
 
 def print_gate(gate):
