@@ -10,6 +10,8 @@ class Ceps_Speed:
         self.preprocessed = False
         self.my_input_values = []
         self.start = None
+        self.pre_time = None
+
 
     def setup(self, circuit, my_input_values):
         self.evaluationStrategy.reset()
@@ -26,6 +28,7 @@ class Ceps_Speed:
     def set_preprossing_circuit(self, circuit):
         self.circuit = circuit
         self.preprocessed = True
+        self.pre_time = time.time() - self.start
         self.share_my_input_value()
 
     def share_my_input_value(self):
@@ -57,4 +60,5 @@ class Ceps_Speed:
     def protocol_done(self):
         print("done")
         end = time.time()
-        print("Time:", end - self.start)
+        print("Pre Time:", self.pre_time)
+        print("Total Time:", end - self.start)
