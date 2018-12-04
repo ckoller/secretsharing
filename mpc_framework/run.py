@@ -114,4 +114,4 @@ if __name__ == '__main__':
     host = config.host
     port = config.port
     app = create_app()
-    app.run(debug=True, host=host, port=port)
+    app.run(debug=False, host=host, port=port)
