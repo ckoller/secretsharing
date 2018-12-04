@@ -4,7 +4,7 @@ import player_config, config, argparse
 from tests.setup import TestSetupLocalShell
 from app.api.ceps.ceps import Ceps
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
-from app.api.ceps_speed.strategies.sharing import BooleanLayerSharingStrategyByPlayerId
+from app.api.ceps_speed.strategies.sharing import BooleanLayerSharingStrategyByPlayerId, BooleanLayerSharingStrategy
 from app.api.ceps_speed.strategies.evaluation import BooleanLayerEvaluationStrategy
 from app.api.ceps.strategies.sharing import ShareByWirePlayerId
 from tests.routes import Client
@@ -21,7 +21,7 @@ class Prod:
         config.all_players = all
         circuit = ArithmeticCircuits().add_1_mult_2_3()
         config.ceps_speed = Ceps_Speed(circuit=circuit,
-                                       sharingStrategy=BooleanLayerSharingStrategyByPlayerId(),
+                                       sharingStrategy=BooleanLayerSharingStrategy(),
                                        evaluationStrategy=BooleanLayerEvaluationStrategy(Client()))
         config.ceps = Ceps(circuit=Client().create_circuit(0), sharingStrategy=ShareByWirePlayerId())
 
