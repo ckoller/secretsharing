@@ -103,7 +103,7 @@ class Server:
         print(config.player_count)
 
 if __name__ == '__main__':
-    setup = TestSetupLocalShell()
+    setup = Prod()
     setup.setup()
     print(config.players)
     print(config.all_players)
