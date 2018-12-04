@@ -19,6 +19,8 @@ class Ceps_Speed:
         self.circuit = circuit["circuit"]
         self.preprocessing = Preprocessing(circuit, self.sharingStrategy)
         self.preprocessed = False
+        self.start = None
+        self.pre_time = None
 
     def run(self):
         if self.start is None:
@@ -59,6 +61,6 @@ class Ceps_Speed:
 
     def protocol_done(self):
         print("done")
-        total_time = time.time() - self.start
-        print("W/O Pre Time:", total_time - self.pre_time)
-        print("Total Time:", total_time)
+        end = time.time()
+        print("Pre Time:", self.pre_time)
+        print("Total Time:", end - self.start)
