@@ -64,7 +64,6 @@ class Emulate_Prod:
                                        evaluationStrategy=BooleanLayerEvaluationStrategy(Client()))
         config.ceps = Ceps(circuit=Client().create_circuit(0), sharingStrategy=ShareByWirePlayerId())
 
-
     def get_host_info(self):
         parser = argparse.ArgumentParser(description='P2P multiparty computation app')
         parser.add_argument('--host')
