@@ -83,7 +83,6 @@ class Preprocessing:
         self.sharingStrategy.add_random_input_values_to_circuit(input_random_shares, self.input_gates)
 
     def handle_random_input_shares(self, r, gate_id):
-        print(r)
         if isinstance(r, list):
             for tuple in r:
                 self.add_input_share_to_circuit(int(tuple[0]), int(tuple[1]))

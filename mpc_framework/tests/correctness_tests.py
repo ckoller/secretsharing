@@ -533,7 +533,7 @@ class TestCepsBoolLayer(TestCase):
         start_protocol(protocol_name='ceps', number_of_players=3)
         self.assertListEqual(list(self.result_arr), n3)
 
-    def test_AES(self):
+    def ttest_AES(self):
         n1 = [0 for x in range(128)]
         ascii_0 = [0,0,1,1,0,0,0,0]
         n2 = ascii_0 * 16

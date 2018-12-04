@@ -67,7 +67,8 @@ class Ceps:
             self.evaluate_circuit()
 
     def received_all_input_shares(self):
-        for gate in self.circuit:
+        for g_in in self.input_gates:
+            gate = self.circuit[g_in.id]
             if gate.type == 'input' and gate.output_value == None:
                 return False
         return True
@@ -124,9 +125,6 @@ class Ceps:
                             layer_shares[player_id].append(tuple)
                         gate.shares[int(config.id)-1] = gate.output_value
                         found_gate_in_layer = True
-
-            # TODO output reconstruction in the end?
-
             # deal layer gate shares
             what = []
             if layer_shares != {}:
@@ -154,7 +152,6 @@ class Ceps:
         config.result[:] = result
         end = time.time()
         print("Time:",   end - self.start)
-        #Client().get_response(result, self.circuit, self.mv)
 
 
 
