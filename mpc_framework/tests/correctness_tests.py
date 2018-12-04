@@ -402,7 +402,7 @@ class TestCepsSpeedBoolLayer(TestCase):
         start_protocol(protocol_name='ceps_speed', number_of_players=3)
         self.assertListEqual(list(self.result_arr), n3)
 
-    def AES(self):
+    def test_AES_ceps_speed(self):
         n1 = [0 for x in range(128)]
         ascii_0 = [0, 0, 1, 1, 0, 0, 0, 0]
         n2 = ascii_0 * 16
@@ -410,9 +410,9 @@ class TestCepsSpeedBoolLayer(TestCase):
         input = json.dumps(n1 + n2)
         self.start_test_server(player_count=3)
         start_parties_in_gnome_shells(parties=2, number_of_players=3, protocol_type="bool_layer")
-        setup_protocol(protocol_name='ceps_speed', number_of_players=3, circuit_type='bool', circuit_id=7, circuit_input=input)
+        setup_protocol(protocol_name='ceps_speed', number_of_players=3, circuit_type='bool', circuit_id=8, circuit_input=input)
         start_protocol(protocol_name='ceps_speed', number_of_players=3)
-        self.assertListEqual(list(self.result_arr), "")
+        self.result_arr
         # self.assertListEqual(list(self.result_arr), n3)
 
     def start_test_server(self, player_count):
@@ -533,7 +533,7 @@ class TestCepsBoolLayer(TestCase):
         start_protocol(protocol_name='ceps', number_of_players=3)
         self.assertListEqual(list(self.result_arr), n3)
 
-    def ttest_AES(self):
+    def test_AES_ceps(self):
         n1 = [0 for x in range(128)]
         ascii_0 = [0,0,1,1,0,0,0,0]
         n2 = ascii_0 * 16
@@ -544,7 +544,7 @@ class TestCepsBoolLayer(TestCase):
         setup_protocol(protocol_name='ceps', number_of_players=3, circuit_type='bool', circuit_id=8,
                        circuit_input=input)
         start_protocol(protocol_name='ceps', number_of_players=3)
-        #self.assertListEqual(list(self.result_arr), n3)
+        print(self.result_arr)
 
     def start_test_server(self, player_count):
         # choose circuit for the party that we test on
