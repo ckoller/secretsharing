@@ -59,6 +59,6 @@ class Ceps_Speed:
 
     def protocol_done(self):
         print("done")
-        end = time.time()
-        print("Pre Time:", self.pre_time)
-        print("Total Time:", end - self.start)
+        total_time = time.time() - self.start
+        print("W/O Pre Time:", total_time - self.pre_time)
+        print("Total Time:", total_time)
