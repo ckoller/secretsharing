@@ -6,7 +6,7 @@ from app.api.ceps.ceps import Ceps
 from app.api.ceps_speed.ceps_speed import Ceps_Speed
 from app.api.ceps_speed.strategies.sharing import BooleanLayerSharingStrategyByPlayerId, BooleanLayerSharingStrategy
 from app.api.ceps_speed.strategies.evaluation import BooleanLayerEvaluationStrategy
-from app.api.ceps.strategies.sharing import ShareByWirePlayerId
+from app.api.ceps.strategies.sharing import ShareByWirePlayerId, ShareByWireId
 from tests.routes import Client
 from tests.arithmeticCircuits.arithmetic_circuits import ArithmeticCircuits
 
@@ -23,7 +23,7 @@ class Prod:
         config.ceps_speed = Ceps_Speed(circuit=circuit,
                                        sharingStrategy=BooleanLayerSharingStrategy(),
                                        evaluationStrategy=BooleanLayerEvaluationStrategy(Client()))
-        config.ceps = Ceps(circuit=Client().create_circuit(0), sharingStrategy=ShareByWirePlayerId())
+        config.ceps = Ceps(circuit=Client().create_circuit(0), sharingStrategy=ShareByWireId())
 
     def create_player_dict(self):
         my_ip = requests.get('https://ipapi.co/ip/').text
@@ -62,7 +62,7 @@ class Emulate_Prod:
         config.ceps_speed = Ceps_Speed(circuit=circuit,
                                        sharingStrategy=BooleanLayerSharingStrategyByPlayerId(),
                                        evaluationStrategy=BooleanLayerEvaluationStrategy(Client()))
-        config.ceps = Ceps(circuit=Client().create_circuit(0), sharingStrategy=ShareByWirePlayerId())
+        config.ceps = Ceps(circuit=Client().create_circuit(0), sharingStrategy=ShareWire())
 
     def get_host_info(self):
         parser = argparse.ArgumentParser(description='P2P multiparty computation app')
