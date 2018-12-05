@@ -25,6 +25,7 @@ class Preprocessing:
         self.input_shares = {}
         self.input_share_count = 0
         self.count = None
+        self.count_add_rand = 0
 
     def run(self):
         i = len(self.input_gates)
@@ -83,11 +84,14 @@ class Preprocessing:
                 self.protocol_triples.run(mult, protocol_double_random_shares[0], protocol_double_random_shares[1])
 
     def add_random_input_values_to_circuit(self, input_random_shares):
-        self.count = self.sharingStrategy.add_random_input_values_to_circuit(input_random_shares, self.input_gates)
-        print("counttt", self.count, self.input_share_count)
-        if self.count == self.input_share_count and len(self.mult_gates) == 0:
-            print("inside")
-            config.ceps_speed.set_preprossing_circuit(self.circuit)
+        count = self.sharingStrategy.add_random_input_values_to_circuit(input_random_shares, self.input_gates)
+        self.count = self.count + count
+        self.count_add_rand = self.count_add_rand + 1
+        if self.count_add_rand == config.player_count:
+            print("counttt", self.count, self.input_share_count)
+            if self.count == self.input_share_count and len(self.mult_gates) == 0:
+                print("inside")
+                config.ceps_speed.set_preprossing_circuit(self.circuit)
 
     def handle_random_input_shares(self, r, gate_id):
         if isinstance(r, list):
@@ -95,10 +99,10 @@ class Preprocessing:
                 self.add_input_share_to_circuit(int(tuple[0]), int(tuple[1]))
             print("countaa", self.count, self.input_share_count)
             if self.count is not None:
-                if self.count == self.input_share_count and len(self.mult_gates) == 0:
-                    print("inside")
-                    config.ceps_speed.set_preprossing_circuit(self.circuit)
-
+                if self.count_add_rand == config.player_count:
+                    if self.count == self.input_share_count and len(self.mult_gates) == 0:
+                        print("inside")
+                        config.ceps_speed.set_preprossing_circuit(self.circuit)
         else:
             r = int(r)
             gate_id = int(gate_id)
