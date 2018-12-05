@@ -176,8 +176,11 @@ class BooleanLayerSharingStrategyByPlayerId:
                 s = json.dumps(shares_to_players[player_id])
                 data = {"r": s, "gid": 1}
                 requests.post(url, data)
+                print(data)
                 if config.id == str(player_id):
                     count = len(shares_to_players[player_id])
+                    print("i got shares", count)
                 else:
+                    print("i got no shares")
                     count = 0
         return count
