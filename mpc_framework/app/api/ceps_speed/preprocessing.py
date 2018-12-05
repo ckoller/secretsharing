@@ -24,7 +24,7 @@ class Preprocessing:
         self.c_open = None
         self.input_shares = {}
         self.input_share_count = 0
-        self.count = None
+        self.count = 0
         self.count_add_rand = 0
 
     def run(self):
@@ -88,7 +88,7 @@ class Preprocessing:
         self.count = self.count + count
         self.count_add_rand = self.count_add_rand + 1
         if self.count_add_rand == config.player_count:
-            print("counttt", self.count, self.input_share_count)
+            print("counto", self.count, self.input_share_count)
             if self.count == self.input_share_count and len(self.mult_gates) == 0:
                 print("inside")
                 config.ceps_speed.set_preprossing_circuit(self.circuit)
@@ -97,7 +97,7 @@ class Preprocessing:
         if isinstance(r, list):
             for tuple in r:
                 self.add_input_share_to_circuit(int(tuple[0]), int(tuple[1]))
-            print("countaa", self.count, self.input_share_count)
+            print("counta", self.count, self.input_share_count)
             if self.count is not None:
                 if self.count_add_rand == config.player_count:
                     if self.count == self.input_share_count and len(self.mult_gates) == 0:
