@@ -333,7 +333,7 @@ class TestCepsSpeedBoolLayer(TestCase):
 
     def tearDown(self):
         # kill all gnome-shell instances
-        subprocess.call(['./kill.sh'], cwd="/home/koller/Projects/secretsharing/mpc_framework/")
+        #subprocess.call(['./kill.sh'], cwd="/home/koller/Projects/secretsharing/mpc_framework/")
         # stop the thread containing the server we test on
         self.process.terminate()
 
@@ -348,7 +348,7 @@ class TestCepsSpeedBoolLayer(TestCase):
         # choose protocol and input for players
         input = json.dumps([0,0])
         # choose protocol and input for players
-        setup_protocol('ceps_speed', number_of_players, circuit_type='bool', circuit_id=1, circuit_input=input)
+        setup_protocol('ceps_speed', number_of_players, circuit_type='bool', circuit_id=2, circuit_input=input)
 
         # start protocols
         start_protocol('ceps_speed', number_of_players)
