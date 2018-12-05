@@ -103,7 +103,7 @@ class Preprocessing:
             if received_all:
                 gate = self.circuit[gate_id]
                 gate.r_open = self.pol.lagrange_interpolate(shares)[1]
-                self.got_all_input_shares
+                self.got_all_input_shares = True
                 if len(self.mult_gates) == 0:
                     config.ceps_speed.set_preprossing_circuit(self.circuit)
         else:
