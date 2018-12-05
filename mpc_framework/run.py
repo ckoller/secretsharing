@@ -21,9 +21,9 @@ class Prod:
         config.all_players = all
         circuit = ArithmeticCircuits().add_1_mult_2_3()
         config.ceps_speed = Ceps_Speed(circuit=circuit,
-                                       sharingStrategy=BooleanLayerSharingStrategy(),
+                                       sharingStrategy=BooleanLayerSharingStrategyByPlayerId(),
                                        evaluationStrategy=BooleanLayerEvaluationStrategy(Client()))
-        config.ceps = Ceps(circuit=Client().create_circuit(0), sharingStrategy=ShareByWireId())
+        config.ceps = Ceps(circuit=Client().create_circuit(0), sharingStrategy=ShareByWirePlayerId())
 
     def create_player_dict(self):
         my_ip = requests.get('https://ipapi.co/ip/').text
