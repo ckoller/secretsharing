@@ -210,7 +210,7 @@ class BooleanLayerEvaluationStrategy:
                         sum = val_in_l + val_in_r
                         gate.output_value = sum
                         found_gate_in_layer = True
-                    if len(self.cur_layer_gates) > 200:
+                    if len(self.cur_layer_gates) > 150:
                         self.pid = self.pid + 1
             if layer_shares != {}:
                 self.open.request_load(layer_shares, "layer")
