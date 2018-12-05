@@ -84,15 +84,19 @@ class Preprocessing:
 
     def add_random_input_values_to_circuit(self, input_random_shares):
         self.count = self.sharingStrategy.add_random_input_values_to_circuit(input_random_shares, self.input_gates)
+        print("counttt", self.count, self.input_share_count)
         if self.count == self.input_share_count and len(self.mult_gates) == 0:
+            print("inside")
             config.ceps_speed.set_preprossing_circuit(self.circuit)
 
     def handle_random_input_shares(self, r, gate_id):
         if isinstance(r, list):
             for tuple in r:
                 self.add_input_share_to_circuit(int(tuple[0]), int(tuple[1]))
+            print("countaa", self.count, self.input_share_count)
             if self.count is not None:
                 if self.count == self.input_share_count and len(self.mult_gates) == 0:
+                    print("inside")
                     config.ceps_speed.set_preprossing_circuit(self.circuit)
 
         else:
