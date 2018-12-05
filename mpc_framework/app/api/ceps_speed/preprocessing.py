@@ -23,6 +23,7 @@ class Preprocessing:
         self.b_open = None
         self.c_open = None
         self.input_shares = {}
+        self.got_all_input_shares = False
 
     def run(self):
         i = len(self.input_gates)
@@ -79,7 +80,7 @@ class Preprocessing:
             #print(protocol_double_random_shares[1])
             if len(self.mult_gates) != 0:
                 self.protocol_triples.run(mult, protocol_double_random_shares[0], protocol_double_random_shares[1])
-            else:
+            elif self.got_all_input_shares:
                 config.ceps_speed.set_preprossing_circuit(self.circuit)
 
     def add_random_input_values_to_circuit(self, input_random_shares):
@@ -102,6 +103,9 @@ class Preprocessing:
             if received_all:
                 gate = self.circuit[gate_id]
                 gate.r_open = self.pol.lagrange_interpolate(shares)[1]
+                self.got_all_input_shares
+                if len(self.mult_gates) == 0:
+                    config.ceps_speed.set_preprossing_circuit(self.circuit)
         else:
             self.input_shares[gate_id] = [r]
 
