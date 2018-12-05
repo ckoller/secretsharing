@@ -8,5 +8,5 @@ ceps = ""
 ceps_speed = ""
 all_players = 'players'
 result = []
-circuit_folder_path = "/home/koller/Projects/secretsharing/mpc_framework/tests/booleanCircuits/"
-#circuit_folder_path = "/home/ubuntu/secretsharing/mpc_framework/tests/booleanCircuits/"
+#circuit_folder_path = "/home/koller/Projects/secretsharing/mpc_framework/tests/booleanCircuits/"
+circuit_folder_path = "/home/ubuntu/secretsharing/mpc_framework/tests/booleanCircuits/"
