@@ -333,7 +333,7 @@ class TestCepsSpeedBoolLayer(TestCase):
 
     def tearDown(self):
         # kill all gnome-shell instances
-        #subprocess.call(['./kill.sh'], cwd="/home/koller/Projects/secretsharing/mpc_framework/")
+        subprocess.call(['./kill.sh'], cwd="/home/koller/Projects/secretsharing/mpc_framework/")
         # stop the thread containing the server we test on
         self.process.terminate()
 
