@@ -35,7 +35,6 @@ class ArithmeticSharingStrategy:
             url = "http://" + player + "/api/ceps_speed/input_shares/"
             data = {"r": r, "gid": gate.id}
             requests.post(url, data)
-        return 0
 
 class BooleanSharingStrategy:
     def share_my_input_value(self, circuit, my_input_values):
@@ -72,7 +71,6 @@ class BooleanSharingStrategy:
             url = "http://" + player + "/api/ceps_speed/input_shares/"
             data = {"r": r, "gid": gate.id}
             requests.post(url, data)
-        return 0
 
 class BooleanLayerSharingStrategy:
 
@@ -122,12 +120,6 @@ class BooleanLayerSharingStrategy:
                 s = json.dumps(shares_to_players[player_id])
                 data = {"r": s, "gid": 1}
                 requests.post(url, data)
-                if config.id == str(player_id):
-                    count = len(shares_to_players[player_id])
-                else:
-                    count = 0
-        return count
-
 
 class BooleanLayerSharingStrategyByPlayerId:
 
@@ -159,7 +151,6 @@ class BooleanLayerSharingStrategyByPlayerId:
         return True
 
     def add_random_input_values_to_circuit(self, input_random_shares, input_gates):
-        count = 0
         shares_to_players = {}
         shares = np.concatenate(input_random_shares).tolist()
         for gate in input_gates:
@@ -177,4 +168,5 @@ class BooleanLayerSharingStrategyByPlayerId:
                 s = json.dumps(shares_to_players[player_id])
                 data = {"r": s, "gid": 1}
                 requests.post(url, data)
-        return count
+
+
