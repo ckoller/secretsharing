@@ -159,6 +159,7 @@ class BooleanLayerSharingStrategyByPlayerId:
         return True
 
     def add_random_input_values_to_circuit(self, input_random_shares, input_gates):
+        count = 0
         shares_to_players = {}
         shares = np.concatenate(input_random_shares).tolist()
         for gate in input_gates:
@@ -176,11 +177,4 @@ class BooleanLayerSharingStrategyByPlayerId:
                 s = json.dumps(shares_to_players[player_id])
                 data = {"r": s, "gid": 1}
                 requests.post(url, data)
-                print(data)
-                if config.id == str(player_id):
-                    count = len(shares_to_players[player_id])
-                    print("i got shares", count)
-                else:
-                    print("i got no shares")
-                    count = 0
         return count
