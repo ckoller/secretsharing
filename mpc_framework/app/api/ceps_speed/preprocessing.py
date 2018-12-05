@@ -77,7 +77,8 @@ class Preprocessing:
             #print(protocol_random_shares)
             #print(protocol_double_random_shares[0])
             #print(protocol_double_random_shares[1])
-            self.protocol_triples.run(mult, protocol_double_random_shares[0], protocol_double_random_shares[1])
+            if len(self.mult_gates) != 0:
+                self.protocol_triples.run(mult, protocol_double_random_shares[0], protocol_double_random_shares[1])
 
     def add_random_input_values_to_circuit(self, input_random_shares):
         self.sharingStrategy.add_random_input_values_to_circuit(input_random_shares, self.input_gates)
