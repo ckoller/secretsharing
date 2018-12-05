@@ -23,7 +23,6 @@ class Preprocessing:
         self.b_open = None
         self.c_open = None
         self.input_shares = {}
-        self.got_all_input_shares = False
 
     def run(self):
         i = len(self.input_gates)
@@ -78,10 +77,7 @@ class Preprocessing:
             #print(protocol_random_shares)
             #print(protocol_double_random_shares[0])
             #print(protocol_double_random_shares[1])
-            if len(self.mult_gates) != 0:
-                self.protocol_triples.run(mult, protocol_double_random_shares[0], protocol_double_random_shares[1])
-            elif self.got_all_input_shares:
-                config.ceps_speed.set_preprossing_circuit(self.circuit)
+            self.protocol_triples.run(mult, protocol_double_random_shares[0], protocol_double_random_shares[1])
 
     def add_random_input_values_to_circuit(self, input_random_shares):
         self.sharingStrategy.add_random_input_values_to_circuit(input_random_shares, self.input_gates)
@@ -103,9 +99,6 @@ class Preprocessing:
             if received_all:
                 gate = self.circuit[gate_id]
                 gate.r_open = self.pol.lagrange_interpolate(shares)[1]
-                self.got_all_input_shares = True
-                if len(self.mult_gates) == 0:
-                    config.ceps_speed.set_preprossing_circuit(self.circuit)
         else:
             self.input_shares[gate_id] = [r]
 
@@ -165,7 +158,8 @@ class ProtocolTriples:
         R = np.concatenate(R, axis=0)
         self.rm = np.concatenate(rm, axis=0)
         D = [(self.a[x] * self.b[x] + R[x]) % self.prime for x in range(len(R))]
-        #print("D", D)
+
+        print("D", D)
         self.open.request( D, "D")
 
     def calculate_c(self, D_open):
