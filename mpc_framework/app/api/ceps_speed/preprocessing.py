@@ -23,6 +23,8 @@ class Preprocessing:
         self.b_open = None
         self.c_open = None
         self.input_shares = {}
+        self.input_share_count = 0
+        self.count = None
 
     def run(self):
         i = len(self.input_gates)
@@ -77,15 +79,22 @@ class Preprocessing:
             #print(protocol_random_shares)
             #print(protocol_double_random_shares[0])
             #print(protocol_dadd_random_input_values_to_circuitouble_random_shares[1])
-            self.protocol_triples.run(mult, protocol_double_random_shares[0], protocol_double_random_shares[1])
+            if m != 0:
+                self.protocol_triples.run(mult, protocol_double_random_shares[0], protocol_double_random_shares[1])
 
     def add_random_input_values_to_circuit(self, input_random_shares):
-        self.sharingStrategy.add_random_input_values_to_circuit(input_random_shares, self.input_gates)
+        self.count = self.sharingStrategy.add_random_input_values_to_circuit(input_random_shares, self.input_gates)
+        if self.count == self.input_share_count and len(self.mult_gates) == 0:
+            config.ceps_speed.set_preprossing_circuit(self.circuit)
 
     def handle_random_input_shares(self, r, gate_id):
         if isinstance(r, list):
             for tuple in r:
                 self.add_input_share_to_circuit(int(tuple[0]), int(tuple[1]))
+            if self.count is not None:
+                if self.count == self.input_share_count and len(self.mult_gates) == 0:
+                    config.ceps_speed.set_preprossing_circuit(self.circuit)
+
         else:
             r = int(r)
             gate_id = int(gate_id)
@@ -99,6 +108,8 @@ class Preprocessing:
             if received_all:
                 gate = self.circuit[gate_id]
                 gate.r_open = self.pol.lagrange_interpolate(shares)[1]
+                self.input_share_count = self.input_share_count + 1
+
         else:
             self.input_shares[gate_id] = [r]
 
