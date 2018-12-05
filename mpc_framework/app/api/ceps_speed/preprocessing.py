@@ -79,6 +79,8 @@ class Preprocessing:
             #print(protocol_double_random_shares[1])
             if len(self.mult_gates) != 0:
                 self.protocol_triples.run(mult, protocol_double_random_shares[0], protocol_double_random_shares[1])
+            else:
+                config.ceps_speed.set_preprossing_circuit(self.circuit)
 
     def add_random_input_values_to_circuit(self, input_random_shares):
         self.sharingStrategy.add_random_input_values_to_circuit(input_random_shares, self.input_gates)
