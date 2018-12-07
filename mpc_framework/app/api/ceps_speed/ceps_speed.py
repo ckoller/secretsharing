@@ -30,7 +30,8 @@ class Ceps_Speed:
     def set_preprossing_circuit(self, circuit):
         self.circuit = circuit
         self.preprocessed = True
-        self.pre_time = time.time() - self.start
+        if self.pre_time is None:
+            self.pre_time = time.time() - self.start
         self.share_my_input_value()
 
     def share_my_input_value(self):
