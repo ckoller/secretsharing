@@ -53,16 +53,12 @@ def get_bool_circuit(circuit_id):
         c.init_parsed_circuit("80_and_15_in")
     elif circuit_id == 20:
         c.init_parsed_circuit("80_and_20_in")
-    elif circuit_id == 30:
-        c.init_parsed_circuit("80_and_30_in")
     elif circuit_id == 110:
         c.init_parsed_circuit("80_or_10_in")
     elif circuit_id == 115:
         c.init_parsed_circuit("80_or_15_in")
     elif circuit_id == 120:
         c.init_parsed_circuit("80_or_20_in")
-    elif circuit_id == 130:
-        c.init_parsed_circuit("80_or_30_in")
     elif circuit_id == 1010:
         c.init_parsed_circuit("10_and")
     elif circuit_id == 1020:
