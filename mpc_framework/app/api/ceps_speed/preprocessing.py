@@ -64,7 +64,7 @@ class Preprocessing:
 
         if protocol_random_shares is not None:
             i = len(self.input_gates)
-            m = len(self.mult_gates)
+            m = len(self.input_gates)
 
             i_runs = int(i / 2) + 1
 
@@ -76,7 +76,7 @@ class Preprocessing:
             self.add_random_input_values_to_circuit(input)
             #print(protocol_random_shares)
             #print(protocol_double_random_shares[0])
-            #print(protocol_dadd_random_input_values_to_circuitouble_random_shares[1])
+            #print(protocol_double_random_shares[1])
             self.protocol_triples.run(mult, protocol_double_random_shares[0], protocol_double_random_shares[1])
 
     def add_random_input_values_to_circuit(self, input_random_shares):
@@ -158,6 +158,7 @@ class ProtocolTriples:
         R = np.concatenate(R, axis=0)
         self.rm = np.concatenate(rm, axis=0)
         D = [(self.a[x] * self.b[x] + R[x]) % self.prime for x in range(len(R))]
+        #print("D", D)
         self.open.request( D, "D")
 
     def calculate_c(self, D_open):
