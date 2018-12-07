@@ -21,7 +21,7 @@ class Prod:
         config.all_players = all
         circuit = ArithmeticCircuits().add_1_mult_2_3()
         config.ceps_speed = Ceps_Speed(circuit=circuit,
-                                       sharingStrategy=BooleanLayerSharingStrategyByPlayerId(),
+                                       sharingStrategy=BooleanLayerSharingStrategy(),
                                        evaluationStrategy=BooleanLayerEvaluationStrategy(Client()))
         config.ceps = Ceps(circuit=Client().create_circuit(0), sharingStrategy=ShareByWirePlayerId())
 
